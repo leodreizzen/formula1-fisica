@@ -1,0 +1,26 @@
+{
+  "name": "proyecto-fisica",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "npm run dev",
+    "electron": "electron .",
+    "react-dev": "cd client & npm start",
+    "dev": "concurrently \"cross-env BROWSER=none npm run react-dev\" \"wait-on http://127.0.0.1:3000 && npm run electron\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pyinstall": "python pyinstall.py"
+  },
+  "author": "",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^29.1.6",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "electron-is-dev": "^3.0.1",
+    "python-shell": "^5.0.0"
+  }
+}
