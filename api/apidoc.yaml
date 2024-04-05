@@ -1,0 +1,312 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'API F1'
+servers:
+  - url: 'http://127.0.0.1:3002'
+
+paths:
+  /rondas:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+    get:
+      summary: Obtener las rondas disponibles dado un año
+      responses:
+        '200':
+          description: Las rondas disponibles para el año solicitado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Round'
+  /conductores:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+    get:
+      summary: Obtener los conductores en una sesión
+      responses:
+        '200':
+          description: "Conductores que participaron de la sesión"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+        '400':
+          description: Alguno de los parámetros es inválido
+
+  /vueltas:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+    get:
+      summary: Obtener las vueltas que dio un conductor en una sesión
+      responses:
+        '200': 
+          description: Vueltas que dio el conductor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lapCount:
+                    type: integer
+                    description: Cantidad de vueltas
+                  fastest_lap:
+                    type: integer
+                    description: Número de la vuelta que el conductor terminó más rápido (desde 0)
+        '400':
+          description: Alguno de los parámetros es inválido
+
+  /trayectoria:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+    get:
+      summary: Obtener la trayectoria de un conductor en una vuelta de una sesión
+      responses:
+        '200': 
+          description: Trayectoria que siguió el conductor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    x:
+                      type: number
+                      description: Coordenada x de posición
+                    y:
+                      type: number
+                      description: Coordenada y de posición
+                    z:
+                      type: number
+                      description: Coordenada z de posición
+                    tiempo:
+                      $ref: '#/components/schemas/RelativeTimestamp'
+        '400':
+          description: Alguno de los parámetros es inválido
+
+  /derrapes:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+    get:
+      description: Obtener los derrapes para un conductor dado, en una vuelta
+      responses:
+        '200':
+          description: Derrapes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RelativeTimestamp'
+        '400':
+           description: Alguno de los parámetros es inválido  
+
+
+  /vectores:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+      - $ref: "#/components/parameters/relativeTimestamp"
+    
+    get:
+      description: Obtener la velocidad y aceleración de un conductor en un determinado momento
+      responses:
+        '200':
+          description: Velocidad y aceleración del conductor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  velocidad:
+                    $ref: '#/components/schemas/Speed'
+                  aceleración:
+                    $ref: '#/components/schemas/Acceleration'
+        '400':
+          description: Alguno de los parámetros es inválido
+
+
+  /picos_aceleracion:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+    get:
+      description: Obtener los picos de aceleración de una vuelta, para un conductor dado
+      responses:
+        '200':
+          description: Picos de aceleración
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    tiempo:
+                      $ref: '#/components/schemas/RelativeTimestamp'
+                    aceleración:
+                      $ref: '#/components/schemas/Acceleration'
+        '400':
+           description: Alguno de los parámetros es inválido
+
+components:
+  parameters:
+    roundYear:
+      name: year
+      in: query
+      schema: 
+        $ref: '#/components/schemas/RoundYear'
+      description: Año de la ronda
+    roundNumber:
+      name: roundNumber
+      in: query
+      description: Numero de ronda
+      schema: 
+        $ref: "#/components/schemas/RoundNumber"
+    sessionNumber:
+      name: sessionNumber
+      in: query
+      description: Numero de sesión
+      schema:
+        $ref: "#/components/schemas/SessionNumber"
+    driverNumber:
+      name: driverNumber
+      in: query
+      description: Número de conductor
+      schema:
+        $ref: "#/components/schemas/DriverNumber"
+        driverNumber:
+    lapNumber:
+      name: lapNumber
+      in: query
+      description: Número de vuelta
+      schema:
+        $ref: "#/components/schemas/LapNumber"
+    relativeTimestamp:
+      name: tiempo
+      in: query
+      description: "Tiempo, relativo al comienzo de la sesión"
+      schema:
+        $ref: "#/components/schemas/RelativeTimestamp"
+
+  schemas:
+    Round:
+      type: object
+      properties:
+        roundNumber:
+          $ref: '#/components/schemas/RoundNumber'
+        country:
+          type: string
+          description: Pais donde se juega la ronda
+        location:
+          type: string
+          description: Ciudad donde se juega la ronda
+        eventName:
+          type: string
+          description: Nombre del evento
+        sessions:
+          type: array
+          description: Sesiones.
+          items:
+            type: object
+            properties:
+              sessionNumber:
+                $ref: "#/components/schemas/SessionNumber"
+              name:
+                type: string
+                description: >
+                  Nombre de la sesión. Ej: "Practice 1", "Qualifying", "Race"
+              dateUTC:
+                $ref: '#/components/schemas/Timestamp'
+    Driver:
+      type: object
+      properties:
+        driverNumber:
+          $ref: '#/components/schemas/DriverNumber'
+        fullName:
+          type: string
+          description: Nombre completo del conductor
+        countryCode:
+          type: string
+          format: NED
+          description: Código de país de nacionalidad del conductor
+        teamName:
+          type: string
+          description: Nombre del equipo
+        teamColor:
+          type: string
+          format: 3671C6
+          description: Color del equipo
+
+    Timestamp:
+      type: string
+      format: 2022-09-27T18:00:00.000Z
+      description: Fecha y hora
+
+    RelativeTimestamp:
+      type: string
+      format: 2022-09-27T18:00:00.000Z
+      description: Tiempo, relativo al comienzo de la sesión
+
+    RoundNumber:
+      type: integer
+      description: Número de ronda
+    RoundYear:
+      type: integer
+      description: Año de la ronda
+    SessionNumber:
+      type: integer
+      description: Número de sesión
+    DriverNumber:
+      type: integer
+      description: Número de conductor
+    LapNumber:
+      type: integer
+      description: Número de vuelta
+    Speed:
+      type: object
+      description: "Velocidad de un conductor, en coordenadas cartesianas"
+      properties:
+        vX:
+          type: number
+        vY:
+          type: number
+        vZ:
+          type: number
+    Acceleration:  
+      type: object
+      description: "Aceleracion de un conductor"
+      properties:
+        aX:
+          type: number
+        aY:
+          type: number
+        aZ:
+          type: number
+        aTangencial:
+          type: number
+        aNormal:
+          type: number
