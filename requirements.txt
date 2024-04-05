@@ -1,3 +1,0 @@
-fastapi
-fastf1
-uvicorn

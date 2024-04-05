@@ -160,3 +160,6 @@ cython_debug/
 .idea
 .vscode
 node_modules/
+build
+dist
+release

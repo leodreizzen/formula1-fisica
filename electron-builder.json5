@@ -1,0 +1,45 @@
+/**
+ * @see https://www.electron.build/configuration/configuration
+ */
+{
+  "productName": "Proyecto Fisica - Formula 1",
+  "appId": "nodomain.proyectofisica",
+  "asar": true,
+  "directories": {
+    "output": "release/${version}",
+    "buildResources": "assets"
+  },
+  "files": [
+    "build/**/*",
+    "main.js",
+    "client/node_modules/**/*",
+    "node_modules/**/*",
+    "!build/api/**/*",
+  ],
+  "extraResources": [
+    "build/api/**/*"
+  ],
+  "mac": {
+    "artifactName": "${productName}_${version}.${ext}",
+    "target": [
+      "dmg"
+    ]
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "artifactName": "${productName}_${version}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false
+  }
+}
