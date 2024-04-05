@@ -145,8 +145,7 @@ paths:
         '400':
           description: Alguno de los parámetros es inválido
 
-
-  /picos_aceleracion:
+  /aceleraciones:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -154,10 +153,10 @@ paths:
       - $ref: "#/components/parameters/driverNumber"
       - $ref: "#/components/parameters/lapNumber"
     get:
-      description: Obtener los picos de aceleración de una vuelta, para un conductor dado
+      description: Obtener las aceleraciones de un conductor en toda una vuelta
       responses:
         '200':
-          description: Picos de aceleración
+          description: Velocidad y aceleración del conductor
           content:
             application/json:
               schema:
@@ -165,12 +164,14 @@ paths:
                 items:
                   type: object
                   properties:
-                    tiempo:
-                      $ref: '#/components/schemas/RelativeTimestamp'
-                    aceleración:
+                    aceleracion:
                       $ref: '#/components/schemas/Acceleration'
+                    tiempo:
+                      $ref: '#/components/parameters/relativeTimestamp'
+
         '400':
-           description: Alguno de los parámetros es inválido
+          description: Alguno de los parámetros es inválido
+
 
 components:
   parameters:
@@ -296,6 +297,10 @@ components:
           type: number
         vZ:
           type: number
+        modulo:
+          type: number
+        velocimetro:
+          type: number
     Acceleration:  
       type: object
       description: "Aceleracion de un conductor"
@@ -305,6 +310,8 @@ components:
         aY:
           type: number
         aZ:
+          type: number
+        modulo:
           type: number
         aTangencial:
           type: number
