@@ -2,3 +2,4 @@ fastapi
 fastf1
 uvicorn
 pyinstaller
+pandas
