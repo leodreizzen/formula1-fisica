@@ -17,11 +17,18 @@ let pythonProcess;
 let venvExeFolder = os.platform() === 'win32' ? "Scripts" : "bin";
 let serverPid = null;
 
+let serverReady;
+const serverReadyPromise = new Promise((resolve, reject) => {
+    serverReady = resolve;
+    setTimeout(reject, 15000);
+})
+
 function processApiStderr(data) {
     if (serverPid === null) {
         let match = data.match(".*Started server process \\[(\\d+)]");
         if (match) {
             serverPid = match[1];
+            serverReady();
         }
     }
     console.log(data);
@@ -79,7 +86,12 @@ try {
         });
     }
     app.whenReady().then(() => {
-        createWindow()
+        serverReadyPromise.then(()=> {
+            createWindow()
+        }).catch((e) => {
+            dialog.showErrorBox("Error", "Failed to start api")
+            killServer();
+        });
     })
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') app.quit()
