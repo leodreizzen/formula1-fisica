@@ -1,4 +1,4 @@
-import {app, BrowserWindow, dialog} from 'electron';
+import {app, BrowserWindow, dialog, session} from 'electron';
 import isDev from 'electron-is-dev';
 import {PythonShell} from 'python-shell';
 import {execFile} from 'child_process';
@@ -8,7 +8,6 @@ import os from "os";
 import treeKill from "tree-kill";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const API_PROD_PATH = path.join(__dirname, "../build/api/api.exe");
 const API_DEV_PATH = path.join(__dirname, "api/api.py");
 const INDEX_PROD_PATH = path.join(__dirname, 'build/client/index.html');
@@ -71,8 +70,20 @@ function killServer() {
     }
 }
 
+async function installExtensions() {
+    if(isDev) {
+        const installer = await import ('electron-devtools-installer');
+        const res = await installer.default.default(installer.REACT_DEVELOPER_TOOLS, {loadExtensionOptions: {allowFileAccess: true}});
+        session.defaultSession.getAllExtensions().map(e => {
+            if (e.name === 'React Developer Tools') {
+                session.defaultSession.loadExtension(e.path);
+            }
+        });
+    }
+}
+
 try {
-    const createWindow = () => {
+    const createWindow = async () => {
         const win = new BrowserWindow({
             width: 800,
             height: 600
@@ -85,7 +96,9 @@ try {
             dialog.showErrorBox("Error", "Failed to load index.html")
         });
     }
-    app.whenReady().then(() => {
+    app.whenReady()
+        .then(installExtensions)
+        .then(() => {
         serverReadyPromise.then(()=> {
             createWindow()
         }).catch((e) => {
