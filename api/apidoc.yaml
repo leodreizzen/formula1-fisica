@@ -6,7 +6,7 @@ servers:
   - url: 'http://127.0.0.1:3002'
 
 paths:
-  /rondas:
+  /rounds:
     parameters:
       - $ref: "#/components/parameters/roundYear"
     get:
@@ -20,7 +20,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Round'
-  /conductores:
+  /drivers:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -39,7 +39,7 @@ paths:
         '400':
           description: Alguno de los parámetros es inválido
 
-  /vueltas:
+  /laps:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -64,7 +64,7 @@ paths:
         '400':
           description: Alguno de los parámetros es inválido
 
-  /trayectoria:
+  /trajectory:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -97,7 +97,7 @@ paths:
         '400':
           description: Alguno de los parámetros es inválido
 
-  /derrapes:
+  /drifts:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -119,7 +119,7 @@ paths:
            description: Alguno de los parámetros es inválido  
 
 
-  /vectores:
+  /vectors:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -145,7 +145,7 @@ paths:
         '400':
           description: Alguno de los parámetros es inválido
 
-  /aceleraciones:
+  /accelerations:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
