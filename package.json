@@ -5,16 +5,19 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
+    "postinstall": "npm run pyinstall && cd client && npm install",
     "start": "npm run dev",
     "electron": "electron .",
+    "python": "python scripts/runPython.py",
+    "api": "pyhon api.py",
     "react-dev": "cd client & npm start",
     "dev": "concurrently \"cross-env BROWSER=none npm run react-dev\" \"wait-on http://127.0.0.1:3000 && npm run electron\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:electron": "electron-builder",
     "build:react": "cd client & cross-env BUILD_PATH=../build/client npm run build",
-    "build:python": "python pybuild.py",
+    "build:python": "python scripts/pybuild.py",
     "build": "npm run build:react && npm run build:python && npm run build:electron",
-    "pyinstall": "python pyinstall.py"
+    "pyinstall": "python scripts/pyinstall.py"
   },
   "author": "",
   "devDependencies": {
@@ -27,6 +30,7 @@
   },
   "dependencies": {
     "electron-is-dev": "^3.0.1",
+    "postinstall": "^0.10.3",
     "python-shell": "^5.0.0",
     "tree-kill": "^1.2.2"
   }
