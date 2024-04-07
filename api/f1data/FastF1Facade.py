@@ -56,7 +56,6 @@ class FastF1Facade(F1Facade):
         session_event = f1.get_session(year, roundNumber, sessionNumber)
         session_event.load()
         lap_telemetry = session_event.laps.pick_driver(str(driverId)).pick_lap(lapNumber).telemetry
-        
-        return lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]]
+        return lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]].reset_index()
     
    
