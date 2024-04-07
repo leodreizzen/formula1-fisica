@@ -31,14 +31,10 @@ def drivers(year: int, roundNumber: int, sessionNumber: int):
 
 @app.get("/laps")
 def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
-    laps=[]
-    laps.append({
+    return {
         "lapCount": facade.lapCount(year, roundNumber, sessionNumber, driverNumber),
         "fastestLap": facade.fastestLap(year, roundNumber, sessionNumber, driverNumber),
-    })
-    return laps
-    
-
+    }
 
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
