@@ -1,23 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
+import MainPanel from "./MainPanel";
+import SelectionMenu from "./SelectionMenu";
 
 function App() {
+    function loadData(year, round, session){
+        console.log(year, round, session);
+    }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <SelectionMenu className="SelectionMenu" loadData={loadData}/>
+      <MainPanel className="MainPanel"/>
     </div>
   );
 }
