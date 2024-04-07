@@ -22,18 +22,15 @@ app.add_middleware(
 
 @app.get("/rounds")
 def rounds(year: int = None):
-    # TODO implementar
    return facade.rounds(year)
 
 @app.get("/drivers")
 def drivers(year: int, roundNumber: int, sessionNumber: int):
-    # TODO implementar
     return facade.drivers(year, roundNumber, sessionNumber)
 
 
 @app.get("/laps")
 def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
-    # TODO implementar
     laps=[]
     laps.append({
         "lapCount": facade.lapCount(year, roundNumber, sessionNumber, driverNumber),
@@ -45,7 +42,6 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
 
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    # TODO implementar
     return facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
 
 

@@ -37,7 +37,6 @@ def timedelta_to_string(delta):
 
 class FastF1Facade(F1Facade):
     def rounds(self, year: int) -> list[Round]:
-        # TODO IMPLEMENTAR
         roundsSchedule = f1.get_event_schedule(year, include_testing=False)
         rounds = []
         for row in roundsSchedule.itertuples():
@@ -58,7 +57,6 @@ class FastF1Facade(F1Facade):
         return rounds
 
     def drivers(self, year: int, roundNumber: int, sessionNumber: int) -> list[Driver]:
-        # TODO IMPLEMENTAR
         session_event = f1.get_session(year, roundNumber, sessionNumber)
         session_event.load()
         driversNumber = session_event.drivers
@@ -71,21 +69,18 @@ class FastF1Facade(F1Facade):
         return drivers
 
     def lapCount(self,year: int, roundNumber: int, sessionNumber: int, driverNumber: int) -> int:
-        # TODO IMPLEMENTAR
         session_event = f1.get_session(year, roundNumber, sessionNumber)
         session_event.load()
         laps = session_event.laps.pick_driver(str(driverNumber))
         return len(laps)
 
     def fastestLap(self,year: int, roundNumber: int, sessionNumber: int, driverNumber: int) -> int:
-        # TODO IMPLEMENTAR
         session_event = f1.get_session(year, roundNumber, sessionNumber)
         session_event.load()
         fatest_lap = session_event.laps.pick_driver(str(driverNumber)).pick_fastest()
         return int(fatest_lap.LapNumber)
 
     def telemetry(self,year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int):
-        # TODO IMPLEMENTAR
         session_event = f1.get_session(year, roundNumber, sessionNumber)
         session_event.load()
         lap_telemetry = session_event.laps.pick_driver(str(driverId)).pick_lap(lapNumber).telemetry
