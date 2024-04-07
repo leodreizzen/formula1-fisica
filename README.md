@@ -6,7 +6,6 @@ Requiere tener instalado Python y Node.js
 Instalar dependencias:
 ```bash
   npm install
-  npm run pyinstall
 ```
 
 #### Para desarrollo
@@ -19,6 +18,12 @@ Correr solamente la aplicación electron y la api de python:
 ```bash
   npm run electron
 ``` 
+
+Correr solamente la api de python:
+```bash
+  npm run python
+```
+
 Correr solamente el servidor react:
 ```bash
   npm run react
