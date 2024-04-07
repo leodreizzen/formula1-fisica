@@ -1,6 +1,6 @@
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
-
+from util import timedelta_to_string
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
     accelerationsPlaceholder
@@ -56,8 +56,16 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
 
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    return facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
-
+    lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    puntos = []
+    for index, row in lap_telemetry.iterrows():
+        puntos.append({
+            "x": row["X"],
+            "y": row["Y"],
+            "z": row["Z"],
+            "time": timedelta_to_string(row["Time"])
+        })
+    return puntos
 
 @app.get("/vectors")
 def vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int, time: str):

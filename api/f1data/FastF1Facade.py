@@ -6,35 +6,6 @@ from .Driver import Driver
 
 import fastf1 as f1
 
-
- ##Funciones auxiliares
-    
-def timedelta_to_string(delta):
-        # Obtener los componentes del timedelta
-        days = delta.days
-        seconds = delta.seconds
-        microseconds = delta.microseconds
-
-        # Calcular los componentes de la fecha y hora
-        years = days // 365
-        days %= 365
-        months = days // 30
-        days %= 30
-        hours = seconds // 3600
-        seconds %= 3600
-        minutes = seconds // 60
-        seconds %= 60
-
-        # Formatear los segundos con los decimales correctos
-        seconds_with_microseconds = seconds + microseconds / 1e6
-
-        # Formatear la salida
-        formatted_timedelta = "{:04}-{:02}-{:02}T{:02}:{:02}:{:06.3f}".format(
-            years, months, days, hours, minutes, seconds_with_microseconds)
-
-        return formatted_timedelta
-
-
 class FastF1Facade(F1Facade):
     def rounds(self, year: int) -> list[Round]:
         roundsSchedule = f1.get_event_schedule(year, include_testing=False)
@@ -86,17 +57,6 @@ class FastF1Facade(F1Facade):
         session_event.load()
         lap_telemetry = session_event.laps.pick_driver(str(driverId)).pick_lap(lapNumber).telemetry
         
-        lap_telemetry[["X", "Y", "Z", "Time"]]
-        puntos = []
-        for index, row in lap_telemetry.iterrows():
-            puntos.append({
-                "x": row["X"],
-                "y": row["Y"],
-                "z": row["Z"],
-                "time": timedelta_to_string(row["Time"])
-            })
-        
-        return puntos
-    
+        return lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]]
     
    
