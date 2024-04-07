@@ -199,7 +199,6 @@ components:
       description: Número de conductor
       schema:
         $ref: "#/components/schemas/DriverNumber"
-        driverNumber:
     lapNumber:
       name: lapNumber
       in: query

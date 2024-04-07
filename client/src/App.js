@@ -1,15 +1,21 @@
 import './App.css';
-import MainPanel from "./MainPanel";
-import SelectionMenu from "./SelectionMenu";
+import MainPanel from "./panels/MainPanel";
+import SelectionMenu from "./panels/SelectionMenu";
+import {useState} from "react";
 
 function App() {
+    const [sessionData, setSessionData] = useState(null);
     function loadData(year, round, session){
-        console.log(year, round, session);
+        setSessionData({
+            year: year,
+            round: round,
+            session: session
+        })
     }
   return (
     <div className="App">
       <SelectionMenu className="SelectionMenu" loadData={loadData}/>
-      <MainPanel className="MainPanel"/>
+      <MainPanel className="MainPanel" sessionData={sessionData}/>
     </div>
   );
 }
