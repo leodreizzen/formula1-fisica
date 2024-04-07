@@ -1,3 +1,5 @@
+import pandas as pd
+
 def timedelta_to_string(delta):
     # Obtener los componentes del timedelta
     days = delta.days
@@ -23,3 +25,9 @@ def timedelta_to_string(delta):
 
     return formatted_timedelta
 
+def timestamp_to_string(timestamp):
+    dt_object = pd.to_datetime(timestamp, unit='ms')
+
+    formatted_timestamp = dt_object.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
+
+    return formatted_timestamp

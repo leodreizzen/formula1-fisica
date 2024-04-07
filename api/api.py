@@ -1,6 +1,6 @@
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
-from util import timedelta_to_string
+from util import timedelta_to_string, timestamp_to_string
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
     accelerationsPlaceholder
@@ -32,7 +32,7 @@ def rounds(year: int = None):
                 {
                     "sessionNumber": session.sessionNumber,
                     "name": session.name,
-                    "dateUTC": session.date
+                    "dateUTC": timestamp_to_string(session.date)
                 }
                 for session in round.sessions
             ]
