@@ -4,6 +4,7 @@ from util import timedelta_to_string, timestamp_to_string
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
     accelerationsPlaceholder
+from functools import lru_cache
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
@@ -20,6 +21,7 @@ app.add_middleware(
 
 
 @app.get("/rounds")
+@lru_cache(maxsize=4)
 def rounds(year: int = None):
     rounds = facade.rounds(year)
     return [
@@ -42,6 +44,7 @@ def rounds(year: int = None):
 
 
 @app.get("/drivers")
+@lru_cache(maxsize=4)
 def drivers(year: int, roundNumber: int, sessionNumber: int):
     return [
         {
@@ -56,6 +59,7 @@ def drivers(year: int, roundNumber: int, sessionNumber: int):
 
 
 @app.get("/laps")
+@lru_cache(maxsize=4)
 def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
     return {
         "lapCount": facade.lapCount(year, roundNumber, sessionNumber, driverNumber),
@@ -64,6 +68,7 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
 
 
 @app.get("/trajectory")
+@lru_cache(maxsize=4)
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     puntos = []
@@ -77,12 +82,14 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
     return puntos
 
 @app.get("/vectors")
+@lru_cache(maxsize=4)
 def vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int, time: str):
     # TODO implementar
     return vectorsPlaceholder
 
 
 @app.get("/accelerations")
+@lru_cache(maxsize=4)
 def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     # TODO implementar
     return accelerationsPlaceholder
