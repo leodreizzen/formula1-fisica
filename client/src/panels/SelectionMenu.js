@@ -40,7 +40,7 @@ export default function SelectionMenu({className, loadData}){
     const roundsLoaded = rounds.length !== 0;
     if (visible) {
         return(
-            <div className={className + " flex flex-col items-center"}>
+            <div className={className + " flex flex-col items-center px-3"}>
                 <input className={"border"} id="year" type="button" value="Ocultar" onClick={() => setVisible(false)}/>
                 <label className={"block"} htmlFor="year">Año</label>
                 <div className={"flex"}>
