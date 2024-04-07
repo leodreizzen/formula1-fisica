@@ -43,17 +43,18 @@ class FastF1Facade(F1Facade):
             roundNumber = row.RoundNumber
             country = row.Country
             eventName = row.EventName
-            
+            location = row.Location
+
             session1 = Session(1, row.Session1, row.Session1DateUtc)
             session2 = Session(2, row.Session2, row.Session2DateUtc)
             session3 = Session(3, row.Session3, row.Session3DateUtc)
             session4 = Session(4, row.Session4, row.Session4DateUtc)
             session5 = Session(5, row.Session5, row.Session5DateUtc)
-            
+
             RoundSessions = [session1, session2, session3, session4, session5]
-            round = Round(roundNumber, country, eventName, RoundSessions)
+            round = Round(roundNumber, country, location, eventName, RoundSessions)
             rounds.append(round)
-        
+
         return rounds
 
     def drivers(self, year: int, roundNumber: int, sessionNumber: int) -> list[Driver]:

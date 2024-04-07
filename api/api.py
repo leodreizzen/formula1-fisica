@@ -1,7 +1,6 @@
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 
-
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
     accelerationsPlaceholder
@@ -22,7 +21,25 @@ app.add_middleware(
 
 @app.get("/rounds")
 def rounds(year: int = None):
-   return facade.rounds(year)
+    rounds = facade.rounds(year)
+    return [
+        {
+            "roundNumber": round.roundNumber,
+            "country": round.country,
+            "location": round.location,
+            "eventName": round.eventName,
+            "sessions": [
+                {
+                    "sessionNumber": session.sessionNumber,
+                    "name": session.name,
+                    "dateUTC": session.date
+                }
+                for session in round.sessions
+            ]
+        }
+        for round in rounds
+    ]
+
 
 @app.get("/drivers")
 def drivers(year: int, roundNumber: int, sessionNumber: int):
@@ -35,6 +52,7 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
         "lapCount": facade.lapCount(year, roundNumber, sessionNumber, driverNumber),
         "fastestLap": facade.fastestLap(year, roundNumber, sessionNumber, driverNumber),
     }
+
 
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
