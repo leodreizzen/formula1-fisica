@@ -108,7 +108,7 @@ def vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, 
     vector_velocidad_y = vector_speed[0]["vY"]
     vector_velocidad_z = vector_speed[0]["vZ"]
     modulo_velocidad = vector_speed[0]["module"]
-    velocimetro = vector_speed[0]["speedometer"]
+    velocimetro = vector_speed[0]["speedometer"] / 3.6 * 10
 
     # Aceleracion
 
@@ -135,7 +135,7 @@ def vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, 
                 "vY": vector_velocidad_y.item(),
                 "vZ": vector_velocidad_z.item(),
                 "module": modulo_velocidad.item(),
-                "velocimeter": velocimetro.item()
+                "speedometer": velocimetro.item()
             },
 
             "acceleration": {
