@@ -3,3 +3,4 @@ class Session:
         self.sessionNumber = sessionNumber
         self.name = name
         self.date = date
+
