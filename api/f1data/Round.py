@@ -1,4 +1,4 @@
-import Session
+from .Session import Session
 
 class Round:
     def __init__(self, roundNumber: int, country: str, eventName: str, sessions: list[Session]):
