@@ -43,7 +43,16 @@ def rounds(year: int = None):
 
 @app.get("/drivers")
 def drivers(year: int, roundNumber: int, sessionNumber: int):
-    return facade.drivers(year, roundNumber, sessionNumber)
+    return [
+        {
+            "driverNumber": driver.driverNumber,
+            "fullName": driver.fullName,
+            "countryCode": driver.countryCode,
+            "teamName": driver.teamName,
+            "teamColor": driver.teamColor
+        }
+        for driver in facade.drivers(year, roundNumber, sessionNumber)
+    ]
 
 
 @app.get("/laps")
