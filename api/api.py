@@ -4,16 +4,9 @@ from util import timedelta_to_string, timestamp_to_string
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
     accelerationsPlaceholder
-from functools import lru_cache
 
 
-""" 
-#Tamaño de la cache en memoria de cada funcion de la api 
-#El tamaño esta dado por la cantidad de llamdas con sus parametros que se pueden guardar
-#Por ejemplo si se quieren guardar 4 llamadas en la cache se debe poner el tamaño en 4
-"""
 
-tamaño_cache = 2 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
 
@@ -29,7 +22,6 @@ app.add_middleware(
 
 
 @app.get("/rounds")
-@lru_cache(maxsize=tamaño_cache)
 def rounds(year: int = None):
     rounds = facade.rounds(year)
     return [
@@ -52,7 +44,6 @@ def rounds(year: int = None):
 
 
 @app.get("/drivers")
-@lru_cache(maxsize=tamaño_cache)
 def drivers(year: int, roundNumber: int, sessionNumber: int):
     return [
         {
@@ -67,7 +58,6 @@ def drivers(year: int, roundNumber: int, sessionNumber: int):
 
 
 @app.get("/laps")
-@lru_cache(maxsize=tamaño_cache)
 def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
     return {
         "lapCount": facade.lapCount(year, roundNumber, sessionNumber, driverNumber),
@@ -76,7 +66,6 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
 
 
 @app.get("/trajectory")
-@lru_cache(maxsize=tamaño_cache)
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     puntos = []
@@ -90,14 +79,12 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
     return puntos
 
 @app.get("/vectors")
-@lru_cache(maxsize=tamaño_cache)
 def vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int, time: str):
     # TODO implementar
     return vectorsPlaceholder
 
 
 @app.get("/accelerations")
-@lru_cache(maxsize=tamaño_cache)
 def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     # TODO implementar
     return accelerationsPlaceholder
