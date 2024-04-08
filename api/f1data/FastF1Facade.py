@@ -1,12 +1,28 @@
+
 from .F1Facade import F1Facade
 from .Round import Round
 from .Session import Session
 from .Driver import Driver
 
-
 import fastf1 as f1
+from functools import lru_cache
+
+
+""" 
+#Tamaño de la cache en memoria de cada funcion de la api 
+#El tamaño esta dado por la cantidad de llamdas con sus parametros que se pueden guardar
+#Por ejemplo si se quieren guardar 4 llamadas en la cache se debe poner el tamaño en 4
+"""
+
+tamano_cache = 2
 
 class FastF1Facade(F1Facade):
+    @lru_cache(maxsize=tamano_cache)
+    def __get_session(self, year: int, roundNumber: int, sessionNumber: int) -> f1.core.Session:
+        session = f1.get_session(year, roundNumber, sessionNumber)
+        session.load()
+        return session
+
     def rounds(self, year: int) -> list[Round]:
         roundsSchedule = f1.get_event_schedule(year, include_testing=False)
         rounds = []
@@ -29,34 +45,29 @@ class FastF1Facade(F1Facade):
         return rounds
 
     def drivers(self, year: int, roundNumber: int, sessionNumber: int) -> list[Driver]:
-        session_event = f1.get_session(year, roundNumber, sessionNumber)
-        session_event.load()
+        session_event = self.__get_session(year, roundNumber, sessionNumber)
         driversNumber = session_event.drivers
         drivers = []
         for driverNumber in driversNumber:
             driverInfo = session_event.get_driver(driverNumber)
-            driverToReturn = Driver(driverInfo.DriverNumber, driverInfo.FullName, driverInfo.CountryCode, driverInfo.TeamName, driverInfo.TeamColor)
+            driverToReturn = Driver(driverInfo.DriverNumber, driverInfo.FullName, driverInfo.CountryCode,
+                                    driverInfo.TeamName, driverInfo.TeamColor)
             drivers.append(driverToReturn)
-        
+
         return drivers
 
-    def lapCount(self,year: int, roundNumber: int, sessionNumber: int, driverNumber: int) -> int:
-        session_event = f1.get_session(year, roundNumber, sessionNumber)
-        session_event.load()
+    def lapCount(self, year: int, roundNumber: int, sessionNumber: int, driverNumber: int) -> int:
+        session_event = self.__get_session(year, roundNumber, sessionNumber)
         laps = session_event.laps.pick_driver(str(driverNumber))
         return len(laps)
 
-    def fastestLap(self,year: int, roundNumber: int, sessionNumber: int, driverNumber: int) -> int:
-        session_event = f1.get_session(year, roundNumber, sessionNumber)
-        session_event.load()
+    def fastestLap(self, year: int, roundNumber: int, sessionNumber: int, driverNumber: int) -> int:
+        session_event = self.__get_session(year, roundNumber, sessionNumber)
         fatest_lap = session_event.laps.pick_driver(str(driverNumber)).pick_fastest()
         return int(fatest_lap.LapNumber)
 
-    def telemetry(self,year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int):
-        session_event = f1.get_session(year, roundNumber, sessionNumber)
-        session_event.load()
+    def telemetry(self, year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int):
+        session_event = self.__get_session(year, roundNumber, sessionNumber)
         lap_telemetry = session_event.laps.pick_driver(str(driverId)).pick_lap(lapNumber).telemetry
-        
+
         return lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]]
-    
-   

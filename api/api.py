@@ -5,6 +5,8 @@ from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
     accelerationsPlaceholder
 
+
+
 app = fastapi.FastAPI()
 facade = FastF1Facade()
 
