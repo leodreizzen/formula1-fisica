@@ -26,7 +26,7 @@ Correr solamente la api de python:
 
 Correr solamente el servidor react:
 ```bash
-  npm run react
+  npm run react-dev
 ```
 <br>
 
