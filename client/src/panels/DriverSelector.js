@@ -22,10 +22,15 @@ export default function DriverSelector({className, sessionData, onDriverChange})
         }
     }, [sessionData]);
 
+
     function onDriverSelectionChange(event){
         setSelectedDriver(Number(event.target.value));
-        onDriverChange(drivers[Number(event.target.value)].driverNumber);
     }
+    useEffect(() => {
+        if(selectedDriver !== null)
+            onDriverChange(drivers[selectedDriver].driverNumber)
+    }, [selectedDriver]);
+
 
     return (<div className={className}>
         <label className="block">Conductor</label>
