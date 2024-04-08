@@ -13,7 +13,7 @@ export default function TrajectoryPanel({className, sessionData}){
     }
 
     useEffect(() => {
-        if (selectedDriver && sessionData){
+        if (selectedDriver !== null && sessionData){
             axios.get("http://localhost:3002/laps", {
                 params: {
                     year: sessionData.year,
@@ -32,7 +32,7 @@ export default function TrajectoryPanel({className, sessionData}){
     }, [selectedDriver, sessionData]);
 
     useEffect(() => {
-        if (sessionData && (currentLap !== null) && selectedDriver){
+        if (sessionData && currentLap !== null && selectedDriver !== null){
             axios.get("http://localhost:3002/trajectory", {
                 params: {
                     year: sessionData.year,
