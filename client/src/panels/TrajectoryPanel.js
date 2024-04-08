@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import DriverSelector from "./DriverSelector"
+import TrajectoryPlot from "../plots/TrajectoryPlot"
 import axios from "axios";
 
 export default function TrajectoryPanel({className, sessionData}){
@@ -48,7 +49,10 @@ export default function TrajectoryPanel({className, sessionData}){
     }, [selectedDriver, sessionData, currentLap]);
     return (<div className={className}>
         {sessionData ?
-            <DriverSelector sessionData={sessionData} onDriverChange={onDriverChange}/>
+            <>
+                <DriverSelector sessionData={sessionData} onDriverChange={onDriverChange}/>
+                <TrajectoryPlot trajectoryData={trajectory}/>
+            </>
             :
             <div><p>Selecciona una sesión para ver la trayectoria</p></div>
         }
