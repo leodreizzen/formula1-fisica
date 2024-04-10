@@ -1,44 +1,38 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
+import {useGetDrivers} from "../api/api";
 
-export default function DriverSelector({className, sessionData, onDriverChange}){
-    const [drivers, setDrivers] = useState([]);
+export default function DriverSelector({className, sessionData, onDriverChange}) {
+    const year = sessionData !== null ? sessionData.year : null;
+    const round = sessionData !== null ? sessionData.round : null;
+    const session = sessionData !== null ? sessionData.session : null;
+
+    const [drivers, driversLoading] = useGetDrivers(year, round, session);
     const [selectedDriver, setSelectedDriver] = useState(null);
-    const driversLoaded = drivers.length > 0;
-    useEffect(() => {
-        if (sessionData){
-            axios.get("http://localhost:3002/drivers", {
-                params: {
-                    year: sessionData.year,
-                    roundNumber: sessionData.round,
-                    sessionNumber: sessionData.session
-                }
-            })
-            .then(response => {
-                setDrivers(response.data)
-                setSelectedDriver(0)
-            }
-            )
-        }
-    }, [sessionData]);
+    const driversLoaded = drivers !== null;
 
-
-    function onDriverSelectionChange(event){
-        setSelectedDriver(Number(event.target.value));
-    }
     useEffect(() => {
-        if(selectedDriver !== null)
+        if (drivers !== null && drivers.length > 0)
+            setSelectedDriver(0)
+    }, [drivers]);
+
+    useEffect(() => {
+        if (selectedDriver !== null && drivers !== null && drivers.length > 0)
             onDriverChange(drivers[selectedDriver].driverNumber)
     }, [selectedDriver]);
 
+    function onDriverSelectionChange(event) {
+        setSelectedDriver(Number(event.target.value));
+    }
 
     return (<div className={className}>
         <label className="block">Conductor</label>
         <select value={selectedDriver ? selectedDriver : ""} className={"block w-full border"} id="conductor"
                 disabled={driversLoaded ? null : true} onChange={onDriverSelectionChange}>
-            {drivers.map((driver, i) => <option key={driver.driverNumber}
-                                              value={i}>{driver.driverNumber + " - " + driver.fullName + (driver.countryCode ? (" (" + (driver.countryCode) + ")") :"")  + " - " + driver.teamName}</option>)}
-                /* TODO: ver como agregar el teamColor para la font de teamName en cada elemento de la lista */
+            {driversLoaded ? (drivers.map((driver, i) => <option key={driver.driverNumber}
+                                                                 value={i}>{driver.driverNumber + " - " + driver.fullName + (driver.countryCode ? (" (" + (driver.countryCode) + ")") : "") + " - " + driver.teamName}</option>))
+                : null}
+            )
+            /* TODO: ver como agregar el teamColor para la font de teamName en cada elemento de la lista */
         </select>
     </div>);
 }

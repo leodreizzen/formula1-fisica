@@ -1,57 +1,38 @@
 import {useEffect, useState} from "react";
 import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
-import axios from "axios";
+import {useGetLaps, useGetTrajectory} from "../api/api";
 
 export default function TrajectoryPanel({className, sessionData}){
     const [selectedDriver, setSelectedDriver] = useState(null);
     const [laps, setLaps] = useState([]);
-    const [trajectory, setTrajectory] = useState([]);
     const [currentLap, setCurrentLap] = useState(null);
+
+    const year = sessionData === null ? null : sessionData.year;
+    const roundNumber = sessionData === null ? null : sessionData.round;
+    const sessionNumber = sessionData === null ? null : sessionData.session;
+
+    const [lapData, lapDataLoading] = useGetLaps(year, roundNumber, sessionNumber, selectedDriver);
+    const [trajectory, trajectoryLoading] = useGetTrajectory(year, roundNumber, sessionNumber, selectedDriver, currentLap);
+
+    const lapCount = lapData !== null ? lapData.lapCount : null;
+    const fastestLap = lapData !== null ? lapData.fastestLap : null;
+
     function onDriverChange(driverNumber){
         setSelectedDriver(driverNumber);
     }
 
     useEffect(() => {
-        if (selectedDriver !== null && sessionData){
-            axios.get("http://localhost:3002/laps", {
-                params: {
-                    year: sessionData.year,
-                    roundNumber: sessionData.round,
-                    sessionNumber: sessionData.session,
-                    driverNumber: selectedDriver
-                }
-            })
-                .then(response => {
-                    setLaps(response.data.lapCount);
-                    if (response.data.lapCount !== 0) {
-                        setCurrentLap(1);
-                    }
-                })
+        if (lapCount !== null && lapCount > 0){
+            setCurrentLap(1);
         }
-    }, [selectedDriver, sessionData]);
+    }, [lapCount]);
 
-    useEffect(() => {
-        if (sessionData && currentLap !== null && selectedDriver !== null){
-            axios.get("http://localhost:3002/trajectory", {
-                params: {
-                    year: sessionData.year,
-                    roundNumber: sessionData.round,
-                    sessionNumber: sessionData.session,
-                    driverNumber: selectedDriver,
-                    lapNumber: currentLap
-                }
-            })
-            .then(response => {
-                setTrajectory(response.data);
-            })
-        }
-    }, [selectedDriver, sessionData, currentLap]);
     return (<div className={className}>
-        {sessionData ?
+        {sessionData !== null ?
             <>
                 <DriverSelector sessionData={sessionData} onDriverChange={onDriverChange}/>
-                <TrajectoryPlot trajectoryData={trajectory}/>
+                {trajectory ?   <TrajectoryPlot trajectoryData={trajectory}/> : null}
             </>
             :
             <div><p>Selecciona una sesión para ver la trayectoria</p></div>
