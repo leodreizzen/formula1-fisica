@@ -1,12 +1,10 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
-import {useGetLaps, useGetTrajectory} from "../api/hooks.js";
-import {OrbitProgress} from "react-loading-indicators";
+import {useGetLaps} from "../api/hooks";
 
-export default function TrajectoryPanel({className, sessionData}){
+export default function TrajectoryPanel({className, sessionData}) {
     const [selectedDriver, setSelectedDriver] = useState(null);
-    const [laps, setLaps] = useState([]);
     const [currentLap, setCurrentLap] = useState(null);
 
     const year = sessionData === null ? null : sessionData.year;
@@ -14,27 +12,28 @@ export default function TrajectoryPanel({className, sessionData}){
     const sessionNumber = sessionData === null ? null : sessionData.session;
 
     const [lapData, lapDataLoading] = useGetLaps(year, roundNumber, sessionNumber, selectedDriver);
-    const [trajectory, trajectoryLoading] = useGetTrajectory(year, roundNumber, sessionNumber, selectedDriver, currentLap);
-
     const lapCount = lapData !== null ? lapData.lapCount : null;
     const fastestLap = lapData !== null ? lapData.fastestLap : null;
 
-    function onDriverChange(driverNumber){
+    function onDriverChange(driverNumber) {
         setSelectedDriver(driverNumber);
+        setCurrentLap(null);
     }
 
     useEffect(() => {
-        if (lapCount !== null && lapCount > 0){
+        if (lapCount !== null && lapCount > 0)
             setCurrentLap(1);
-        }
     }, [lapCount]);
 
     return (<div className={className}>
-        {sessionData !== null ?
+        {(sessionData !== null) ?
             <>
-                <DriverSelector sessionData={sessionData} onDriverChange={onDriverChange}/>
-                {trajectory ?   <TrajectoryPlot trajectoryData={trajectory}/> :
-                                trajectoryLoading ? <OrbitProgress/> : null}
+                <DriverSelector sessionData={sessionData} selectedDriver={selectedDriver} onDriverChange={onDriverChange}/>
+                    {currentLap !== null ?
+                        <TrajectoryPlot sessionData={sessionData} currentDriver={selectedDriver}
+                                        currentLap={currentLap} key={selectedDriver + " " + currentLap}/>
+                        : null
+                    }
             </>
             :
             <div><p>Selecciona una sesión para ver la trayectoria</p></div>
