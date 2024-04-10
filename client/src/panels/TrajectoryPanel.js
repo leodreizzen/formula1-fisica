@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
 import {useGetLaps, useGetTrajectory} from "../api/api";
+import {OrbitProgress} from "react-loading-indicators";
 
 export default function TrajectoryPanel({className, sessionData}){
     const [selectedDriver, setSelectedDriver] = useState(null);
@@ -32,7 +33,8 @@ export default function TrajectoryPanel({className, sessionData}){
         {sessionData !== null ?
             <>
                 <DriverSelector sessionData={sessionData} onDriverChange={onDriverChange}/>
-                {trajectory ?   <TrajectoryPlot trajectoryData={trajectory}/> : null}
+                {trajectory ?   <TrajectoryPlot trajectoryData={trajectory}/> :
+                                trajectoryLoading ? <OrbitProgress/> : null}
             </>
             :
             <div><p>Selecciona una sesión para ver la trayectoria</p></div>

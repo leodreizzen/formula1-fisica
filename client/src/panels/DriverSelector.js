@@ -28,7 +28,7 @@ export default function DriverSelector({className, sessionData, onDriverChange})
         <label className="block">Conductor</label>
         <select value={selectedDriver ? selectedDriver : ""} className={"block w-full border"} id="conductor"
                 disabled={driversLoaded ? null : true} onChange={onDriverSelectionChange}>
-            {driversLoaded ? (drivers.map((driver, i) => <option key={driver.driverNumber}
+            {(driversLoaded && drivers.length > 0) ? (drivers.map((driver, i) => <option key={driver.driverNumber}
                                                                  value={i}>{driver.driverNumber + " - " + driver.fullName + (driver.countryCode ? (" (" + (driver.countryCode) + ")") : "") + " - " + driver.teamName}</option>))
                 : null}
             )
