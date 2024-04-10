@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {CiSearch} from "react-icons/ci";
-import {useGetRounds} from "../api/api"
+import {useGetRounds} from "../api/hooks.js"
 import axios from "axios";
 
 export default function SelectionMenu({className, loadData}) {

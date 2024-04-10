@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useGetDrivers} from "../api/api";
+import {useGetDrivers} from "../api/hooks.js";
 
 export default function DriverSelector({className, sessionData, onDriverChange}) {
     const year = sessionData !== null ? sessionData.year : null;

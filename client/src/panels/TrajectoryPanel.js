@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
-import {useGetLaps, useGetTrajectory} from "../api/api";
+import {useGetLaps, useGetTrajectory} from "../api/hooks.js";
 import {OrbitProgress} from "react-loading-indicators";
 
 export default function TrajectoryPanel({className, sessionData}){
