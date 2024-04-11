@@ -1,6 +1,7 @@
 import Plot from 'react-plotly.js';
 import {useGetTrajectory} from "../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
+import {useMemo} from "react";
 
 export default function TrajectoryPlot({className, sessionData, currentDriver: selectedDriver, currentLap}) {
     const year = sessionData === null ? null : sessionData.year;
@@ -8,9 +9,15 @@ export default function TrajectoryPlot({className, sessionData, currentDriver: s
     const sessionNumber = sessionData === null ? null : sessionData.session;
 
     const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, roundNumber, sessionNumber, selectedDriver, currentLap);
+
+    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x))) : null, [trajectoryData]);
+    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.y))) : null, [trajectoryData]);
+    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x))) : null, [trajectoryData]);
+    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y))) : null, [trajectoryData]);
+
     return (
         <div>
-            {trajectoryDataLoading ? <OrbitProgress/> :
+            {trajectoryDataLoading ? <OrbitProgress color="#1A212E" size="medium"/> :
                 trajectoryData !== null ?
                     <Plot
                         data={[
@@ -27,7 +34,16 @@ export default function TrajectoryPlot({className, sessionData, currentDriver: s
                             responsive: true,
                             displayModeBar: false
                         }}
-                        layout={{width: 600, height: 600, title:'Trayectoria en coordenadas cartesianas', dragmode: "pan"}}
+                        layout={{width: 600,
+                            xaxis: {
+                                title: 'X (m)',
+                            },
+                            yaxis: {
+                                title: 'Y (m)',
+                            },
+                            height: 600,
+                            title:'Trayectoria en coordenadas cartesianas',
+                            dragmode: "pan"}}
                     />
                     : null}
         </div>

@@ -3,6 +3,8 @@ import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
 import {useGetLaps} from "../api/hooks";
 import TextPanel from "./TextPanel";
+import {Pagination} from "@mui/material";
+import LapSelector from "./LapSelector";
 
 export default function TrajectoryPanel({className, sessionData, driver, onDriverChange, currentLap, onLapChange}) {
 
@@ -23,14 +25,19 @@ export default function TrajectoryPanel({className, sessionData, driver, onDrive
         {(sessionData !== null) ?
             <>
                 <DriverSelector sessionData={sessionData} selectedDriver={driver} onDriverChange={onDriverChange}/>
-                    {currentLap !== null ?
+                {currentLap !== null ?
+                    <div className="flex flex-col items-center">
                         <div className="flex items-center">
-                        <TrajectoryPlot sessionData={sessionData} currentDriver={driver}
-                                        currentLap={currentLap} key={driver + " " + currentLap}/>
-                        <TextPanel/>
+                            <TrajectoryPlot sessionData={sessionData} currentDriver={driver}
+                                            currentLap={currentLap} key={driver + " " + currentLap}/>
+                            <TextPanel/>
                         </div>
-                        : null
-                    }
+
+                    <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange}/>
+
+                    </div>
+                    : null
+                }
             </>
             :
             <div><p>Selecciona una sesión para ver la trayectoria</p></div>
