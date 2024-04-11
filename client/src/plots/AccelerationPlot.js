@@ -3,8 +3,6 @@ import {OrbitProgress} from "react-loading-indicators";
 import {dateUTC_to_timeUnit} from "../client-util"
 
 export default function AccelerationPlot({className, isDataLoading, accelerationData, timeUnit}) {
-    console.log(isDataLoading? "Cargando" : accelerationData === null? "NO data" :
-        "Tiempo:" +  Number(dateUTC_to_timeUnit(accelerationData.map(it => it.time))) + "Aceleracion:" + accelerationData.map(it => it.acceleration.module));
     return (
         <div>
             {isDataLoading ? <OrbitProgress/> :

@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
 import {useGetLaps} from "../api/hooks";
+import TextPanel from "./TextPanel";
 
 export default function TrajectoryPanel({className, sessionData, driver, onDriverChange, currentLap, onLapChange}) {
 
@@ -23,9 +24,11 @@ export default function TrajectoryPanel({className, sessionData, driver, onDrive
             <>
                 <DriverSelector sessionData={sessionData} selectedDriver={driver} onDriverChange={onDriverChange}/>
                     {currentLap !== null ?
+                        <div className="flex items-center">
                         <TrajectoryPlot sessionData={sessionData} currentDriver={driver}
                                         currentLap={currentLap} key={driver + " " + currentLap}/>
-
+                        <TextPanel/>
+                        </div>
                         : null
                     }
             </>

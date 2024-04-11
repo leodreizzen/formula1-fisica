@@ -29,7 +29,7 @@ export default function MainPanel({className, sessionData}) {
                            currentLap ={currentLap} onLapChange = {setCurrentLap}/>
         </TabPanel>
         <TabPanel>
-          <AccelerationsPanel sessionData={sessionData} driver={selectedDriver} lap={currentLap} />
+          <AccelerationsPanel sessionData={sessionData} driver={selectedDriver} onDriverChange = {handlerDriverChange} lap={currentLap} />
         </TabPanel>
         </Tabs>
     </div>

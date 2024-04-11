@@ -18,11 +18,16 @@ export default function TrajectoryPlot({className, sessionData, currentDriver: s
                                 x: trajectoryData.map(it => it.x / 10),
                                 y: trajectoryData.map(it => it.y / 10),
                                 type: 'scatter',
-                                mode: 'lines+markers',
-                                marker: {color: 'red'},
+                                mode: 'lines',
+                                marker: {color: '#00FF00'}
                             }
                         ]}
-                        layout={{width: 600, height: 600, title:'Posición en coordenadas cartesianas'}}
+                        config={{
+                            scrollZoom: true,
+                            responsive: true,
+                            displayModeBar: false
+                        }}
+                        layout={{width: 600, height: 600, title:'Trayectoria en coordenadas cartesianas', dragmode: "pan"}}
                     />
                     : null}
         </div>

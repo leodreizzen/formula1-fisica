@@ -85,9 +85,10 @@ async function installExtensions() {
 try {
     const createWindow = async () => {
         const win = new BrowserWindow({
-            width: 800,
-            height: 600
+            width: 1200,
+            height: 675
         })
+        win.maximize()
         win.loadURL(isDev ? 'http://localhost:3000' : url.format({
             pathname: INDEX_PROD_PATH,
             protocol: 'file:',
