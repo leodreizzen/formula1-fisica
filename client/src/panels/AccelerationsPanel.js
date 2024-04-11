@@ -11,6 +11,6 @@ export default function AccelerationsPanel({className, sessionData, driver, lap,
 
     return (<div className={className}>
         <DriverSelector sessionData={sessionData} selectedDriver={driver} onDriverChange={onDriverChange}/>
-        <AccelerationPlot isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>
+        {accelerationData ? <AccelerationPlot isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: null}
     </div>);
 }
