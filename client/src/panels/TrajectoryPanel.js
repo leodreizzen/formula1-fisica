@@ -3,7 +3,6 @@ import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
 import {useGetLaps} from "../api/hooks";
 import TextPanel from "./TextPanel";
-import {Pagination} from "@mui/material";
 import LapSelector from "./LapSelector";
 
 export default function TrajectoryPanel({className, sessionData, driver, onDriverChange, currentLap, onLapChange}) {

@@ -26,10 +26,10 @@ export default function LapSelector({className, lapCount, currentLap, changeCurr
         }
     }
 
-    return (<div className={"flex items-center " + className}>
+    return (<div className={"flex items-center border pl-2" + className}>
             <p className="mr-2">Vuelta</p>
             <input type="number" min={1}
-                   className="resize-none w-16 h-10 border border-gray-300 rounded-sm p-2 mr-2 remove-arrow"
+                   className="resize-none w-8 h-10 border border-gray-300 rounded-sm p-2 mr-2 remove-arrow"
                    value={currentLapInput.toString()}
                    onChange={onLapInputChange}
                    onKeyPress={handleKeypress}

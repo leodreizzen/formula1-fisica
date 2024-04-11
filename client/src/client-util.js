@@ -1,4 +1,4 @@
-export function dateUTC_to_LocalTimezone(utcString:string) {
+export function dateUTC_to_LocalTimezone(utcString) {
     var utcDate = new Date(utcString);
     var timezoneOffset = utcDate.getTimezoneOffset();
     var localDate = new Date(utcDate.getTime() - (timezoneOffset * 60 * 1000));
@@ -6,7 +6,7 @@ export function dateUTC_to_LocalTimezone(utcString:string) {
     return localDate.toLocaleString();
 }
 
-export function dateUTC_to_dateTime(utcString:string){
+export function dateUTC_to_dateTime(utcString){
     const utcDate = new Date(utcString);
 
     const date = utcDate.toLocaleDateString();

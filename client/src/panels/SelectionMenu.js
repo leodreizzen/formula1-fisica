@@ -60,14 +60,14 @@ export default function SelectionMenu({className, loadData}) {
     const roundsLoaded = rounds !== null;
     if (visible) {
         return (
-            <div className={className + " flex flex-col items-center px-3"}>
-                <MdOutlineMenuOpen className={"border my-4 "} id="menu" type="button" onClick={onMenuClick}/>
+            <div className={className + " flex flex-col items-center px-3  border-r-2 h-full"}>
+                <MdOutlineMenuOpen className={"border my-4 w-8 h-8 rounded-md"} id="menu" type="button" onClick={onMenuClick}/>
                 <label className={"block"} htmlFor="year">Año</label>
-                <div className={"flex"}>
-                    <input type="number" className={"block"} placeholder="Año" onChange={onYearChange} onKeyPress={handleKeypress}/>
+                <div className={"flex "}>
+                    <input type="number" className={"block border rounded-sm "} placeholder="Año" onChange={onYearChange} onKeyPress={handleKeypress}/>
                     <button className={"border my-4 "} onClick={onSearchClick}><CiSearch/></button>
                 </div>
-                <label className={"block"} htmlFor="ronda">Ronda</label>
+                <label className={"block my-5"} htmlFor="ronda">Ronda</label>
                 <select value={selectedRound ? selectedRound : ""} className={"block w-full border"} id="ronda"
                         disabled={roundsLoaded ? null : true} onChange={onRoundChange}>
                     {rounds ? (rounds.map((round, i) => <option key={round.roundNumber}
@@ -75,7 +75,7 @@ export default function SelectionMenu({className, loadData}) {
                         : null}
                 </select>
 
-                <label className={"block"} htmlFor="sesion">Sesión</label>
+                <label className={"block my-5"} htmlFor="sesion">Sesión</label>
                 <select value={selectedSession ? selectedSession : ""} className={"block w-full border"} id="sesion"
                         disabled={roundsLoaded ? null : true} onChange={onSessionChange}>
                     {
@@ -84,14 +84,19 @@ export default function SelectionMenu({className, loadData}) {
                                                                                        value={i}>{session.sessionNumber + " - " + session.name + " - " + dateUTC_to_LocalTimezone(session.dateUTC)} </option>)
                     }
                 </select>
-                <button className={"border mt-2"} disabled={selectedSession === null ? true : null}
+                <button className={"border my-5 rounded-md"} disabled={selectedSession === null ? true : null}
                         onClick={onLoadClick}>Cargar datos
                 </button>
             </div>
         )
     } else return (
-        <div className={className}>
-            <MdOutlineMenu className={"border my-4 "} id="menu" type="button" onClick={onMenuClick}/>
+        <div className={className + " top-0 h-auto"}>
+            <MdOutlineMenu
+                className={" my-5 h-8 w-8 border rounded-md"}
+                id="menu"
+                type="button"
+                onClick={onMenuClick}
+            />
         </div>
     );
 }

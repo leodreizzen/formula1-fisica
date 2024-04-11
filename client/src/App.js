@@ -13,7 +13,7 @@ function App() {
         })
     }
   return (
-    <div className="App">
+    <div className="App ">
       <SelectionMenu className="SelectionMenu" loadData={loadData}/>
       <MainPanel className="MainPanel" sessionData={sessionData} key={JSON.stringify(sessionData)}/>
     </div>

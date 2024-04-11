@@ -1,6 +1,8 @@
-import AccelerationPlot from "../plots/AccelerationPlot"
+import SplitAccelerationPlot from "../plots/SplitAccelerationPlot"
 import {useGetAcceleration} from "../api/hooks";
 import DriverSelector from "./DriverSelector";
+import OverlappingAccelerationPlot from "../plots/OverlappingAccelerationPlot";
+import AccelerationPlot from "../plots/AccelerationPlot";
 
 export default function AccelerationsPanel({className, sessionData, driver, lap, onDriverChange}){
 
