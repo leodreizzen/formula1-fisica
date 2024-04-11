@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {API_BASE_URL} from "../settings";
 import {value} from "plotly.js/src/traces/indicator/attributes";
-import {getDrivers, getLaps, getRounds, getTrajectory} from "./getters";
+import {getDrivers, getLaps, getRounds, getTrajectory, getAcceleration} from "./getters";
 
 function useGetFromAPI(getter, dependencies, validParams) {
     const [res, setRes] = useState(null)
@@ -63,8 +63,12 @@ export function useGetLaps(year, roundNumber, sessionNumber, driverNumber) {
 }
 
 export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
-    const params = [year, roundNumber, sessionNumber, driverNumber, lapNumber];
 
     const [trajectory, isLoading] = useAPIHook(getTrajectory, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [trajectory, isLoading]
+}
+
+export function useGetAcceleration(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+    const [acceleration, isLoading] = useAPIHook(getAcceleration, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
+    return [acceleration, isLoading]
 }

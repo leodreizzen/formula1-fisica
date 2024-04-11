@@ -24,10 +24,11 @@ export default function DriverSelector({className, sessionData, selectedDriver, 
         <select value={selectedDriver ? selectedDriver : ""} className={"block w-full border"} id="conductor"
                 disabled={driversLoaded ? null : true} onChange={onDriverSelectionChange}>
             {(driversLoaded && drivers.length > 0) ? (drivers.map((driver, i) => <option key={driver.driverNumber}
-                                                                                         value={driver.driverNumber}>{driver.driverNumber + " - " + driver.fullName + (driver.countryCode ? (" (" + (driver.countryCode) + ")") : "") + " - " + driver.teamName}</option>))
+                                                                                         value={driver.driverNumber} style={{color: "#${driver.teamColor}"}}>{driver.driverNumber + " - " + driver.fullName + (driver.countryCode ? (" (" + (driver.countryCode) + ")") : "") + " - " + driver.teamName}
+                                                                                 </option>))
                 : null}
             )
-            /* TODO: ver como agregar el teamColor para la font de teamName en cada elemento de la lista */
+            /* TODO: agregar el teamColor para la font de teamName */
         </select>
     </div>);
 }

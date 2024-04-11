@@ -2,6 +2,8 @@ import {useEffect, useState} from "react";
 import {CiSearch} from "react-icons/ci";
 import {useGetRounds} from "../api/hooks.js"
 import axios from "axios";
+import {MdOutlineMenu, MdOutlineMenuOpen} from "react-icons/md";
+import {dateUTC_to_LocalTimezone} from "../client-util.js"
 
 export default function SelectionMenu({className, loadData}) {
     const [visible, setVisible] = useState(true);
@@ -12,7 +14,7 @@ export default function SelectionMenu({className, loadData}) {
 
     const [selectedRound, setSelectedRound] = useState(null);
     const [selectedSession, setSelectedSession] = useState(null);
-
+    const [isMenuVisible, setMenuVisible] = useState(true)
 
     useEffect(() => {
         if (rounds !== null && rounds.length > 0) {
@@ -37,20 +39,32 @@ export default function SelectionMenu({className, loadData}) {
         setSearchedYear(yearInput)
     }
 
-    function onLoadClick(event) {
+    function onLoadClick() {
         const round = rounds[selectedRound];
         const session = round.sessions[selectedSession];
+        onMenuClick()
         loadData(yearInput, round.roundNumber, session.sessionNumber);
     }
+
+    function onMenuClick(){
+         isMenuVisible? setMenuVisible(false): setMenuVisible(true);
+         setVisible(isMenuVisible);
+    }
+
+    const handleKeypress = e => {
+    if (e.key === 'Enter') {
+      onSearchClick();
+    }
+  };
 
     const roundsLoaded = rounds !== null;
     if (visible) {
         return (
             <div className={className + " flex flex-col items-center px-3"}>
-                <input className={"border"} id="year" type="button" value="Ocultar" onClick={() => setVisible(false)}/>
+                <MdOutlineMenuOpen className={"border my-4 "} id="menu" type="button" onClick={onMenuClick}/>
                 <label className={"block"} htmlFor="year">Año</label>
                 <div className={"flex"}>
-                    <input type="number" className={"block"} placeholder="Año" onChange={onYearChange}/>
+                    <input type="number" className={"block"} placeholder="Año" onChange={onYearChange} onKeyPress={handleKeypress}/>
                     <button className={"border my-4 "} onClick={onSearchClick}><CiSearch/></button>
                 </div>
                 <label className={"block"} htmlFor="ronda">Ronda</label>
@@ -67,7 +81,7 @@ export default function SelectionMenu({className, loadData}) {
                     {
                         (selectedRound === null || rounds === null) ? null :
                             rounds[selectedRound].sessions.map((session, i) => <option key={session.sessionNumber}
-                                                                                       value={i}>{session.sessionNumber + " - " + session.name + " - " + session.dateUTC}</option>)
+                                                                                       value={i}>{session.sessionNumber + " - " + session.name + " - " + dateUTC_to_LocalTimezone(session.dateUTC)} </option>)
                     }
                 </select>
                 <button className={"border mt-2"} disabled={selectedSession === null ? true : null}
@@ -77,7 +91,7 @@ export default function SelectionMenu({className, loadData}) {
         )
     } else return (
         <div className={className}>
-            <input type="button" value="Mostrar" onClick={() => setVisible(true)}/>
+            <MdOutlineMenu className={"border my-4 "} id="menu" type="button" onClick={onMenuClick}/>
         </div>
     );
 }

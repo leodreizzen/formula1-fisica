@@ -22,7 +22,7 @@ export default function TrajectoryPlot({className, sessionData, currentDriver: s
                                 marker: {color: 'red'},
                             }
                         ]}
-                        layout={{width: 600, height: 600}}
+                        layout={{width: 600, height: 600, title:'Posición en coordenadas cartesianas'}}
                     />
                     : null}
         </div>
