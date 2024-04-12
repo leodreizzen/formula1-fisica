@@ -1,17 +1,15 @@
-import {useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import DriverSelector from "./DriverSelector"
 import TrajectoryPlot from "../plots/TrajectoryPlot"
 import {useGetLaps} from "../api/hooks";
 import TextPanel from "./TextPanel";
 import LapSelector from "./LapSelector";
+import {SessionDataContext} from "../context/SessionDataContext";
 
-export default function TrajectoryPanel({className, sessionData, drivers, selectedDriver, onSelectedDriverChange, currentLap, onLapChange}) {
+export default function TrajectoryPanel({className, drivers, selectedDriver, onSelectedDriverChange, currentLap, onLapChange}) {
+    const {year, round, session} = useContext(SessionDataContext);
 
-    const year = sessionData === null ? null : sessionData.year;
-    const roundNumber = sessionData === null ? null : sessionData.round;
-    const sessionNumber = sessionData === null ? null : sessionData.session;
-
-    const [lapData, lapDataLoading] = useGetLaps(year, roundNumber, sessionNumber, selectedDriver);
+    const [lapData, lapDataLoading] = useGetLaps(year, round, session, selectedDriver);
     const lapCount = lapData !== null ? lapData.lapCount : null;
     const fastestLap = lapData !== null ? lapData.fastestLap : null;
 
@@ -21,13 +19,13 @@ export default function TrajectoryPanel({className, sessionData, drivers, select
     }, [lapCount, onLapChange]);
 
     return (<div className={className + " h-full"}>
-        {(sessionData !== null) ?
+        {(session !== null) ?
             <>
-                <DriverSelector drivers={drivers} sessionData={sessionData} selectedDriver={selectedDriver} onDriverChange={onSelectedDriverChange}/>
+                <DriverSelector drivers={drivers} selectedDriver={selectedDriver} onDriverChange={onSelectedDriverChange}/>
                 {currentLap !== null ?
                     <div className="flex flex-col items-center h-full w-full pl-1">
                     <div className="flex flex-col items-center bg-gray-900 sm:flex-row w-full h-auto">
-                            <TrajectoryPlot sessionData={sessionData} currentDriver={selectedDriver}
+                            <TrajectoryPlot currentDriver={selectedDriver}
                                             currentLap={currentLap} key={selectedDriver + " " + currentLap}/>
                             <TextPanel/>
                         </div>

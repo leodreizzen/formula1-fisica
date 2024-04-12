@@ -2,16 +2,13 @@ import TrajectoryPanel from "./TrajectoryPanel.js";
 import AccelerationsPanel from "./AccelerationsPanel.js";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import {useEffect, useState} from "react";
-import {useGetDrivers} from "../api/hooks";
+import {useContext, useEffect, useState} from "react";
 import {getDrivers} from "../api/getters";
+import {SessionDataContext} from "../context/SessionDataContext";
 
 
-export default function MainPanel({className, sessionData}) {
-    const year = sessionData !== null ? sessionData.year : null;
-    const round = sessionData !== null ? sessionData.round : null;
-    const session = sessionData !== null ? sessionData.session : null;
-
+export default function MainPanel({className}) {
+    const {year, round, session} = useContext(SessionDataContext);
     const [drivers, setDrivers] = useState(null);
     const [areTabsDisabled, setTabs] = useState(true);
 
@@ -42,13 +39,13 @@ export default function MainPanel({className, sessionData}) {
         </TabList>
 
         <TabPanel>
-          <TrajectoryPanel sessionData={sessionData}
+          <TrajectoryPanel
                            drivers={drivers}
                            selectedDriver={selectedDriver} onSelectedDriverChange = {handlerDriverChange}
                            currentLap ={currentLap} onLapChange = {setCurrentLap}/>
         </TabPanel>
         <TabPanel>
-          <AccelerationsPanel sessionData={sessionData} drivers={drivers} selectedDriver={selectedDriver} onSelectedDriverChange={handlerDriverChange} lap={currentLap} className="h-full" />
+          <AccelerationsPanel drivers={drivers} selectedDriver={selectedDriver} onSelectedDriverChange={handlerDriverChange} lap={currentLap} className="h-full" />
         </TabPanel>
         </Tabs>
     </div>

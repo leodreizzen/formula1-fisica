@@ -1,6 +1,3 @@
-import {useEffect, useState} from "react";
-import {useGetDrivers} from "../api/hooks.js";
-
 export default function DriverSelector({className, drivers, selectedDriver, onDriverChange}) {
     function onDriverSelectionChange(event) {
         onDriverChange(Number(event.target.value));
