@@ -25,3 +25,7 @@ code {
 #tabList {
   background-color: #010409;
 }
+
+.draglayer {
+    cursor: default !important;
+}

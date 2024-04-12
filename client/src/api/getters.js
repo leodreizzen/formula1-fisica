@@ -48,3 +48,14 @@ export function getAcceleration(year, roundNumber, sessionNumber, driverNumber, 
         lapNumber: lapNumber
     }, options);
 }
+
+export function getVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber, time, options){
+    return APIGetter("/vectors", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber: driverNumber,
+        lapNumber: lapNumber,
+        time: time
+    }, options);
+}
