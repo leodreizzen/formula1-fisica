@@ -142,6 +142,26 @@ paths:
                     $ref: '#/components/schemas/Speed'
                   acceleration:
                     $ref: '#/components/schemas/Acceleration'
+                  versors:
+                    type: object
+                    description: Versores (intrínsecas) en el punto
+                    properties:
+                      tangent:
+                        description: Componentes del vector tangente, en coordenadas cartesianas
+                        type: object
+                        properties:
+                          x:
+                            type: number
+                          y:
+                            type: number
+                      normal:
+                        description: Componentes del vector normal, en coordenadas cartesianas
+                        type: object
+                        properties:
+                          x:
+                            type: number
+                          y:
+                            type: number
         '400':
           description: Alguno de los parámetros es inválido
 
