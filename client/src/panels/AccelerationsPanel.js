@@ -11,6 +11,6 @@ export default function AccelerationsPanel({className, sessionData, driver, lap,
 
     return (<div className={className + " flex flex-col"}>
         <DriverSelector sessionData={sessionData} selectedDriver={driver} onDriverChange={onDriverChange}/>
-        {accelerationData ? <AccelerationPlot className="grow" isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: null}
+        {accelerationData ? <AccelerationPlot className="grow pt-2" isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: null}
     </div>);
 }

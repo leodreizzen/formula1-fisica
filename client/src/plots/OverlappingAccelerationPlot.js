@@ -12,10 +12,13 @@ export default function OverlappingAccelerationPlot({className, isDataLoading, a
 
                 ]}
                 layout={{
-                    title:'Aceleraciones en función del tiempo',
                     xaxis: {title: 'Tiempo [' + timeUnit + "]"},
-                    responsive: true
+                    yaxis: {title: 'Aceleración [m/s²]'},
+                    responsive: true,
+                    dragmode: "pan",
+                    margin: {t:20},
                 }}
+                config={{responsive: true, scrollZoom: true, displayModeBar: false}}
             />
         </div>
     )
