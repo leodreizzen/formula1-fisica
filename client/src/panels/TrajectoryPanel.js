@@ -6,17 +6,11 @@ import TextPanel from "./TextPanel";
 import LapSelector from "./LapSelector";
 import {SessionDataContext} from "../context/SessionDataContext";
 
-export default function TrajectoryPanel({className, drivers, selectedDriver, onSelectedDriverChange, currentLap, onLapChange}) {
+export default function TrajectoryPanel({className, drivers, selectedDriver, onSelectedDriverChange, lapData , currentLap, onLapChange}) {
     const {year, round, session} = useContext(SessionDataContext);
 
-    const [lapData, lapDataLoading] = useGetLaps(year, round, session, selectedDriver);
-    const lapCount = lapData !== null ? lapData.lapCount : null;
-    const fastestLap = lapData !== null ? lapData.fastestLap : null;
-
-    useEffect(() => {
-        if (lapCount !== null && lapCount > 0)
-            onLapChange(1);
-    }, [lapCount, onLapChange]);
+    const lapCount = lapData ? lapData.length : null;
+    const fastestLap = lapData ? lapData.fastestLap : null;
 
     return (<div className={className + " h-full"}>
         {(session !== null) ?
