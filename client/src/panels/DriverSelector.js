@@ -14,7 +14,7 @@ export default function DriverSelector({className, drivers, selectedDriver, onDr
                                                                                          value={driver.driverNumber} style={{color: "#${driver.teamColor}"}}>{driver.driverNumber + " - " + driver.fullName + (driver.countryCode ? (" (" + (driver.countryCode) + ")") : "") + " - " + driver.teamName}
                                                                                  </option>))
                 : null}
-            )
+            
             /* TODO: agregar el teamColor para la font de teamName */
         </select>
     </div>);

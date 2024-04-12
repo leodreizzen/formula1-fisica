@@ -27,7 +27,7 @@ export default function LapSelector({className, lapCount, currentLap, changeCurr
     }
 
     return (
-        <div className={"flex items-center border-2 border-gray-400 rounded-md pl-2 bg-[#8F8F8F] " + className}>
+        <div className={"flex items-center border-2 border-gray-400 rounded-md pl-2 my-3 bg-[#8F8F8F] " + className}>
             <p className="mr-2 text-black">Vuelta</p>
             <input type="number" min={1}
                 className="resize-none bg-[#8F8F8F] w-8 h-10 border-2 border-black rounded-lg p-2 mr-2 remove-arrow text-black"

@@ -25,8 +25,8 @@ export default function TrajectoryPanel({className, sessionData, drivers, select
             <>
                 <DriverSelector drivers={drivers} sessionData={sessionData} selectedDriver={selectedDriver} onDriverChange={onSelectedDriverChange}/>
                 {currentLap !== null ?
-                    <div className="flex flex-col items-center">
-                        <div className="flex items-center">
+                    <div className="flex flex-col items-center h-full w-full">
+                    <div className="flex flex-col items-center bg-gray-900 sm:flex-row w-full h-auto">
                             <TrajectoryPlot sessionData={sessionData} currentDriver={selectedDriver}
                                             currentLap={currentLap} key={selectedDriver + " " + currentLap}/>
                             <TextPanel/>
