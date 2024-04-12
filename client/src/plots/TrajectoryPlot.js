@@ -16,8 +16,8 @@ export default function TrajectoryPlot({className, sessionData, currentDriver: s
     const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y))) : null, [trajectoryData]);
 
     return (
-        <div style={{ width: '600px', height: '600px' }}>
-            {trajectoryDataLoading ? <OrbitProgress  color="#1A212E" /> :
+        <div style={{ width: '600px', height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center'  }}>
+            {trajectoryDataLoading ? <OrbitProgress size='large' color="#EFE2E2" variant='dotted'/> :
                 trajectoryData !== null ?
                     <Plot
                         data={[
