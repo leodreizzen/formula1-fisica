@@ -21,3 +21,7 @@ code {
 .remove-arrow {
     -moz-appearance: textfield;
 }
+
+#tabList {
+  background-color: #010409;
+}

@@ -17,8 +17,8 @@ export default function MainPanel({className, sessionData}) {
         setSelectedDriver(driverNum)
     }
     
-    return <div className={"w-full h-screen" + className}>
-        <Tabs className="h-full flex flex-col" selectedTabPanelClassName="react-tabs__tab-panel--selected grow">
+    return <div className={"w-full text-white h-screen bg-[#010409] " + className} >
+        <Tabs className=" h-full flex flex-col" selectedTabPanelClassName="react-tabs__tab-panel--selected grow">
         <TabList>
           <Tab>Trayectoria</Tab>
           <Tab disabled={areTabsDisabled}>Aceleraciones</Tab>
@@ -30,7 +30,7 @@ export default function MainPanel({className, sessionData}) {
                            currentLap ={currentLap} onLapChange = {setCurrentLap}/>
         </TabPanel>
         <TabPanel>
-          <AccelerationsPanel sessionData={sessionData} driver={selectedDriver} onDriverChange = {handlerDriverChange} lap={currentLap} className="h-full" />
+          <AccelerationsPanel sessionData={sessionData} driver={selectedDriver} onDriverChange = {handlerDriverChange} lap={currentLap} className=" h-full" />
         </TabPanel>
         </Tabs>
     </div>

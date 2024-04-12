@@ -26,17 +26,17 @@ export default function LapSelector({className, lapCount, currentLap, changeCurr
         }
     }
 
-    return (<div className={"flex items-center border pl-2" + className}>
-            <p className="mr-2">Vuelta</p>
+    return (
+        <div className={"flex items-center border-2 border-gray-400 rounded-md pl-2 bg-[#8F8F8F] " + className}>
+            <p className="mr-2 text-black">Vuelta</p>
             <input type="number" min={1}
-                   className="resize-none w-8 h-10 border border-gray-300 rounded-sm p-2 mr-2 remove-arrow"
-                   value={currentLapInput.toString()}
-                   onChange={onLapInputChange}
-                   onKeyPress={handleKeypress}
+                className="resize-none bg-[#8F8F8F] w-8 h-10 border-2 border-black rounded-lg p-2 mr-2 remove-arrow text-black"
+                value={currentLapInput.toString()}
+                onChange={onLapInputChange}
+                onKeyPress={handleKeypress}
             />
-            <button onClick={buttonClick} className={"border my-4 "}><TbExchange /></button>
-            <Pagination count={lapCount} page={currentLap} onChange={onPaginationChange}/>
+            <button onClick={buttonClick} className={"border border-black my-4 text-black"}><TbExchange /></button>
+            <Pagination color="primary"  count={lapCount} page={currentLap} onChange={onPaginationChange}/>
         </div>
-
     )
 }

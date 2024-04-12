@@ -19,16 +19,17 @@ export default function DriverSelector({className, sessionData, selectedDriver, 
         onDriverChange(Number(event.target.value));
     }
 
-    return (<div className={className}>
+    return (<div className={"text-white " + className}>
         <label className="block">Conductor</label>
-        <select value={selectedDriver ? selectedDriver : ""} className={"block w-full border"} id="conductor"
+        <select value={selectedDriver ? selectedDriver : ""} className={"block bg-[#010409] mx-auto mb-5 border border-gray-400 rounded-md"} id="conductor"
                 disabled={driversLoaded ? null : true} onChange={onDriverSelectionChange}>
             {(driversLoaded && drivers.length > 0) ? (drivers.map((driver, i) => <option key={driver.driverNumber}
                                                                                          value={driver.driverNumber} style={{color: "#${driver.teamColor}"}}>{driver.driverNumber + " - " + driver.fullName + (driver.countryCode ? (" (" + (driver.countryCode) + ")") : "") + " - " + driver.teamName}
                                                                                  </option>))
                 : null}
             )
-            /* TODO: agregar el teamColor para la font de teamName */
         </select>
     </div>);
+                /* TODO: agregar el teamColor para la font de teamName */
+
 }

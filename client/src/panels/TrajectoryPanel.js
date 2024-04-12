@@ -20,24 +20,25 @@ export default function TrajectoryPanel({className, sessionData, driver, onDrive
             onLapChange(1);
     }, [lapCount, onLapChange]);
 
-    return (<div className={className}>
+    return (<div className={className + " h-full"}>
         {(sessionData !== null) ?
-            <>
+            <div>
                 <DriverSelector sessionData={sessionData} selectedDriver={driver} onDriverChange={onDriverChange}/>
                 {currentLap !== null ?
-                    <div className="flex flex-col items-center">
-                        <div className="flex items-center">
-                            <TrajectoryPlot sessionData={sessionData} currentDriver={driver}
-                                            currentLap={currentLap} key={driver + " " + currentLap}/>
+                    <div className="flex flex-col items-center h-full w-full">
+                        <div className="flex flex-col items-center bg-gray-900 sm:flex-row w-full h-auto">
+                            <TrajectoryPlot
+                                sessionData={sessionData} currentDriver={driver}
+                                currentLap={currentLap} key={driver + " " + currentLap}/>
                             <TextPanel/>
                         </div>
 
-                    <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange}/>
+                        <LapSelector className={"my-3"} lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange}/>
 
                     </div>
                     : null
                 }
-            </>
+            </div>
             :
             <div><p>Selecciona una sesión para ver la trayectoria</p></div>
         }

@@ -60,23 +60,23 @@ export default function SelectionMenu({className, loadData}) {
     const roundsLoaded = rounds !== null;
     if (visible) {
         return (
-            <div className={className + " flex flex-col items-center px-3  border-r-2 h-full"}>
-                <MdOutlineMenuOpen className={"border my-4 w-8 h-8 rounded-md"} id="menu" type="button" onClick={onMenuClick}/>
-                <label className={"block"} htmlFor="year">Año</label>
+            <div id="" className={className + " bg-gray-900 text-white flex flex-col items-center px-3  border-r-2 border-gray-400 h-full"}>
+                <MdOutlineMenuOpen className={"text-white border border-gray-400 my-4 w-8 h-8 rounded-md "} id="menu" type="button" onClick={onMenuClick}/>
+                <label className={"block mb-1 text-white"} htmlFor="year">Año</label>
                 <div className={"flex "}>
-                    <input type="number" className={"block border rounded-sm "} placeholder="Año" onChange={onYearChange} onKeyPress={handleKeypress}/>
-                    <button className={"border my-4 "} onClick={onSearchClick}><CiSearch/></button>
+                    <input type="number" className={"text-white block border border-gray-400 rounded-md remove-arrow bg-gray-900"} placeholder="ej: 1998" onChange={onYearChange} onKeyPress={handleKeypress}/>
+                    <button className={"text-white border border-gray-400 rounded-md ml-1"} onClick={onSearchClick}><CiSearch/></button>
                 </div>
-                <label className={"block my-5"} htmlFor="ronda">Ronda</label>
-                <select value={selectedRound ? selectedRound : ""} className={"block w-full border"} id="ronda"
+                <label className={"block mb-1 mt-5 text-white"} htmlFor="ronda">Ronda</label>
+                <select value={selectedRound ? selectedRound : ""} className={"block w-full border border-gray-400 rounded-md text-white bg-gray-900"} id="ronda"
                         disabled={roundsLoaded ? null : true} onChange={onRoundChange}>
                     {rounds ? (rounds.map((round, i) => <option key={round.roundNumber}
                                                                 value={i}>{round.roundNumber + " - " + round.eventName + " - " + round.country + " - " + round.location}</option>))
                         : null}
                 </select>
 
-                <label className={"block my-5"} htmlFor="sesion">Sesión</label>
-                <select value={selectedSession ? selectedSession : ""} className={"block w-full border"} id="sesion"
+                <label className={"block mb-1 mt-5 text-white"} htmlFor="sesion">Sesión</label>
+                <select value={selectedSession ? selectedSession : ""} className={" text-white block w-full border border-gray-400 rounded-md bg-gray-900"} id="sesion"
                         disabled={roundsLoaded ? null : true} onChange={onSessionChange}>
                     {
                         (selectedRound === null || rounds === null) ? null :
@@ -84,15 +84,15 @@ export default function SelectionMenu({className, loadData}) {
                                                                                        value={i}>{session.sessionNumber + " - " + session.name + " - " + dateUTC_to_LocalTimezone(session.dateUTC)} </option>)
                     }
                 </select>
-                <button className={"border my-5 rounded-md"} disabled={selectedSession === null ? true : null}
+                <button className={"text-white border border-gray-400 my-5 rounded-md bg-gray-900"} disabled={selectedSession === null ? true : null}
                         onClick={onLoadClick}>Cargar datos
                 </button>
             </div>
         )
     } else return (
-        <div className={className + " top-0 h-auto"}>
+        <div className={className + " bg-[#010409] top-0 h-auto text-white"}>
             <MdOutlineMenu
-                className={" my-5 h-8 w-8 border rounded-md"}
+                className={"text-white my-5 h-8 w-8 border border-gray-400 rounded-md"}
                 id="menu"
                 type="button"
                 onClick={onMenuClick}
