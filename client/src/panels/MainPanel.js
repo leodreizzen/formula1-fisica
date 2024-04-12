@@ -47,7 +47,7 @@ export default function MainPanel({className}) {
                         setCurrentLap(null)
                 })
         }
-    }, [drivers, year, round, session]);
+    }, [drivers, year, round, session, selectedDriver]);
 
 
     return <div className={"w-full text-white h-screen bg-[#010409] " + className} >
