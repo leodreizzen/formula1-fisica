@@ -9,8 +9,9 @@ import {SessionDataContext} from "../context/SessionDataContext";
 export default function TrajectoryPanel({className, drivers, selectedDriver, onSelectedDriverChange, lapData , currentLap, onLapChange}) {
     const {year, round, session} = useContext(SessionDataContext);
 
-    const lapCount = lapData ? lapData.length : null;
+    const lapCount = lapData ? lapData.lapCount : null;
     const fastestLap = lapData ? lapData.fastestLap : null;
+
 
     return (<div className={className + " h-full"}>
         {(session !== null) ?

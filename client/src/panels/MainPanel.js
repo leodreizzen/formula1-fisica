@@ -65,7 +65,7 @@ export default function MainPanel({className}) {
                            currentLap={currentLap} onLapChange={setCurrentLap}/>
         </TabPanel>
         <TabPanel>
-          <AccelerationsPanel drivers={drivers} lapData={lapData} selectedDriver={selectedDriver} onSelectedDriverChange={handlerDriverChange} currentLap={currentLap} className="h-full" />
+          <AccelerationsPanel drivers={drivers} lapData={lapData} selectedDriver={selectedDriver} onSelectedDriverChange={handlerDriverChange} currentLap={currentLap} onLapChange={setCurrentLap} className="h-full" />
         </TabPanel>
         </Tabs>
     </div>
