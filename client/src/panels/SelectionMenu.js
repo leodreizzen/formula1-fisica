@@ -64,7 +64,7 @@ export default function SelectionMenu({className, loadData}) {
                 <MdOutlineMenuOpen className={"text-white border border-gray-400 my-4 w-8 h-8 rounded-md "} id="menu" type="button" onClick={onMenuClick}/>
                 <label className={"block mb-1 text-white"} htmlFor="year">Año</label>
                 <div className={"flex "}>
-                    <input type="number" className={"text-white block border border-gray-400 rounded-md remove-arrow bg-gray-900"} placeholder="ej: 1998" onChange={onYearChange} onKeyDown={handleKeyDown}/>
+                    <input type="number" className={"text-white block border border-gray-400 rounded-md remove-arrow bg-gray-900"} placeholder="ej: 2023" onChange={onYearChange} onKeyDown={handleKeyDown}/>
                     <button className={"text-white border border-gray-400 rounded-md ml-1"} onClick={onSearchClick}><CiSearch/></button>
                 </div>
                 <label className={"block mb-1 mt-5 text-white"} htmlFor="ronda">Ronda</label>
