@@ -1,7 +1,5 @@
-import SplitAccelerationPlot from "../plots/SplitAccelerationPlot"
 import {useGetAcceleration} from "../api/hooks";
 import DriverSelector from "./DriverSelector";
-import OverlappingAccelerationPlot from "../plots/OverlappingAccelerationPlot";
 import AccelerationPlot from "../plots/AccelerationPlot";
 
 export default function AccelerationsPanel({className, sessionData, driver, lap, onDriverChange}){
@@ -11,8 +9,8 @@ export default function AccelerationsPanel({className, sessionData, driver, lap,
     const sessionNumber = sessionData === null ? null : sessionData.session;
     const [accelerationData, accelerationDataLoading] = useGetAcceleration(year, roundNumber, sessionNumber, driver, lap);
 
-    return (<div className={className}>
+    return (<div className={className + " flex flex-col"}>
         <DriverSelector sessionData={sessionData} selectedDriver={driver} onDriverChange={onDriverChange}/>
-        {accelerationData ? <AccelerationPlot isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: null}
+        {accelerationData ? <AccelerationPlot className="grow" isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: null}
     </div>);
 }

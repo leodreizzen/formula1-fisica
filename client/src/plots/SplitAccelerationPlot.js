@@ -1,8 +1,12 @@
 import Plot from 'react-plotly.js';
 import {OrbitProgress} from "react-loading-indicators";
 import {dateUTC_to_timeUnit} from "../client-util"
+import { useResizeDetector } from 'react-resize-detector';
 
-export default function SplitAccelerationPlot({className, isDataLoading, accelerationData, timeUnit}) {
+
+function SplitAccelerationPlot({className, isDataLoading, accelerationData, timeUnit, size}) {
+    const { width, height, ref } = useResizeDetector();
+    console.log(width, height)
     let moduleTrace = {
         x: Number(dateUTC_to_timeUnit(accelerationData.map(it => it.time), timeUnit)),
         y: accelerationData.map(it => it.acceleration.module / 10),
@@ -25,7 +29,7 @@ export default function SplitAccelerationPlot({className, isDataLoading, acceler
         marker: {color: 'blue'},
     };
     return (
-        <div className={className}>
+        <div ref={ref} className={className + " flex h-full p-0"}>
             {isDataLoading ? <OrbitProgress/> :
                 accelerationData !== null ?
                     <Plot
@@ -42,12 +46,18 @@ export default function SplitAccelerationPlot({className, isDataLoading, acceler
                             yaxis2: {title: 'a tangencial [m/s²]'},
                             yaxis3: {title: 'a normal [m/s²]'},
 
+                            margins: {t: 0, b: 0, l: 0, r: 0},
                             grid: { rows: 3, columns: 1 },
+                            width: width,
+                            height: height,
+                            autosize:true,
 
                         }}
-                        options={{responsive: true}}
+                        config={{responsive: true, scrollZoom: true, autosizable: true}}
                     />
                     :null}
         </div>
     )
 }
+
+export default SplitAccelerationPlot;
