@@ -35,24 +35,7 @@ def timestamp_to_string(timestamp):
     return formatted_timestamp
 
 
-def calcular_vector_velocidad(elemento_final: [], elemento_inicial: []):
-    vector_speed_x = (elemento_final["X"] - elemento_inicial["X"]) / (elemento_final["Time"] - elemento_inicial["Time"]).total_seconds()
-    vector_speed_y = (elemento_final["Y"] - elemento_inicial["Y"]) / (elemento_final["Time"] - elemento_inicial["Time"]).total_seconds()
-    vector_speed_z = (elemento_final["Z"] - elemento_inicial["Z"]) / (elemento_final["Time"] - elemento_inicial["Time"]).total_seconds()
 
-    module = (vector_speed_x ** 2 + vector_speed_y ** 2 + vector_speed_z ** 2) ** 0.5
-
-    velocimeter = elemento_final["Speed"]
-
-    return [
-        {
-            "vX": vector_speed_x,
-            "vY": vector_speed_y,
-            "vZ": vector_speed_z,
-            "module": module,
-            "speedometer": velocimeter
-        }
-    ]
 
 def string_to_timedelta(formatted_timedelta):
     # Dividir la cadena formateada en sus componentes
