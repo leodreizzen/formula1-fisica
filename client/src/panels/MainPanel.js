@@ -3,6 +3,7 @@ import AccelerationsPanel from "./AccelerationsPanel.js";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {useState} from "react";
+import DriverSelector from "./DriverSelector";
 
 
 export default function MainPanel({className, sessionData}) {
