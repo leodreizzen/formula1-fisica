@@ -1,6 +1,6 @@
 import Plot from 'react-plotly.js';
 import { useResizeDetector } from 'react-resize-detector';
-
+import {light} from "@mui/material/styles/createPalette";
 
 function SplitAccelerationPlot({className, timeUnit, traces}) {
     const {moduleTrace, tangentialTrace, normalTrace} = traces;

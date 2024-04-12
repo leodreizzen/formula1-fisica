@@ -51,7 +51,7 @@ export default function MainPanel({className}) {
 
 
     return <div className={"w-full text-white h-screen bg-[#010409] " + className} >
-        <Tabs className=" h-full flex flex-col" selectedTabPanelClassName="react-tabs__tab-panel--selected grow">
+        <Tabs className=" h-full flex flex-col" selectedTabPanelClassName="react-tabs__tab-panel--selected grow" selectedTabClassName="bg-gray-500">
         <TabList>
           <Tab>Trayectoria</Tab>
           <Tab disabled={areTabsDisabled}>Aceleraciones</Tab>

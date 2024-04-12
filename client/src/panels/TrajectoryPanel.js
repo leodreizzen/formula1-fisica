@@ -7,7 +7,7 @@ import LapSelector from "./LapSelector";
 import {SessionDataContext} from "../context/SessionDataContext";
 
 export default function TrajectoryPanel({className, drivers, selectedDriver, onSelectedDriverChange, lapData , currentLap, onLapChange}) {
-    const {year, round, session} = useContext(SessionDataContext);
+    const session = useContext(SessionDataContext);
 
     const lapCount = lapData ? lapData.lapCount : null;
     const fastestLap = lapData ? lapData.fastestLap : null;

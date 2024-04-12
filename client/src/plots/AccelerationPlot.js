@@ -28,7 +28,7 @@ export default function AccelerationPlot({className, isDataLoading, acceleration
     const traces = {moduleTrace, tangentialTrace, normalTrace};
 
     return (
-        <div className={className + " flex justify-center"}>
+        <div className={className + " flex justify-center w-full"}>
             <OverlappingAccelerationPlot className="w-1/2 h-full" isDataLoading = {isDataLoading} accelerationData={accelerationData} timeUnit={timeUnit} traces={traces}/>
             <SplitAccelerationPlot className="w-1/2 h-full" isDataLoading = {isDataLoading} accelerationData={accelerationData} timeUnit={timeUnit} traces={traces}/>
         </div>
