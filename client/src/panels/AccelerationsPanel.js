@@ -12,7 +12,7 @@ export default function AccelerationsPanel({className, drivers, selectedDriver, 
 
     const [accelerationData, accelerationDataLoading] = useGetAcceleration(year, round, session, selectedDriver, currentLap);
 
-    return (<div className={className + " flex flex-col items-center overflow-clip"}>
+    return (<div className={className + " flex flex-col items-center overflow-clip h-full"}>
         <DriverSelector drivers={drivers} selectedDriver={selectedDriver} onDriverChange={onSelectedDriverChange}/>
         {accelerationData ? <AccelerationPlot className="grow pt-2" isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: null}
         <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange}/>

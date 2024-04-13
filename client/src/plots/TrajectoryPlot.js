@@ -3,6 +3,8 @@ import {useGetTrajectory, useGetVectors} from "../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
 import {useContext, useMemo, useState} from "react";
 import {SessionDataContext} from "../context/SessionDataContext";
+import { useResizeDetector } from 'react-resize-detector';
+
 
 export default function TrajectoryPlot({className, currentDriver: selectedDriver, currentLap}) {
     const sessionData = useContext(SessionDataContext);
@@ -11,6 +13,7 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
     const [hoveredPoint, setHoveredPoint] = useState(null);
     const time = hoveredPoint !== null ? trajectoryData[hoveredPoint].time : null;
     const [vectors, vectorsLoading] = useGetVectors(year, round, session, selectedDriver, currentLap, time);
+    const { width, height, ref } = useResizeDetector();
 
 
 
@@ -138,11 +141,10 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
     }
 
     return (
-        <div className={className}
-             style={{width: '600px', height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <div className={className + " overflow-clip"} ref={ref}>
             {trajectoryDataLoading ? <OrbitProgress size='large' color="#EFE2E2" variant='dotted'/> :
                 trajectoryData !== null ?
-                    <Plot
+                    <Plot className="w-full h-full"
                         data={[
                             {
                                 x: trajectoryData.map(it => it.x / 10),
@@ -159,14 +161,14 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                             displayModeBar: false
                         }}
                         layout={{
-                            width: 600,
+                            width: width,
+                            height: height,
                             xaxis: {
                                 title: 'X (m)',
                             },
                             yaxis: {
                                 title: 'Y (m)',
                             },
-                            height: 600,
                             title: 'Trayectoria en coordenadas cartesianas',
                             dragmode: "pan",
                             annotations: arrows
