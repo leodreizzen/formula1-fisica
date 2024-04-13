@@ -20,7 +20,7 @@ export default function TrajectoryPanel({className, drivers, selectedDriver, onS
                                 onDriverChange={onSelectedDriverChange}/>
                 {currentLap !== null ?
                     <div className="flex flex-col items-center w-full h-full grow pl-1 overflow-clip">
-                        <div className="flex flex-col items-center bg-gray-900 sm:flex-row w-full grow overflow-clip">
+                        <div className="flex flex-col items-center  sm:flex-row w-full grow overflow-clip">
                             <TrajectoryPlot className="h-full w-2/3" currentDriver={selectedDriver}
                                             currentLap={currentLap} key={selectedDriver + " " + currentLap}/>
                             <TextPanel className= "w-1/3"/>

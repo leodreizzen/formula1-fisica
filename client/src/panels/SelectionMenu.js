@@ -60,7 +60,7 @@ export default function SelectionMenu({className, loadData}) {
     const roundsLoaded = rounds !== null;
     if (visible) {
         return (
-            <div id="" className={className + " bg-gray-900 text-white flex flex-col items-center px-3  border-r-2 border-gray-400 h-full"}>
+            <div id="" className={className + " bg-[hsl(218,80,8)] text-white flex flex-col items-center px-3  border-r-2 border-gray-400 h-full"}>
                 <MdOutlineMenuOpen className={"text-white border border-gray-400 my-4 w-8 h-8 rounded-md "} id="menu" type="button" onClick={onMenuClick}/>
                 <label className={"block mb-1 text-white"} htmlFor="year">Año</label>
                 <div className={"flex "}>
@@ -90,7 +90,7 @@ export default function SelectionMenu({className, loadData}) {
             </div>
         )
     } else return (
-        <div className={className + " bg-[#010409] top-0 h-auto text-white"}>
+        <div className={className + " bg-[hsl(218,80,5)] top-0 h-auto text-white"}>
             <MdOutlineMenu
                 className={"text-white my-5 h-8 w-8 border border-gray-400 rounded-md"}
                 id="menu"

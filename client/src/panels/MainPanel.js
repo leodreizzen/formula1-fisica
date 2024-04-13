@@ -50,7 +50,7 @@ export default function MainPanel({className}) {
     }, [drivers, year, round, session, selectedDriver]);
 
 
-    return <div className={"w-full text-white h-screen bg-[#010409] overflow-clip " + className} >
+    return <div className={"w-full text-white h-screen bg-[hsl(218,80,5)] overflow-clip " + className} >
         <Tabs className=" h-full flex flex-col" selectedTabPanelClassName="react-tabs__tab-panel--selected grow" selectedTabClassName="bg-gray-500">
             <TabList>
               <Tab>Trayectoria</Tab>
