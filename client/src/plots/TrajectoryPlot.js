@@ -115,7 +115,6 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                 gridwidth: plotStyles.axisGridwidth,
                 range: [range.y0, range.y1],
             },
-            title: 'Trayectoria en coordenadas cartesianas',
             dragmode: "pan",
             annotations: arrows
         }
