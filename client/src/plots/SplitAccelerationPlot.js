@@ -7,8 +7,8 @@ function SplitAccelerationPlot({className, timeUnit, traces}) {
     const {moduleTrace, tangentialTrace, normalTrace} = traces;
     const {width, height, ref} = useResizeDetector();
     return (
-        <div ref={ref} className={className + " flex h-full p-0"}>
-            <Plot
+        <div ref={ref} className={className + " flex p-0"}>
+            <Plot className="w-full h-full"
                 data={[
                     {...moduleTrace, showlegend: false, xaxis: 'x1', yaxis: 'y1'},
                     {...tangentialTrace, xaxis: 'x2', yaxis: 'y2', showlegend: false},

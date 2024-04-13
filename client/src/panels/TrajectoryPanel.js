@@ -12,9 +12,8 @@ export default function TrajectoryPanel({className, drivers, selectedDriver, onS
     const lapCount = lapData ? lapData.lapCount : null;
     const fastestLap = lapData ? lapData.fastestLap : null;
 
-
     return (<div className={className + " overflow-clip h-full flex flex-col"}>
-        {(session !== null) ?
+        {(session.session !== null) ?
             <>
                 <DriverSelector drivers={drivers} selectedDriver={selectedDriver}
                                 onDriverChange={onSelectedDriverChange}/>

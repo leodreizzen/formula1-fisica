@@ -7,8 +7,9 @@ export default function OverlappingAccelerationPlot({className, isDataLoading, a
     const { width, height, ref } = useResizeDetector();
 
     return (
-        <div ref={ref} className={className + " flex h-full p-0"}>
+        <div ref={ref} className={className + " flex p-0"}>
             <Plot
+                className="w-full h-full"
                 data={[
                     {...moduleTrace, xaxis: 'x1', yaxis: 'y1', name: "Módulo"},
                     {...tangentialTrace, xaxis: 'x1', yaxis: 'y1', name: "Tangencial"},
