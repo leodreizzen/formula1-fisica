@@ -24,7 +24,7 @@ export default function SelectionMenu({className, loadData}) {
     }, [rounds]);
 
     function onYearChange(event) {
-        setYearInput(event.target.value);
+        setYearInput(Number(event.target.value));
     }
 
     function onRoundChange(event) {

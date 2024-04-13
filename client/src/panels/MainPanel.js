@@ -19,7 +19,7 @@ export default function MainPanel({className}) {
                 .then((res) => {
                     setDrivers(res);
                     if(res.length > 0) {
-                        setSelectedDriver(res[0].driverNumber);
+                        setSelectedDriver(Number(res[0].driverNumber));
                         setTabs(false);
                     }
                 })
