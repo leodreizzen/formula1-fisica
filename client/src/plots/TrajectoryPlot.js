@@ -13,7 +13,7 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
     const {year, round, session} = sessionData;
     const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, selectedDriver, currentLap);
     const [hoveredPoint, setHoveredPoint] = useState(null);
-    const time = hoveredPoint !== null ? trajectoryData[hoveredPoint].time : null;
+    const time = hoveredPoint !== null  && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
     const [vectors, vectorsLoading] = useGetVectors(year, round, session, selectedDriver, currentLap, time);
     const {width, height, ref} = useResizeDetector();
 
@@ -44,7 +44,7 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
 
 
     const arrows = useMemo(() => {
-        if (vectors === null || trajectoryData[hoveredPoint] === undefined)
+        if (vectors === null || trajectoryData === null || hoveredPoint === null)
             return null;
 
         const x = trajectoryData[hoveredPoint].x / 10;
