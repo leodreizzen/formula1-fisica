@@ -1,19 +1,19 @@
 import Plot from 'react-plotly.js';
 import {useGetTrajectory, useGetVectors} from "../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
-import {useContext, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {SessionDataContext} from "../context/SessionDataContext";
 import {useResizeDetector} from 'react-resize-detector';
 import {plotStyles} from "../styles";
 import {enforcePlotRange} from "./plot-utils";
-import {speedArrow, accelerationArrow, tangentialAccelerationArrow, normalAccelerationArrow} from "./arrows";
+import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
 
 export default function TrajectoryPlot({className, currentDriver: selectedDriver, currentLap}) {
     const sessionData = useContext(SessionDataContext);
     const {year, round, session} = sessionData;
     const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, selectedDriver, currentLap);
     const [hoveredPoint, setHoveredPoint] = useState(null);
-    const time = hoveredPoint !== null  && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
+    const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
     const [vectors, vectorsLoading] = useGetVectors(year, round, session, selectedDriver, currentLap, time);
     const {width, height, ref} = useResizeDetector();
 
@@ -22,12 +22,26 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
     const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
     const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
 
+    const xTolerance = (maxX - minX) * 0.05;
+    const yTolerance = (maxY - minY) * 0.05;
+
     const [range, setRange] = useState({
         x0: minX,
         x1: maxX,
         y0: minY,
         y1: maxY
     });
+
+    useEffect(() => {
+        if (trajectoryData !== null) {
+            setRange({
+                x0: minX - xTolerance,
+                x1: maxX + xTolerance,
+                y0: minY - yTolerance,
+                y1: maxY + yTolerance
+            });
+        }
+    }, [trajectoryData]);
 
     function handleUpdate(state) {
         if (state.layout.xaxis.range[0] !== range.x0 || state.layout.xaxis.range[1] !== range.x1 ||
@@ -38,7 +52,7 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                 y0: state.layout.yaxis.range[0],
                 y1: state.layout.yaxis.range[1]
             }
-            setRange(enforcePlotRange(range, newRange, minX, minY, maxX, maxY));
+            setRange(enforcePlotRange(range, newRange, minX - xTolerance, minY - yTolerance, maxX + xTolerance, maxY + yTolerance));
         }
     }
 
@@ -83,7 +97,7 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
             paper_bgcolor: plotStyles.paper_bgcolor,
             font: plotStyles.font,
 
-            margin: {r: 15},
+            margin: {r: 0},
 
             width: width,
             height: height,
@@ -99,7 +113,7 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                 color: plotStyles.axisColor,
                 gridcolor: plotStyles.gridColor,
                 gridwidth: plotStyles.axisGridwidth,
-                range: [range.y0, range.y1]
+                range: [range.y0, range.y1],
             },
             title: 'Trayectoria en coordenadas cartesianas',
             dragmode: "pan",
@@ -117,7 +131,8 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                           config={{
                               scrollZoom: true,
                               responsive: true,
-                              displayModeBar: false
+                              displayModeBar: false,
+                              doubleClick: 'reset'
                           }}
                           layout={plotLayout}
                           onHover={handleHover}
