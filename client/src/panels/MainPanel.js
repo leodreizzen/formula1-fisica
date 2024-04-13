@@ -50,23 +50,23 @@ export default function MainPanel({className}) {
     }, [drivers, year, round, session, selectedDriver]);
 
 
-    return <div className={"w-full text-white h-screen bg-[#010409] " + className} >
-        <Tabs className=" h-full flex flex-col" selectedTabPanelClassName="react-tabs__tab-panel--selected grow" selectedTabClassName="bg-gray-500">
-        <TabList>
-          <Tab>Trayectoria</Tab>
-          <Tab disabled={areTabsDisabled}>Aceleraciones</Tab>
-        </TabList>
+    return <div className={"w-full text-white h-screen bg-[#010409] overflow-clip " + className} >
+        <Tabs className=" h-full  flex flex-col" selectedTabPanelClassName="react-tabs__tab-panel--selected grow" selectedTabClassName="bg-gray-500">
+            <TabList>
+              <Tab>Trayectoria</Tab>
+              <Tab disabled={areTabsDisabled}>Aceleraciones</Tab>
+            </TabList>
 
-        <TabPanel>
-          <TrajectoryPanel
-                           drivers={drivers}
-                           selectedDriver={selectedDriver} onSelectedDriverChange = {handlerDriverChange}
-                           lapData={lapData}
-                           currentLap={currentLap} onLapChange={setCurrentLap}/>
-        </TabPanel>
-        <TabPanel>
-          <AccelerationsPanel drivers={drivers} lapData={lapData} selectedDriver={selectedDriver} onSelectedDriverChange={handlerDriverChange} currentLap={currentLap} onLapChange={setCurrentLap} className="h-full" />
-        </TabPanel>
+            <TabPanel>
+              <TrajectoryPanel
+                               drivers={drivers}
+                               selectedDriver={selectedDriver} onSelectedDriverChange = {handlerDriverChange}
+                               lapData={lapData}
+                               currentLap={currentLap} onLapChange={setCurrentLap}/>
+            </TabPanel>
+            <TabPanel className="overflow-clip">
+              <AccelerationsPanel drivers={drivers} lapData={lapData} selectedDriver={selectedDriver} onSelectedDriverChange={handlerDriverChange} currentLap={currentLap} onLapChange={setCurrentLap} className="h-full" />
+            </TabPanel>
         </Tabs>
     </div>
 }
