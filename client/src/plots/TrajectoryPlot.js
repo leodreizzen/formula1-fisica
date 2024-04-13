@@ -4,7 +4,7 @@ import {OrbitProgress} from "react-loading-indicators";
 import {useContext, useMemo, useState} from "react";
 import {SessionDataContext} from "../context/SessionDataContext";
 import { useResizeDetector } from 'react-resize-detector';
-
+import {plotStyles} from "../styles";
 
 export default function TrajectoryPlot({className, currentDriver: selectedDriver, currentLap}) {
     const sessionData = useContext(SessionDataContext);
@@ -161,13 +161,23 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                             displayModeBar: false
                         }}
                         layout={{
+                            plot_bgcolor:plotStyles.plot_bgcolor,
+                            paper_bgcolor: plotStyles.paper_bgcolor,
+                            font: plotStyles.font,
+
                             width: width,
                             height: height,
                             xaxis: {
                                 title: 'X (m)',
+                                color: plotStyles.axisColor,
+                                gridcolor: plotStyles.gridColor,
+                                gridwidth: 1,
                             },
                             yaxis: {
                                 title: 'Y (m)',
+                                color: plotStyles.axisColor,
+                                gridcolor: plotStyles.gridColor,
+                                gridwidth: plotStyles.axisGridwidth
                             },
                             title: 'Trayectoria en coordenadas cartesianas',
                             dragmode: "pan",

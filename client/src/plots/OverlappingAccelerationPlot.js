@@ -1,5 +1,6 @@
 import Plot from 'react-plotly.js';
 import { useResizeDetector } from 'react-resize-detector';
+import {plotStyles} from "../styles";
 
 export default function OverlappingAccelerationPlot({className, isDataLoading, accelerationData, timeUnit, traces}) {
     const {moduleTrace, tangentialTrace, normalTrace} = traces;
@@ -15,8 +16,21 @@ export default function OverlappingAccelerationPlot({className, isDataLoading, a
 
                 ]}
                 layout={{
-                    xaxis: {title: 'Tiempo [' + timeUnit + "]"},
-                    yaxis: {title: 'Aceleración [m/s²]'},
+                    plot_bgcolor:plotStyles.plot_bgcolor,
+                    paper_bgcolor: plotStyles.paper_bgcolor,
+                    font: plotStyles.font,
+
+                    xaxis: {
+                        title: 'Tiempo [' + timeUnit + "]",
+                        color: plotStyles.axisColor,
+                        gridcolor: plotStyles.gridColor,
+                        gridwidth: 1,
+                    },
+                    yaxis: {title: 'Aceleración [m/s²]',
+                        color: plotStyles.axisColor,
+                        gridcolor: plotStyles.gridColor,
+                        gridwidth: 1,
+                    },
                     responsive: true,
                     dragmode: "pan",
                     width: width,
