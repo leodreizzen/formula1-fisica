@@ -5,6 +5,7 @@ import {useContext, useMemo, useState} from "react";
 import {SessionDataContext} from "../context/SessionDataContext";
 import { useResizeDetector } from 'react-resize-detector';
 import {plotStyles} from "../styles";
+import {enforcePlotRange} from "./plot-utils";
 
 export default function TrajectoryPlot({className, currentDriver: selectedDriver, currentLap}) {
     const sessionData = useContext(SessionDataContext);
@@ -111,7 +112,38 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
         }
     }
 
+    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x/10))) : null, [trajectoryData]);
+    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.y/10))) : null, [trajectoryData]);
+    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x/10))) : null, [trajectoryData]);
+    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y/10))) : null, [trajectoryData]);
 
+    //TODO PONER UN USEFFECT O SIMILAR PORQUE minX etc arrancan en null
+    const [range, setRange] = useState({
+        x0: minX,
+        x1: maxX,
+        y0: minY,
+        y1: maxY
+    });
+
+    function handleUpdate(state){
+       if (state.layout.xaxis.range[0] === range.x0 && state.layout.xaxis.range[1] === range.x1 &&
+            state.layout.yaxis.range[0] === range.y0 && state.layout.yaxis.range[1] === range.y1)
+            return;
+       const newRange = {
+              x0: state.layout.xaxis.range[0],
+              x1: state.layout.xaxis.range[1],
+              y0: state.layout.yaxis.range[0],
+              y1: state.layout.yaxis.range[1]
+       }
+       const {x0, x1, y0, y1} = enforcePlotRange(range, newRange, minX, minY, maxX, maxY)
+
+        setRange({
+            x0: x0,
+            x1: x1,
+            y0: y0,
+            y1: y1,
+        })
+    }
 
 
     const arrows = useMemo(() => {
@@ -124,10 +156,6 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
         return [speedArrow(x,y), accelerationArrow(x, y), tangentialAccelerationArrow(x, y), normalAccelerationArrow(x, y)]
     }, [vectors, trajectoryData, hoveredPoint]);
 
-    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x))) : null, [trajectoryData]);
-    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.y))) : null, [trajectoryData]);
-    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x))) : null, [trajectoryData]);
-    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y))) : null, [trajectoryData]);
 
     function handleHover(data) {
         const index = data.points[0].pointIndex;
@@ -174,12 +202,14 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                                 color: plotStyles.axisColor,
                                 gridcolor: plotStyles.gridColor,
                                 gridwidth: 1,
+                                range: [range.x0, range.x1]
                             },
                             yaxis: {
                                 title: 'Y (m)',
                                 color: plotStyles.axisColor,
                                 gridcolor: plotStyles.gridColor,
-                                gridwidth: plotStyles.axisGridwidth
+                                gridwidth: plotStyles.axisGridwidth,
+                                range: [range.y0, range.y1]
                             },
                             title: 'Trayectoria en coordenadas cartesianas',
                             dragmode: "pan",
@@ -187,6 +217,7 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                         }}
                         onHover={handleHover}
                         onUnhover={handleUnhover}
+                        onUpdate={handleUpdate}
 
                     />
                     : null}
