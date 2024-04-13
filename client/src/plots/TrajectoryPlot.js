@@ -165,6 +165,8 @@ export default function TrajectoryPlot({className, currentDriver: selectedDriver
                             paper_bgcolor: plotStyles.paper_bgcolor,
                             font: plotStyles.font,
 
+                            margin:{r:15},
+
                             width: width,
                             height: height,
                             xaxis: {

@@ -23,10 +23,12 @@ export default function TrajectoryPanel({className, drivers, selectedDriver, onS
                         <div className="flex flex-col items-center  sm:flex-row w-full grow overflow-clip">
                             <TrajectoryPlot className="h-full w-2/3" currentDriver={selectedDriver}
                                             currentLap={currentLap} key={selectedDriver + " " + currentLap}/>
-                            <TextPanel className= "w-1/3"/>
+                            <div className="h-1/3 w-1/3 flex items-center">
+                                <TextPanel className= "h-full w-4/5 mx-auto"/>
+                            </div>
                         </div>
 
-                        <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange}/>
+                        <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange} className="mb-3"/>
                     </div>
                     : null
                 }

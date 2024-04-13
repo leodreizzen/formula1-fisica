@@ -15,6 +15,6 @@ export default function AccelerationsPanel({className, drivers, selectedDriver, 
     return (<div className={className + " flex flex-col items-center overflow-clip h-full"}>
         <DriverSelector drivers={drivers} selectedDriver={selectedDriver} onDriverChange={onSelectedDriverChange}/>
         {accelerationData ? <AccelerationPlot className="grow pt-2" isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: null}
-        <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange}/>
+        <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange} className="mb-3"/>
     </div>);
 }
