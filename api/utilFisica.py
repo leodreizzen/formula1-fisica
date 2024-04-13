@@ -15,7 +15,7 @@ def calcular_vector_velocidad(elemento_final: [], elemento_inicial: []):
 
 def calcular_vector_aceleracion(vector_velocidad_final: [], vector_velocidad_inicial: [], time_delta: float):
 
-    if np.array_equal(vector_velocidad_final, vector_velocidad_inicial):
+    if np.array_equal(vector_velocidad_final, vector_velocidad_inicial) or time_delta == 0.0:
         vector_aceleracion = np.array([np.float64(0), np.float64(0), np.float64(0)])
     else:
         delta_velocidad = vector_velocidad_final - vector_velocidad_inicial

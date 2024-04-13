@@ -104,7 +104,7 @@ def vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, 
 
         else:  # si el elemento es el primer punto que tenemos en la vuelta nos fijamos el ultimo de la anterior
             prev_lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber - 1)
-            elemento_inicial = prev_lap_telemetry.tail(1)[0]
+            elemento_inicial = prev_lap_telemetry.tail(1).iloc[0]
     else:
         elemento_inicial = lap_telemetry.iloc[elemento_final_index - 1]
     vector_speed = calcular_vector_velocidad(elemento_final, elemento_inicial)
@@ -116,8 +116,7 @@ def vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, 
 
     if lap_telemetry.tail(1).index[0] == elemento_final_index:  # Si es el ultimo punto de la vuelta
 
-        if lapNumber == facade.lapCount(year, sessionNumber,
-                                        driverNumber):  # si es la ultima vuelta devolvemos el mismo punto
+        if lapNumber == facade.lapCount(year, roundNumber, sessionNumber, driverNumber):  # si es la ultima vuelta devolvemos el mismo punto
             elemento_siguiente_final = elemento_final
 
         else:  # Sino buscamos el primer punto de la siguiente vuelta
