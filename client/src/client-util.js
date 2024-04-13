@@ -6,33 +6,34 @@ export function dateUTC_to_LocalTimezone(utcString) {
     return localDate.toLocaleString();
 }
 
-export function dateUTC_to_dateTime(utcString){
-    const utcDate = new Date(utcString);
+export function timeDeltaToTimeUnit(timeDelta, timeUnitString){
+    const parts = timeDelta.match(/(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)\.(\d+)/);
 
-    const date = utcDate.toLocaleDateString();
-    const time = utcDate.toLocaleTimeString();
-    const timezoneOffset = utcDate.getTimezoneOffset();
+    if(!parts){
+        console.error("Tiempo inválido: ", timeDelta);
+        return null;
+    }
 
-    return `${date} ${time} (UTC${timezoneOffset >= 0 ? '-' : '+'}${Math.abs(timezoneOffset / 60)})`;
-}
+    const seconds = parseInt(parts[1]) * 24 * 3600 + parseInt(parts[2]) * 3600 + parseInt(parts[3]) * 60 +
+        parseInt(parts[4]) * 3600 + parseInt(parts[5]) * 60 + parseInt(parts[6]) +
+        parseFloat("0." + parts[7]);
 
-export function dateUTC_to_timeUnit(utcString, timeUnitString){
-    var utcDate = new Date(utcString);
-    var timeInMilliseconds = utcDate.getTime();
-    var timeInUnit
+    let timeInUnit;
     switch (timeUnitString) {
         case 'min':
-            timeInUnit = timeInMilliseconds / (1000 * 60);
+            timeInUnit = seconds / 60;
             break;
         case 'h':
-            timeInUnit = timeInMilliseconds / (1000 * 60 * 60);
+            timeInUnit = seconds / (60 * 60);
             break;
         case 's':
-            timeInUnit = timeInUnit = timeInMilliseconds / 1000;
+            timeInUnit = seconds;
             break;
-        default:
-            timeInUnit = timeInMilliseconds * 1000000; //nanosegundos
+        case 'ms':
+            timeInUnit = seconds * 1000;
             break;
     }
+
     return timeInUnit;
 }
+
