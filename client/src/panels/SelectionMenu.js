@@ -36,6 +36,7 @@ export default function SelectionMenu({className, loadData}) {
         onSearchClick();
     }
   };
+    const roundsLoaded = rounds !== null;
 
     if (visible) {
         return (
@@ -46,7 +47,7 @@ export default function SelectionMenu({className, loadData}) {
                     <input type="number" className={"text-white block border border-gray-400 rounded-md remove-arrow bg-gray-900"} placeholder="ej: 2023" onChange={onYearChange} onKeyDown={handleKeyDown}/>
                     <button className={"text-white border border-gray-400 rounded-md ml-1"} onClick={onSearchClick}><CiSearch/></button>
                 </div>
-                <SessionSelector className="w-full" rounds={rounds} onLoadDataClick={handleLoadDataClick}/>
+                {roundsLoaded ?  <SessionSelector className="w-full" rounds={rounds} onLoadDataClick={handleLoadDataClick}/> : null}
             </div>
         )
     } else return (

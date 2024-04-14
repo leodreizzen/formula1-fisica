@@ -12,9 +12,6 @@ export default function SessionSelector({className, rounds, onLoadDataClick}) {
         }
     }, [rounds]);
 
-
-    const roundsLoaded = rounds !== null;
-
     function onRoundChange(event) {
         setSelectedRound(Number(event.target.value))
     }
@@ -29,24 +26,22 @@ export default function SessionSelector({className, rounds, onLoadDataClick}) {
         onLoadDataClick(round.roundNumber, session.sessionNumber)
     }
 
-
-
     return <div className={className}>
         <label className={"block mb-1 mt-5 text-white"} htmlFor="ronda">Ronda</label>
-        <select value={selectedRound ? selectedRound : ""}
+        <select value={selectedRound !== null ? selectedRound : ""}
                 className={"block w-full border border-gray-400 rounded-md text-white bg-gray-900"} id="ronda"
-                disabled={roundsLoaded ? null : true} onChange={onRoundChange}>
+                onChange={onRoundChange}>
             {rounds ? (rounds.map((round, i) => <option key={round.roundNumber}
                                                         value={i}>{round.roundNumber + " - " + round.eventName + " - " + round.country + " - " + round.location}</option>))
                 : null}
         </select>
 
         <label className={"block mb-1 mt-5 text-white"} htmlFor="sesion">Sesión</label>
-        <select value={selectedSession ? selectedSession : ""}
+        <select value={selectedSession !== null ? selectedSession : ""}
                 className={" text-white block w-full border border-gray-400 rounded-md bg-gray-900"} id="sesion"
-                disabled={roundsLoaded ? null : true} onChange={onSessionChange}>
+                onChange={onSessionChange}>
             {
-                (selectedRound === null || rounds === null) ? null :
+                selectedRound === null ? null :
                     rounds[selectedRound].sessions.map((session, i) => <option key={session.sessionNumber}
                                                                                value={i}>{session.sessionNumber + " - " + session.name + " - " + dateUTC_to_LocalTimezone(session.dateUTC)} </option>)
             }
