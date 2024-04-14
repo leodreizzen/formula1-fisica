@@ -14,7 +14,7 @@ export default function MainPanel({className}) {
             <DriverContextConsumer>
                 {driverData =>
                     <LapContextProvider year={year} round={round} session={session}
-                                        selectedDriver={driverData.currentDriver}>
+                                        selectedDriver={driverData.currentDriver? driverData.currentDriver.driverNumber : null}>
                         <Tabs className=" h-full flex flex-col"
                               selectedTabPanelClassName="react-tabs__tab-panel--selected grow"
                               selectedTabClassName="bg-gray-500">

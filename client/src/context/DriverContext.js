@@ -9,7 +9,7 @@ export function DriverContextProvider({year, round, session, ...props}) {
     const [currentDriver, setCurrentDriver] = useStateWithDeps(null, [year, round, session, drivers]);
     useEffect(() => {
         if (drivers && drivers.length > 0) {
-            setCurrentDriver(drivers[0].driverNumber);
+            setCurrentDriver(drivers[0]);
         }
     }, [drivers]);
     const value = {

@@ -16,10 +16,10 @@ export default function TrajectoryPlot({className}) {
     const {currentLap} = useLapContext();
 
     const {year, round, session} = sessionData;
-    const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, currentDriver, currentLap);
+    const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, currentDriver? currentDriver.driverNumber:null, currentLap);
     const [hoveredPoint, setHoveredPoint] = useState(null);
     const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
-    const [vectors, vectorsLoading] = useGetVectors(year, round, session, currentDriver, currentLap, time);
+    const [vectors, vectorsLoading] = useGetVectors(year, round, session, currentDriver? currentDriver.driverNumber:null, currentLap, time);
     const {width, height, ref} = useResizeDetector();
 
     const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
