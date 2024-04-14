@@ -1,13 +1,13 @@
 import numpy as np
 import json
-def calcular_vector_velocidad(elemento_final: [], elemento_inicial: []):
-    if elemento_inicial["index"] == elemento_final["index"]:
+def calcular_vector_velocidad(punto: [], punto_anterior: []):
+    if punto_anterior["index"] == punto["index"]:
         vector_speed = np.array([np.float64(0), np.float64(0), np.float64(0)])
     else:
-        vector_posicion_final = np.array([elemento_final["X"], elemento_final["Y"], elemento_final["Z"]])
-        vector_posicion_inicial = np.array([elemento_inicial["X"], elemento_inicial["Y"], elemento_inicial["Z"]])
-        position_delta = vector_posicion_final - vector_posicion_inicial
-        time_delta = (elemento_final["Time"] - elemento_inicial["Time"]).total_seconds()
+        vector_punto = np.array([punto["X"], punto["Y"], punto["Z"]])
+        vector_punto_anterior = np.array([punto_anterior["X"], punto_anterior["Y"], punto_anterior["Z"]])
+        position_delta = vector_punto - vector_punto_anterior
+        time_delta = (punto["Time"] - punto_anterior["Time"]).total_seconds()
         vector_speed = np.divide(position_delta, time_delta)
     return vector_speed
 
