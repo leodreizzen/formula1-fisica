@@ -91,7 +91,7 @@ export default function TrajectoryPlot({className}) {
                 y: trajectoryData.map(it => it.y / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: '#00FF00'},
+                marker: {color: '#' + currentDriver?.teamColor ?? "00FF00"},
                 hoverinfo: 'none'
             }
         ] : null, [trajectoryData]);
