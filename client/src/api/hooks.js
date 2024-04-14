@@ -3,14 +3,14 @@ import axios from "axios";
 import {API_BASE_URL} from "../settings";
 import {value} from "plotly.js/src/traces/indicator/attributes";
 import {getDrivers, getLaps, getRounds, getTrajectory, getAcceleration, getVectors} from "./getters";
+import {useStateWithDeps} from "use-state-with-deps";
 
 function useGetFromAPI(getter, dependencies, validParams) {
-    const [res, setRes] = useState(null)
+    const [res, setRes] = useStateWithDeps(null, dependencies)
     const [isLoading, setIsLoading] = useState(null)
     useEffect(() => {
         const abortController = new AbortController()
         if (validParams) {
-            setRes(null); // TODO VER si debería hacerse esto.
             setIsLoading(true);
             getter({signal: abortController.signal})
                 .then((res) => {

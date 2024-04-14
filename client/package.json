@@ -19,6 +19,7 @@
     "react-resize-detector": "^10.0.1",
     "react-scripts": "5.0.1",
     "react-tabs": "^6.0.2",
+    "use-state-with-deps": "^1.1.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
