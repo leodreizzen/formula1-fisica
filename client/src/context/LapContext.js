@@ -1,15 +1,12 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {useGetLaps} from "../api/hooks";
+import {useStateWithDeps} from "use-state-with-deps";
 
 const LapContext = createContext(null);
 
 export function LapContextProvider({year, round, session, selectedDriver, ...props}) {
     const [lapData, lapDataLoading] = useGetLaps(year, round, session, selectedDriver);
-    return <LapContextProviderInternal lapData={lapData} lapDataLoading={lapDataLoading} props={props} key={`${year} ${round} ${session} ${selectedDriver}`}/>
-}
-
-function LapContextProviderInternal({lapData, lapDataLoading, props}){
-    const [currentLap, setCurrentLap] = useState(null); //Se resetea al cambiar key
+    const [currentLap, setCurrentLap] = useStateWithDeps(null, [lapData, year, round, session, selectedDriver]);
     useEffect(() => {
         if (lapData && lapData.lapCount > 0) {
             setCurrentLap(1);

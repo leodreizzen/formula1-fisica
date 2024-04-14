@@ -1,17 +1,12 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {useGetDrivers} from "../api/hooks";
+import {useStateWithDeps} from "use-state-with-deps";
 
 const DriversDataContext = createContext(null);
 
 export function DriverContextProvider({year, round, session, ...props}) {
     const [drivers, driversLoading] = useGetDrivers(year, round, session);
-    return <DriverContextProviderInternal drivers={drivers} driversLoading={driversLoading} props={props}
-                                          key={`${year} ${round} ${session}`}/>
-
-}
-
-function DriverContextProviderInternal({drivers, driversLoading, props}) {
-    const [currentDriver, setCurrentDriver] = useState(null); //Se resetea al cambiar key
+    const [currentDriver, setCurrentDriver] = useStateWithDeps(null, [year, round, session, drivers]);
     useEffect(() => {
         if (drivers && drivers.length > 0) {
             setCurrentDriver(drivers[0].driverNumber);
