@@ -19,7 +19,7 @@ function App() {
     }
   return (
     <div className="App ">
-      <SelectionMenu className="SelectionMenu" loadData={loadData}/>
+        <SelectionMenu className="SelectionMenu" loadData={loadData}/>
         <SessionDataContext.Provider value={sessionData}>
             <MainPanel className="MainPanel" key={JSON.stringify(sessionData)}/>
         </SessionDataContext.Provider>

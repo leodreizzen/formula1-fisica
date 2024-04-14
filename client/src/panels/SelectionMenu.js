@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {CiSearch} from "react-icons/ci";
 import {useGetRounds} from "../api/hooks.js"
 import {MdOutlineMenu, MdOutlineMenuOpen} from "react-icons/md";
@@ -6,16 +6,23 @@ import SessionSelector from "./SessionSelector";
 
 export default function SelectionMenu({className, loadData}) {
     const [visible, setVisible] = useState(true);
-    const [yearInput, setYearInput] = useState(0);
+    const [yearInput, setYearInput] = useState("");
 
     const [searchedYear, setSearchedYear] = useState(null);
     const [rounds, roundsLoading] = useGetRounds(searchedYear);
 
-
     const [isMenuVisible, setMenuVisible] = useState(true)
 
     function onYearChange(event) {
-        setYearInput(event.target.value);
+        let input = event.target.value;
+
+        //Leave only numbers, up to 4 digits
+        input = input.replace(/[^0-9]/g, '');
+        if (input.length > 4) {
+            input = input.slice(0, 4);
+        }
+
+        setYearInput(input)
     }
 
     function onSearchClick() {
@@ -44,7 +51,7 @@ export default function SelectionMenu({className, loadData}) {
                 <MdOutlineMenuOpen className={"text-white border border-gray-400 my-4 w-8 h-8 rounded-md "} id="menu" type="button" onClick={onMenuClick}/>
                 <label className={"block mb-1 text-white"} htmlFor="year">Año</label>
                 <div className={"flex "}>
-                    <input type="number" className={"text-white block border border-gray-400 rounded-md remove-arrow bg-gray-900"} placeholder="ej: 2023" onChange={onYearChange} onKeyDown={handleKeyDown}/>
+                    <input type="text" className={"text-white block border border-gray-400 rounded-md remove-arrow bg-gray-900"} placeholder="ej: 2023" value={yearInput} onChange={onYearChange} onKeyDown={handleKeyDown}/>
                     <button className={"text-white border border-gray-400 rounded-md ml-1"} onClick={onSearchClick}><CiSearch/></button>
                 </div>
                 {roundsLoaded ?  <SessionSelector className="w-full" rounds={rounds} onLoadDataClick={handleLoadDataClick}/> : null}
