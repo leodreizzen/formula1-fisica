@@ -2,15 +2,17 @@ import {Pagination} from "@mui/material";
 import {useState} from "react";
 import { TbExchange } from "react-icons/tb";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {useLapContext} from "../context/LapContext";
 
-export default function LapSelector({className, lapCount, currentLap, changeCurrentLap}) {
+export default function LapSelector({className}) {
+    const {lapCount, currentLap, setCurrentLap} = useLapContext();
     const [currentLapInput, setCurrentLapInput] = useState(currentLap);
 
     function buttonClick(){
-        changeCurrentLap(currentLapInput);
+        setCurrentLap(currentLapInput);
     }
     function onPaginationChange(event, value){
-        changeCurrentLap(value);
+        setCurrentLap(value);
         setCurrentLapInput(value);
     }
 

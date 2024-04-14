@@ -1,20 +1,25 @@
 import Plot from 'react-plotly.js';
 import {useGetTrajectory, useGetVectors} from "../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
-import {useContext, useEffect, useMemo, useState} from "react";
-import {SessionDataContext} from "../context/SessionDataContext";
+import {useEffect, useMemo, useState} from "react";
+import {useSessionDataContext} from "../context/SessionDataContext";
 import {useResizeDetector} from 'react-resize-detector';
 import {plotStyles} from "../styles";
 import {enforcePlotRange} from "./plot-utils";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
+import {useDriverContext} from "../context/DriverContext";
+import {useLapContext} from "../context/LapContext";
 
-export default function TrajectoryPlot({className, currentDriver: selectedDriver, currentLap}) {
-    const sessionData = useContext(SessionDataContext);
+export default function TrajectoryPlot({className}) {
+    const sessionData = useSessionDataContext();
+    const {currentDriver} = useDriverContext();
+    const {currentLap} = useLapContext();
+
     const {year, round, session} = sessionData;
-    const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, selectedDriver, currentLap);
+    const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, currentDriver, currentLap);
     const [hoveredPoint, setHoveredPoint] = useState(null);
     const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
-    const [vectors, vectorsLoading] = useGetVectors(year, round, session, selectedDriver, currentLap, time);
+    const [vectors, vectorsLoading] = useGetVectors(year, round, session, currentDriver, currentLap, time);
     const {width, height, ref} = useResizeDetector();
 
     const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);

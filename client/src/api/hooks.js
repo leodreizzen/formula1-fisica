@@ -1,7 +1,5 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import {API_BASE_URL} from "../settings";
-import {value} from "plotly.js/src/traces/indicator/attributes";
 import {getDrivers, getLaps, getRounds, getTrajectory, getAcceleration, getVectors} from "./getters";
 import {useStateWithDeps} from "use-state-with-deps";
 

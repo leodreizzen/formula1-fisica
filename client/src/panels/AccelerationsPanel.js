@@ -1,19 +1,19 @@
 import {useGetAcceleration} from "../api/hooks";
 import DriverSelector from "./DriverSelector";
 import AccelerationPlot from "../plots/AccelerationPlot";
-import {useContext} from "react";
-import {SessionDataContext} from "../context/SessionDataContext";
+import {useSessionDataContext} from "../context/SessionDataContext";
 import LapSelector from "./LapSelector";
+import {useDriverContext} from "../context/DriverContext";
+import {useLapContext} from "../context/LapContext";
 
-export default function AccelerationsPanel({className, drivers, selectedDriver, lapData, currentLap, onLapChange, onSelectedDriverChange}){
-
-    const lapCount = lapData ? lapData.lapCount : null;
-    const {year, round, session} = useContext(SessionDataContext);
-
-    const [accelerationData, accelerationDataLoading] = useGetAcceleration(year, round, session, selectedDriver, currentLap);
+export default function AccelerationsPanel({className}){
+    const {currentDriver} = useDriverContext();
+    const {currentLap} = useLapContext();
+    const {year, round, session} = useSessionDataContext()
+    const [accelerationData, accelerationDataLoading] = useGetAcceleration(year, round, session, currentDriver, currentLap);
     return (<div className={className + " flex flex-col items-center overflow-clip h-full"}>
-        <DriverSelector drivers={drivers} selectedDriver={selectedDriver} onDriverChange={onSelectedDriverChange}/>
+        <DriverSelector/>
         {accelerationData ? <AccelerationPlot className="grow pt-2" isDataLoading={accelerationDataLoading} accelerationData={accelerationData} timeUnit={"s"}/>: <div className="grow pt-2"/>}
-        <LapSelector lapCount={lapCount} currentLap={currentLap} changeCurrentLap={onLapChange} className="mb-3"/>
+        <LapSelector className="mb-3"/>
     </div>);
 }

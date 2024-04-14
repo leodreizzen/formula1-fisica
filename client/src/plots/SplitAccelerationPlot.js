@@ -1,6 +1,5 @@
 import Plot from 'react-plotly.js';
 import {useResizeDetector} from 'react-resize-detector';
-import {light} from "@mui/material/styles/createPalette";
 import {plotStyles} from "../styles";
 import {useMemo, useState} from "react";
 import {enforcePlotSingleAxisRange} from "./plot-utils";
