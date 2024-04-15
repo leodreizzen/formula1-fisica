@@ -128,23 +128,24 @@ export default function TrajectoryPlot({className}) {
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
-            {trajectoryDataLoading ? <OrbitProgress size='large' color="#EFE2E2" variant='dotted'/> :
-                trajectoryData !== null ?
-                    <Plot className="w-full h-full"
-                          data={plotData}
-                          config={{
-                              scrollZoom: true,
-                              responsive: true,
-                              displayModeBar: false,
-                              doubleClick: 'reset'
-                          }}
-                          layout={plotLayout}
-                          onHover={handleHover}
-                          onUnhover={handleUnhover}
-                          onUpdate={handleUpdate}
-
-                    />
-                    : null}
+            {trajectoryDataLoading ? <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large' color="#EFE2E2" variant='dotted'/></div>
+                : trajectoryData !== null ?
+                        <Plot className="w-full h-full"
+                              data={plotData}
+                              config={{
+                                  scrollZoom: true,
+                                  responsive: true,
+                                  displayModeBar: false,
+                                  doubleClick: 'reset'
+                              }}
+                              layout={plotLayout}
+                              onHover={handleHover}
+                              onUnhover={handleUnhover}
+                              onUpdate={handleUpdate}
+    
+                        />
+                        : null
+            }
         </div>
     )
 }
