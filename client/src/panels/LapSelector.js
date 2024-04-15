@@ -1,5 +1,5 @@
 import {Pagination} from "@mui/material";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { TbExchange } from "react-icons/tb";
 import {useLapContext} from "../context/LapContext";
 import {OrbitProgress} from "react-loading-indicators";
@@ -7,6 +7,11 @@ import {OrbitProgress} from "react-loading-indicators";
 export default function LapSelector({className}) {
     const {lapCount, currentLap, setCurrentLap} = useLapContext();
     const [currentLapInput, setCurrentLapInput] = useState(currentLap);
+
+    useEffect(() => {
+        if(currentLap !== null)
+            setCurrentLapInput(currentLap);
+    }, [currentLap]);
 
     function buttonClick(){
         setCurrentLap(currentLapInput);
