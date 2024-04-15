@@ -29,3 +29,6 @@ code {
 .draglayer {
     cursor: default !important;
 }
+.react-tabs__tab::after {
+    display: none;
+}
