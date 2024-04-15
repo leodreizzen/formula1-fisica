@@ -20,9 +20,14 @@ function App() {
         })
     }
 
+    function handleWheel(e) {
+        if (e.deltaY === 0)
+            e.preventDefault()
+    }
+
     return (
         <ThemeProvider theme={createTheme({palette: {mode: 'dark',}, color: '#8F8F8F'})}>
-        <div className="App ">
+        <div className="App " onWheel={handleWheel}>
             <SelectionMenu className="SelectionMenu" loadData={loadData}/>
             <SessionDataContext.Provider value={sessionData}>
                 <MainPanel className="MainPanel" key={JSON.stringify(sessionData)}/>
