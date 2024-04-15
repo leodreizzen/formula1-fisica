@@ -10,14 +10,12 @@ import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccele
 import {useDriverContext} from "../context/DriverContext";
 import {useLapContext} from "../context/LapContext";
 
-export default function TrajectoryPlot({className}) {
+export default function TrajectoryPlot({className, trajectoryData, trajectoryDataLoading, hoveredPoint, setHoveredPoint}) {
     const sessionData = useSessionDataContext();
     const {currentDriver} = useDriverContext();
     const {currentLap} = useLapContext();
 
     const {year, round, session} = sessionData;
-    const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, currentDriver? currentDriver.driverNumber:null, currentLap);
-    const [hoveredPoint, setHoveredPoint] = useState(null);
     const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
     const [vectors, vectorsLoading] = useGetVectors(year, round, session, currentDriver? currentDriver.driverNumber:null, currentLap, time);
     const {width, height, ref} = useResizeDetector();
