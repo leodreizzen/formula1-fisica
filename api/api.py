@@ -195,11 +195,13 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     lap_telemetry['aceleracion_x'] = (lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / lap_telemetry['diferencia_tiempo']
     lap_telemetry['aceleracion_y'] = (lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / lap_telemetry['diferencia_tiempo']
     lap_telemetry['aceleracion_z'] = (lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / lap_telemetry['diferencia_tiempo']
-    lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
+    lap_telemetry['modulo_velocidad_xy'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
+    lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]], axis=1)
+
 
     # Calculamos el versor tangente para cada fila
-    versor_x_tangente = lap_telemetry['velocidad_x'] / lap_telemetry['modulo_velocidad']
-    versor_y_tangente = lap_telemetry['velocidad_y'] / lap_telemetry['modulo_velocidad']
+    versor_x_tangente = lap_telemetry['velocidad_x'] / lap_telemetry['modulo_velocidad_xy']
+    versor_y_tangente = lap_telemetry['velocidad_y'] / lap_telemetry['modulo_velocidad_xy']
 
     # Creamos una nueva columna para el versor tangente
     lap_telemetry['versor_tangente'] = list(zip(versor_x_tangente, versor_y_tangente))
@@ -208,20 +210,21 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
             lap_telemetry['aceleracion_x'] * lap_telemetry['versor_tangente'].apply(lambda x: x[0]) +
             lap_telemetry['aceleracion_y'] * lap_telemetry['versor_tangente'].apply(lambda x: x[1]))
 
-    versor_normal_x = -lap_telemetry['versor_tangente'].apply(lambda x: x[1])
-    versor_normal_y = lap_telemetry['versor_tangente'].apply(lambda x: x[0])
-
-    lap_telemetry['versor_normal'] = list(zip(versor_normal_x, versor_normal_y))
+    lap_telemetry['versor_normal_x'] = -lap_telemetry['versor_tangente'].apply(lambda x: x[1])
+    lap_telemetry['versor_normal_y'] = lap_telemetry['versor_tangente'].apply(lambda x: x[0])
 
     # Calculamos la aceleración normal para cada fila
-    a_normal = (lap_telemetry['aceleracion_x'] * lap_telemetry['versor_normal'].apply(lambda x: x[0]) +
-                lap_telemetry['aceleracion_y'] * lap_telemetry['versor_normal'].apply(lambda x: x[1]))
+    lap_telemetry['a_normal'] = ((lap_telemetry['aceleracion_x'] * lap_telemetry['versor_normal_x']) +
+                (lap_telemetry['aceleracion_y'] * lap_telemetry['versor_normal_y']))
 
     # Si la aceleración normal es negativa, invertimos el versor normal y la aceleración normal
-    lap_telemetry['aNormal'] = np.where(a_normal < 0, -a_normal, a_normal)
+    a_negativa = lap_telemetry['a_normal'] < 0
+    lap_telemetry.loc[a_negativa, 'a_normal'] *= -1
+    lap_telemetry.loc[a_negativa, 'versor_normal_x'] *= -1
+    lap_telemetry.loc[a_negativa, 'versor_normal_y'] *= -1
 
-    columnas_seleccionadas = ['Time','aceleracion_x', 'aceleracion_y', 'aceleracion_z', 'modulo_velocidad', 'aTangential',
-                              'aNormal']
+    columnas_seleccionadas = ['Time', 'aceleracion_x', 'aceleracion_y', 'aceleracion_z', 'modulo_velocidad', 'aTangential',
+                              'a_normal']
 
     # Eliminar la primera fila
     lap_telemetry = lap_telemetry.iloc[1:]
@@ -242,7 +245,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
                 "aZ": row["aceleracion_z"],
                 "module": row["modulo_velocidad"],
                 "aTangential": row["aTangential"],
-                "aNormal": row["aNormal"]
+                "aNormal": row["a_normal"]
             }
         })
 
