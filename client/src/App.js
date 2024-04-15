@@ -3,6 +3,7 @@ import MainPanel from "./panels/MainPanel";
 import SelectionMenu from "./panels/SelectionMenu";
 import {useState} from "react";
 import {SessionDataContext} from "./context/SessionDataContext";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 
 function App() {
     const [sessionData, setSessionData] = useState({
@@ -20,12 +21,14 @@ function App() {
     }
 
     return (
+        <ThemeProvider theme={createTheme({palette: {mode: 'dark',}, color: '#8F8F8F'})}>
         <div className="App ">
             <SelectionMenu className="SelectionMenu" loadData={loadData}/>
             <SessionDataContext.Provider value={sessionData}>
                 <MainPanel className="MainPanel" key={JSON.stringify(sessionData)}/>
             </SessionDataContext.Provider>
         </div>
+        </ThemeProvider>
     );
 }
 

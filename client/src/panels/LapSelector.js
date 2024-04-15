@@ -1,7 +1,6 @@
 import {Pagination} from "@mui/material";
 import {useState} from "react";
 import { TbExchange } from "react-icons/tb";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {useLapContext} from "../context/LapContext";
 
 export default function LapSelector({className}) {
@@ -37,9 +36,7 @@ export default function LapSelector({className}) {
                 onKeyDown={handleKeyDown}
             />
             <button onClick={buttonClick} className={"border border-black my-4 text-white mr-1"}><TbExchange /></button>
-            <ThemeProvider theme={createTheme({palette: {mode: 'dark',}, color: '#8F8F8F'})}>
-                <Pagination variant="outlined" count={lapCount} page={currentLap} onChange={onPaginationChange} className="grow"/>
-            </ThemeProvider>
+            <Pagination variant="outlined" count={lapCount} page={currentLap} onChange={onPaginationChange} className="grow"/>
         </div>
     )
 }
