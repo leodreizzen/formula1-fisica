@@ -66,12 +66,7 @@ export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber,
     return [trajectory, isLoading]
 }
 
-export function useGetAcceleration(year, roundNumber, sessionNumber, driverNumber, lapNumber){
-    const [acceleration, isLoading] = useAPIHook(getAcceleration, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
-    return [acceleration, isLoading]
-}
-
-export function useGetVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber, time){
-    const [vectors, isLoading] = useAPIHook(getVectors, [year, roundNumber, sessionNumber, driverNumber, lapNumber, time])
+export function useGetVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+    const [vectors, isLoading] = useAPIHook(getVectors, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [vectors, isLoading]
 }

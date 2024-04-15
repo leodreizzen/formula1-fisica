@@ -1,6 +1,4 @@
 import DriverSelector from "./DriverSelector"
-import TrajectoryPlot from "../plots/TrajectoryPlot"
-import TrajectorySidePanel from "./TrajectorySidePanel";
 import LapSelector from "./LapSelector";
 import {useSessionDataContext} from "../context/SessionDataContext";
 import {useDriverContext} from "../context/DriverContext";

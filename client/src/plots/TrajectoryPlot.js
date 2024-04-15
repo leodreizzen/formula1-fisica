@@ -9,15 +9,16 @@ import {enforcePlotRange} from "./plot-utils";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
 import {useDriverContext} from "../context/DriverContext";
 import {useLapContext} from "../context/LapContext";
+import {useVectorsContext} from "../context/VectorsContext";
 
 export default function TrajectoryPlot({className, trajectoryData, trajectoryDataLoading, hoveredPoint, setHoveredPoint}) {
     const sessionData = useSessionDataContext();
     const {currentDriver} = useDriverContext();
     const {currentLap} = useLapContext();
+    const {vectors, getVectorsFromTime, vectorsLoading} = useVectorsContext();
 
     const {year, round, session} = sessionData;
     const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
-    const [vectors, vectorsLoading] = useGetVectors(year, round, session, currentDriver? currentDriver.driverNumber:null, currentLap, time);
     const {width, height, ref} = useResizeDetector();
 
     const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
@@ -66,9 +67,11 @@ export default function TrajectoryPlot({className, trajectoryData, trajectoryDat
 
         const x = trajectoryData[hoveredPoint].x / 10;
         const y = trajectoryData[hoveredPoint].y / 10;
-
-        return [speedArrow(vectors, x, y), accelerationArrow(vectors, x, y), tangentialAccelerationArrow(vectors, x, y), normalAccelerationArrow(vectors, x, y)]
-    }, [vectors, trajectoryData, hoveredPoint]);
+        const vectorsInTime = getVectorsFromTime(time);
+        if(vectorsInTime === undefined)
+            return [];
+        return [speedArrow(vectorsInTime, x, y), accelerationArrow(vectorsInTime, x, y), tangentialAccelerationArrow(vectorsInTime, x, y), normalAccelerationArrow(vectorsInTime, x, y)]
+    }, [vectors, trajectoryData, hoveredPoint, getVectorsFromTime]);
 
 
     function handleHover(data) {

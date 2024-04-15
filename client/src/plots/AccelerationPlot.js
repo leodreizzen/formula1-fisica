@@ -3,49 +3,51 @@ import SplitAccelerationPlot from "./SplitAccelerationPlot";
 import {timeDeltaToTimeUnit} from "../client-util";
 import {OrbitProgress} from "react-loading-indicators";
 import {useMemo} from "react";
+import {useVectorsContext} from "../context/VectorsContext";
 
 export default function AccelerationPlot({className, isDataLoading, accelerationData, timeUnit}) {
+    const {vectors, vectorsLoading} = useVectorsContext();
     const moduleTrace = useMemo(() => {
             return {
-                x: accelerationData?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: accelerationData?.map(it => it.acceleration.module / 10),
+                x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
+                y: vectors?.map(it => it.acceleration.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: {color: 'red'},
             }
-        }, [accelerationData, timeUnit]);
+        }, [vectors, timeUnit]);
 
     const tangentialTrace = useMemo(()=>{
         return {
-            x: accelerationData?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-            y: accelerationData?.map(it => it.acceleration.aTangential / 10),
+            x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
+            y: vectors?.map(it => it.acceleration.aTangential / 10),
             type: 'scatter',
             mode: 'lines',
             marker: {color: 'orange'},
         }
-    }, [accelerationData, timeUnit]);
+    }, [vectors, timeUnit]);
     const normalTrace = useMemo(()=>{
         return {
 
-            x: accelerationData?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-            y: accelerationData?.map(it => it.acceleration.aNormal / 10),
+            x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
+            y: vectors?.map(it => it.acceleration.aNormal / 10),
             type: 'scatter',
             mode: 'lines',
             marker: {color: 'blue'},
         }
-    }, [accelerationData, timeUnit]);
+    }, [vectors, timeUnit]);
 
     const traces = {moduleTrace, tangentialTrace, normalTrace};
 
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
-            {accelerationData !== null ?
+            {vectors !== null ?
                 <>
                     <OverlappingAccelerationPlot className="w-1/2 h-full" isDataLoading={isDataLoading}
-                                                 accelerationData={accelerationData} timeUnit={timeUnit}
+                                                 accelerationData={vectors} timeUnit={timeUnit}
                                                  traces={traces}/>
                     <SplitAccelerationPlot className="w-1/2 h-full" isDataLoading={isDataLoading}
-                                           accelerationData={accelerationData} timeUnit={timeUnit} traces={traces}/>
+                                           accelerationData={vectors} timeUnit={timeUnit} traces={traces}/>
                 </>
                 :
                 <>
