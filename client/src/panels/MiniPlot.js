@@ -2,6 +2,7 @@ import Plot from "react-plotly.js";
 import {useDriverContext} from "../context/DriverContext";
 import {plotStyles} from "../styles";
 import {useMemo} from "react";
+import {useResizeDetector} from "react-resize-detector";
 
 export function MiniPlot({className, trajectoryData, hoveredPoint}) {
 
@@ -14,6 +15,8 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
     const xSize = useMemo(() => maxX - minX, [maxX, minX]);
     const ySize = useMemo(() => maxY - minY, [maxY, minY]);
 
+    const {width, height, ref} = useResizeDetector();
+
     const range = {
         x0: trajectoryData[hoveredPoint].x / 10 - xSize * radius,
         x1: trajectoryData[hoveredPoint].x / 10 + ySize * radius,
@@ -22,6 +25,7 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
     }
     const {currentDriver} = useDriverContext();
     return (
+        <div ref={ref} className={className + " overflow-clip"}>
         <Plot
             data={[{
                 x: trajectoryData.map(it => it.x / 10),
@@ -54,8 +58,8 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
                     range: [range.y0, range.y1],
                 },
                 dragmode: "none",
-                height: 180, //TODO hacer dinámico
-                width: 200
+                height: height,
+                width: width
             }}
             config={{
                 scrollZoom: false,
@@ -64,5 +68,6 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
                 doubleClick: 'none'
             }}
         />
+        </div>
     )
 }
