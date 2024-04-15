@@ -1,0 +1,65 @@
+name: Create release on tag creation
+on: 
+  push:
+    tags: 
+      - '**'
+permissions:
+  contents: write
+jobs:
+  Crear-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Setup Python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: '3.12'
+          
+      - name: Install dependencies
+        run: |
+          npm install
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt install wine64
+      - name: Install Pyinstaller on Wine
+        run: |
+          wget https://www.python.org/ftp/python/3.12.2/python-3.12.2-amd64.exe
+          wineconsole --backend=curses cmd /c python-3.12.2-amd64.exe /quiet InstallAllUsers=1 PrependPath=1
+          wineconsole --backend=curses python.exe -m pip install pyinstaller
+          
+      - uses: little-core-labs/get-git-tag@v3.0.1
+        id: tagName
+        
+      - name: Create release files
+        run: npm run build
+        
+      - name: get-package-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Make release files
+        run: |
+          mkdir ../../release_files
+          mv win-unpacked ${{ github.event.repository.name }}
+          mv *.exe ../../release_files/
+          zip -qq -r "../../release_files/${{ github.event.repository.name }}-${{ steps.package-version.outputs.current-version }}.zip" "${{ github.event.repository.name }}"
+        working-directory: ./release/${{ steps.package-version.outputs.current-version }}
+      
+      - name: Create GitHub release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          automatic_release_tag: ${{ steps.tagName.outputs.tag }}
+          files: |
+            ./release_files/**
+
+      - name: Cleanup
+        run: |
+          rm -rf ./* || true
+          rm -rf ./.??* || true     
