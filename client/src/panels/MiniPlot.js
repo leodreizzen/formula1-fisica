@@ -53,6 +53,7 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
                     gridwidth: plotStyles.axisGridwidth,
                     range: [range.y0, range.y1],
                 },
+                dragmode: "none",
                 height: 180, //TODO hacer dinámico
                 width: 200
             }}
