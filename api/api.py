@@ -9,6 +9,8 @@ from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlacehol
 import pandas as pd
 import numpy as np
 
+
+
 app = fastapi.FastAPI()
 facade = FastF1Facade()
 
