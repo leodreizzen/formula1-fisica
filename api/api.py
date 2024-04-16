@@ -100,8 +100,8 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     lap_telemetry['modulo_aceleracion_xy'] = np.linalg.norm(lap_telemetry[['aceleracion_x', 'aceleracion_y']], axis=1)
 
     # Calculamos el versor tangente para cada fila
-    versor_x_tangente = lap_telemetry['velocidad_x'] / lap_telemetry['modulo_velocidad_xy']
-    versor_y_tangente = lap_telemetry['velocidad_y'] / lap_telemetry['modulo_velocidad_xy']
+    versor_x_tangente = (lap_telemetry['velocidad_x'] / lap_telemetry['modulo_velocidad_xy']).fillna(0)
+    versor_y_tangente = (lap_telemetry['velocidad_y'] / lap_telemetry['modulo_velocidad_xy']).fillna(0)
 
     # Creamos una nueva columna para el versor tangente
     lap_telemetry['versor_tangente'] = list(zip(versor_x_tangente, versor_y_tangente))
