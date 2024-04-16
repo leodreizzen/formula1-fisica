@@ -3,6 +3,8 @@ import {useDriverContext} from "../context/DriverContext";
 import {plotStyles} from "../styles";
 import {useMemo} from "react";
 import {useResizeDetector} from "react-resize-detector";
+import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "../plots/arrows";
+import {useVectorsContext} from "../context/VectorsContext";
 
 export function MiniPlot({className, trajectoryData, hoveredPoint}) {
 
@@ -16,6 +18,21 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
     const ySize = useMemo(() => maxY - minY, [maxY, minY]);
 
     const {width, height, ref} = useResizeDetector();
+    const {vectors, getVectorsFromTime, vectorsLoading} = useVectorsContext();
+    const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
+
+    const arrows = useMemo(() => {
+        if (vectors === null || trajectoryData === null || hoveredPoint === null)
+            return null;
+
+        const x = trajectoryData[hoveredPoint].x / 10;
+        const y = trajectoryData[hoveredPoint].y / 10;
+        const vectorsInTime = getVectorsFromTime(time);
+        if(vectorsInTime === undefined)
+            return [];
+        return [speedArrow(vectorsInTime, x, y), accelerationArrow(vectorsInTime, x, y), tangentialAccelerationArrow(vectorsInTime, x, y), normalAccelerationArrow(vectorsInTime, x, y)]
+    }, [vectors, trajectoryData, hoveredPoint, getVectorsFromTime]);
+
 
     const range = {
         x0: trajectoryData[hoveredPoint].x / 10 - xSize * radius,
@@ -59,7 +76,8 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
                 },
                 dragmode: "none",
                 height: height,
-                width: width
+                width: width,
+                annotations: arrows
             }}
             config={{
                 scrollZoom: false,
