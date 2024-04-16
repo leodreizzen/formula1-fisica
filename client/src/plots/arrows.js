@@ -1,6 +1,6 @@
 export function speedArrow(vectors, x, y) {
-    const speedX = vectors.speed.vX;
-    const speedY = vectors.speed.vY;
+    const speedX = vectors.speed.vX / 10;
+    const speedY = vectors.speed.vY / 10;
 
     return {
         ax: x,
@@ -22,7 +22,7 @@ export function speedArrow(vectors, x, y) {
 export function tangentialAccelerationArrow(vectors, x, y) {
     const versorX = vectors.versors.tangent.x;
     const versorY = vectors.versors.tangent.y;
-    const tangential = vectors.acceleration.aTangential;
+    const tangential = vectors.acceleration.aTangential / 10;
 
     const arrowX = versorX * tangential;
     const arrowY = versorY * tangential;
@@ -48,7 +48,7 @@ export function tangentialAccelerationArrow(vectors, x, y) {
 export function normalAccelerationArrow(vectors, x, y) {
     const versorX = vectors.versors.normal.x;
     const versorY = vectors.versors.normal.y;
-    const aNormal = vectors.acceleration.aNormal;
+    const aNormal = vectors.acceleration.aNormal / 10;
 
     const arrowX = versorX * aNormal;
     const arrowY = versorY * aNormal;
@@ -72,8 +72,8 @@ export function normalAccelerationArrow(vectors, x, y) {
 
 
 export function accelerationArrow(vectors, x, y) {
-    const accelerationX = vectors.acceleration.aX;
-    const accelerationY = vectors.acceleration.aY;
+    const accelerationX = vectors.acceleration.aX / 10;
+    const accelerationY = vectors.acceleration.aY / 10;
 
     return {
         ax: x,
