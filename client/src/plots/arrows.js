@@ -1,3 +1,5 @@
+import {accelerationColor, normalAccelerationColor, speedColor, tangentialAccelerationColor} from "../styles";
+
 export function speedArrow(vectors, x, y) {
     const speedX = vectors.speed.vX / 10;
     const speedY = vectors.speed.vY / 10;
@@ -15,7 +17,7 @@ export function speedArrow(vectors, x, y) {
         arrowhead: 10,
         arrowsize: 2,
         arrowwidth: 1,
-        arrowcolor: 'blue',
+        arrowcolor: speedColor,
     }
 }
 
@@ -41,7 +43,7 @@ export function tangentialAccelerationArrow(vectors, x, y) {
         arrowhead: 10,
         arrowsize: 2,
         arrowwidth: 1,
-        arrowcolor: 'light-blue',
+        arrowcolor: tangentialAccelerationColor
     }
 }
 
@@ -66,7 +68,7 @@ export function normalAccelerationArrow(vectors, x, y) {
         arrowhead: 10,
         arrowsize: 2,
         arrowwidth: 1,
-        arrowcolor: 'light-blue',
+        arrowcolor: normalAccelerationColor
     }
 }
 
@@ -88,6 +90,6 @@ export function accelerationArrow(vectors, x, y) {
         arrowhead: 10,
         arrowsize: 2,
         arrowwidth: 1,
-        arrowcolor: 'red',
+        arrowcolor: accelerationColor,
     }
 }

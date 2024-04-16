@@ -10,3 +10,8 @@ export const plotStyles= {
     plot_bgcolor: 'rgba(0,0,0,0)',
     axisGridwidth: 1
 }
+
+export const accelerationColor = "red"
+export const normalAccelerationColor = "orange"
+export const tangentialAccelerationColor = "pink"
+export const speedColor = "blue"
