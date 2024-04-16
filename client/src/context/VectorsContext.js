@@ -6,12 +6,12 @@ export const VectorContext = createContext(null);
 export function VectorsProvider({year, round, session, currentDriver, currentLap, ...props}) {
     const [vectors, vectorsLoading] = useGetVectors(year, round, session, currentDriver?.driverNumber, currentLap)
     const vectorsMap = useMemo(() => {
-        if (vectors === null) return null;
         const vectorsMap = new Map();
-        vectors.forEach(vector => {
-            const key = vector.time;
-            vectorsMap.set(key, vector)
-        })
+        if (vectors !== null)
+            vectors.forEach(vector => {
+                const key = vector.time;
+                vectorsMap.set(key, vector)
+            })
         return vectorsMap;
     }, [vectors])
     function getVectorsFromTime(time){
