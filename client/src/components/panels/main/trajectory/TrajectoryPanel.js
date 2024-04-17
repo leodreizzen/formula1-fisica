@@ -14,22 +14,19 @@ export default function TrajectoryPanel({className}) {
         {(session.session !== null) ?
             (
                 drivers !== null?
-                <>
-                    <DriverSelector/>
-                    {currentLap !== null ?
-                        <div className="flex flex-col items-center w-full h-full grow pl-1 overflow-clip">
-                            <TrajectoryInfo className="w-full grow" key={currentDriver.driverNumber + " " + currentLap}/>
-                            <LapSelector className="mb-3"/>
-                        </div>
-                        : null
-                    }
-                </>
-
-
-            : <LinearProgress className="my-1 mx-2"/>
+                    <>
+                        <DriverSelector/>
+                        {currentLap !== null ?
+                            <div className="flex flex-col items-center w-full h-full grow pl-1 overflow-clip">
+                                <TrajectoryInfo className="w-full grow" key={currentDriver.driverNumber + " " + currentLap}/>
+                                <LapSelector className="mb-3"/>
+                            </div>
+                            : null
+                        }
+                    </>
+                : <LinearProgress className="my-1 mx-2"/>
             )
-            :
-            <div><p>Selecciona una sesión para ver la trayectoria</p></div>
+            : <div><p>Selecciona una sesión para ver la trayectoria</p></div>
         }
     </div>);
 }
