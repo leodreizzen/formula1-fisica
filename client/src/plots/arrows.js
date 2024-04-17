@@ -14,9 +14,9 @@ export function speedArrow(vectors, x, y) {
         axref: 'x',
         ayref: 'y',
         text: '',
-        arrowhead: 10,
-        arrowsize: 2,
-        arrowwidth: 1,
+        arrowhead: 1,
+        arrowsize: 1,
+        arrowwidth: 2,
         arrowcolor: speedColor,
     }
 }
@@ -40,9 +40,9 @@ export function tangentialAccelerationArrow(vectors, x, y) {
         axref: 'x',
         ayref: 'y',
         text: '',
-        arrowhead: 10,
-        arrowsize: 2,
-        arrowwidth: 1,
+        arrowhead: 1,
+        arrowsize: 1,
+        arrowwidth: 2,
         arrowcolor: tangentialAccelerationColor
     }
 }
@@ -65,9 +65,9 @@ export function normalAccelerationArrow(vectors, x, y) {
         axref: 'x',
         ayref: 'y',
         text: '',
-        arrowhead: 10,
-        arrowsize: 2,
-        arrowwidth: 1,
+        arrowhead: 1,
+        arrowsize: 1,
+        arrowwidth: 2,
         arrowcolor: normalAccelerationColor
     }
 }
@@ -87,9 +87,9 @@ export function accelerationArrow(vectors, x, y) {
         axref: 'x',
         ayref: 'y',
         text: '',
-        arrowhead: 10,
-        arrowsize: 2,
-        arrowwidth: 1,
+        arrowhead: 1,
+        arrowsize: 1,
+        arrowwidth: 2,
         arrowcolor: accelerationColor,
     }
 }
