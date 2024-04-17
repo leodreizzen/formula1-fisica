@@ -4,8 +4,7 @@ import { useGetRounds } from "../api/hooks.js"
 import { MdOutlineMenu, MdOutlineMenuOpen } from "react-icons/md";
 import SessionSelector from "./SessionSelector";
 
-export default function SelectionMenu({ className, loadData }) {
-    const [visible, setVisible] = useState(true);
+export default function SelectionMenu({ className, loadData, visible, setVisible}) {
     const [yearInput, setYearInput] = useState("");
 
     const [searchedYear, setSearchedYear] = useState(null);

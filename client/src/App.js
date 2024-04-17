@@ -18,7 +18,11 @@ function App() {
             round: round,
             session: session
         })
+        setSelectionMenuVisible(false)
     }
+
+    const [selectionMenuVisible, setSelectionMenuVisible] = useState(true);
+
 
     function handleWheel(e) {
         if (e.deltaY === 0)
@@ -28,7 +32,7 @@ function App() {
     return (
         <ThemeProvider theme={createTheme({palette: {mode: 'dark',}, color: '#8F8F8F'})}>
         <div className="App " onWheel={handleWheel}>
-            <SelectionMenu className="SelectionMenu" loadData={loadData}/>
+            <SelectionMenu className="SelectionMenu" loadData={loadData} visible={selectionMenuVisible} setVisible={setSelectionMenuVisible}/>
             <SessionDataContext.Provider value={sessionData}>
                 <MainPanel className="MainPanel" key={JSON.stringify(sessionData)}/>
             </SessionDataContext.Provider>
