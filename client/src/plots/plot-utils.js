@@ -12,7 +12,6 @@ export function enforcePlotRange(oldRange, newRange, minX, minY, maxX, maxY){
 export function enforcePlotSingleAxisRange(oldRange, newRange, min, max) {
     const previousSize = oldRange[1] - oldRange[0];
     const newSize = newRange[1] - newRange[0];
-    console.log(previousSize, newSize);
 
     let x0, x1;
     if(newSize.toFixed(5) === previousSize.toFixed(5)){

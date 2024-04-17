@@ -8,7 +8,7 @@ export default function SelectionMenu({ className, loadData, visible, setVisible
     const [yearInput, setYearInput] = useState("");
 
     const [searchedYear, setSearchedYear] = useState(null);
-    const [rounds, roundsLoading] = useGetRounds(searchedYear);
+    const [rounds] = useGetRounds(searchedYear);
 
     const [isMenuVisible, setMenuVisible] = useState(true)
 

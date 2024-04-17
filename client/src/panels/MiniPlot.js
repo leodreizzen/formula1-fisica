@@ -18,7 +18,7 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
     const ySize = useMemo(() => maxY - minY, [maxY, minY]);
 
     const {width, height, ref} = useResizeDetector();
-    const {vectors, getVectorsFromTime, vectorsLoading} = useVectorsContext();
+    const {vectors, getVectorsFromTime} = useVectorsContext();
 
     const arrows = useMemo(() => {
         if (vectors === null || trajectoryData === null || hoveredPoint === null) {

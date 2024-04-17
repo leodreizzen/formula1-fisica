@@ -6,7 +6,7 @@ import {useMemo} from "react";
 import {useVectorsContext} from "../context/VectorsContext";
 
 export default function AccelerationPlot({className, isDataLoading, timeUnit}) {
-    const {vectors, vectorsLoading} = useVectorsContext();
+    const {vectors} = useVectorsContext();
     const moduleTrace = useMemo(() => {
             return {
                 x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
@@ -43,10 +43,10 @@ export default function AccelerationPlot({className, isDataLoading, timeUnit}) {
         <div className={className + " flex justify-center w-full overflow-clip"}>
             {vectors !== null ?
                 <>
-                    <OverlappingAccelerationPlot className="w-1/2 h-full" isDataLoading={isDataLoading}
+                    <OverlappingAccelerationPlot className="w-1/2 h-full"
                                                  accelerationData={vectors} timeUnit={timeUnit}
                                                  traces={traces}/>
-                    <SplitAccelerationPlot className="w-1/2 h-full" isDataLoading={isDataLoading}
+                    <SplitAccelerationPlot className="w-1/2 h-full"
                                            accelerationData={vectors} timeUnit={timeUnit} traces={traces}/>
                 </>
                 :

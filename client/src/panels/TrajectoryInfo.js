@@ -14,13 +14,13 @@ export default function TrajectoryInfo({className=""}) {
     const year = sessionData.year;
     const round = sessionData.round;
     const session = sessionData.session;
-    const [trajectoryData, trajectoryDataLoading] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap);
+    const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap);
 
     const [hoveredPoint, setHoveredPoint] = useState(null);
 
     return (
         <div className={"flex flex-col items-center sm:flex-row overflow-clip " + className}>
-            <TrajectoryPlot className="h-full w-2/3" trajectoryData={trajectoryData} trajectoryDataLoading={trajectoryDataLoading} hoveredPoint={hoveredPoint} setHoveredPoint={setHoveredPoint}/>
+            <TrajectoryPlot className="h-full w-2/3" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint} setHoveredPoint={setHoveredPoint}/>
             <div className="h-3/5 w-1/3 flex items-center">
                 <TrajectorySidePanel className="h-full w-4/5 mx-auto" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
             </div>

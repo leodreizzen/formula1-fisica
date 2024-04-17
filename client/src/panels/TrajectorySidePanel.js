@@ -5,7 +5,7 @@ import {useDriverContext} from "../context/DriverContext";
 
 export default function
     TrajectorySidePanel({className, trajectoryData, hoveredPoint}) {
-    const {vectors, getVectorsFromTime, vectorsLoading} = useVectorsContext();
+    const {getVectorsFromTime} = useVectorsContext();
     const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
     const vectorsInTime = getVectorsFromTime(time);
     const {currentDriver} = useDriverContext();

@@ -9,10 +9,9 @@ import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccele
 import {useDriverContext} from "../context/DriverContext";
 import {useVectorsContext} from "../context/VectorsContext";
 
-export default function TrajectoryPlot({className, trajectoryData, trajectoryDataLoading, hoveredPoint, setHoveredPoint}) {
-    const sessionData = useSessionDataContext();
+export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
     const {currentDriver} = useDriverContext();
-    const {vectors, getVectorsFromTime, vectorsLoading} = useVectorsContext();
+    const {vectors, getVectorsFromTime} = useVectorsContext();
 
     const {width, height, ref} = useResizeDetector();
 
@@ -124,23 +123,20 @@ export default function TrajectoryPlot({className, trajectoryData, trajectoryDat
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
-            {trajectoryDataLoading ? <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large' color="#EFE2E2" variant='dotted'/></div>
-                : trajectoryData !== null ?
-                        <Plot className="w-full h-full"
-                              data={plotData}
-                              config={{
-                                  scrollZoom: true,
-                                  responsive: true,
-                                  displayModeBar: false,
-                                  doubleClick: 'reset'
-                              }}
-                              layout={plotLayout}
-                              onHover={handleHover}
-                              onUnhover={handleUnhover}
-                              onUpdate={handleUpdate}
-    
-                        />
-                        : null
+            {trajectoryData === null ? <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large' color="#EFE2E2" variant='dotted'/></div>
+                :<Plot className="w-full h-full"
+                      data={plotData}
+                      config={{
+                          scrollZoom: true,
+                          responsive: true,
+                          displayModeBar: false,
+                          doubleClick: 'reset'
+                      }}
+                      layout={plotLayout}
+                      onHover={handleHover}
+                      onUnhover={handleUnhover}
+                      onUpdate={handleUpdate}
+                />
             }
         </div>
     )
