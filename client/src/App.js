@@ -1,5 +1,5 @@
-import MainPanel from "./panels/MainPanel";
-import SelectionMenu from "./panels/SelectionMenu";
+import MainPanel from "./components/panels/main/MainPanel";
+import SelectionMenu from "./components/panels/selection/SelectionMenu";
 import {useState} from "react";
 import {SessionDataContext} from "./context/SessionDataContext";
 import {createTheme, ThemeProvider} from "@mui/material/styles";

@@ -1,13 +1,13 @@
 import Plot from 'react-plotly.js';
 import {OrbitProgress} from "react-loading-indicators";
 import {useEffect, useMemo, useState} from "react";
-import {useSessionDataContext} from "../context/SessionDataContext";
+import {useSessionDataContext} from "../../context/SessionDataContext";
 import {useResizeDetector} from 'react-resize-detector';
-import {plotStyles} from "../styles";
+import {plotStyles} from "../../styles";
 import {enforcePlotRange} from "./plot-utils";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
-import {useDriverContext} from "../context/DriverContext";
-import {useVectorsContext} from "../context/VectorsContext";
+import {useDriverContext} from "../../context/DriverContext";
+import {useVectorsContext} from "../../context/VectorsContext";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
     const {currentDriver} = useDriverContext();

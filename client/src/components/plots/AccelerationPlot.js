@@ -1,9 +1,9 @@
 import OverlappingAccelerationPlot from "./OverlappingAccelerationPlot";
 import SplitAccelerationPlot from "./SplitAccelerationPlot";
-import {timeDeltaToTimeUnit} from "../client-util";
+import {timeDeltaToTimeUnit} from "../../client-util";
 import {OrbitProgress} from "react-loading-indicators";
 import {useMemo} from "react";
-import {useVectorsContext} from "../context/VectorsContext";
+import {useVectorsContext} from "../../context/VectorsContext";
 
 export default function AccelerationPlot({className, isDataLoading, timeUnit}) {
     const {vectors} = useVectorsContext();

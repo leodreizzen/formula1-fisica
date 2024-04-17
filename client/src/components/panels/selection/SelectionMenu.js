@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { useGetRounds } from "../api/hooks.js"
+import { useGetRounds } from "../../../api/hooks.js"
 import { MdOutlineMenu, MdOutlineMenuOpen } from "react-icons/md";
 import SessionSelector from "./SessionSelector";
 

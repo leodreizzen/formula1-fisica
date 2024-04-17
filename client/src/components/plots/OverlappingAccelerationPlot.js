@@ -1,6 +1,6 @@
 import Plot from 'react-plotly.js';
 import {useResizeDetector} from 'react-resize-detector';
-import {plotStyles} from "../styles";
+import {plotStyles} from "../../styles";
 import {enforcePlotRange} from "./plot-utils";
 import {useMemo, useState} from "react";
 

@@ -1,10 +1,10 @@
 import Plot from "react-plotly.js";
-import {useDriverContext} from "../context/DriverContext";
-import {plotStyles} from "../styles";
+import {useDriverContext} from "../../context/DriverContext";
+import {plotStyles} from "../../styles";
 import {useMemo} from "react";
 import {useResizeDetector} from "react-resize-detector";
-import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "../plots/arrows";
-import {useVectorsContext} from "../context/VectorsContext";
+import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
+import {useVectorsContext} from "../../context/VectorsContext";
 
 export function MiniPlot({className, trajectoryData, hoveredPoint}) {
 

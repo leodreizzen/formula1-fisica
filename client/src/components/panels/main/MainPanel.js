@@ -1,11 +1,11 @@
-import TrajectoryPanel from "./TrajectoryPanel.js";
-import AccelerationsPanel from "./AccelerationsPanel.js";
+import TrajectoryPanel from "./trajectory/TrajectoryPanel.js";
+import AccelerationsPanel from "./accelerations/AccelerationsPanel.js";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import {useSessionDataContext} from "../context/SessionDataContext";
-import {DriverContextConsumer, DriverContextProvider} from "../context/DriverContext";
-import {LapContextConsumer, LapContextProvider} from "../context/LapContext";
-import {VectorsProvider} from "../context/VectorsContext";
+import {useSessionDataContext} from "../../../context/SessionDataContext";
+import {DriverContextConsumer, DriverContextProvider} from "../../../context/DriverContext";
+import {LapContextConsumer, LapContextProvider} from "../../../context/LapContext";
+import {VectorsProvider} from "../../../context/VectorsContext";
 
 export default function MainPanel({className}) {
     const {year, round, session} = useSessionDataContext();

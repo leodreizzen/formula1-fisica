@@ -1,8 +1,8 @@
-import DriverSelector from "./DriverSelector"
-import LapSelector from "./LapSelector";
-import {useSessionDataContext} from "../context/SessionDataContext";
-import {useDriverContext} from "../context/DriverContext";
-import {useLapContext} from "../context/LapContext";
+import DriverSelector from "../../../inputs/DriverSelector"
+import LapSelector from "../../../inputs/LapSelector";
+import {useSessionDataContext} from "../../../../context/SessionDataContext";
+import {useDriverContext} from "../../../../context/DriverContext";
+import {useLapContext} from "../../../../context/LapContext";
 import {LinearProgress} from "@mui/material";
 import TrajectoryInfo from "./TrajectoryInfo";
 

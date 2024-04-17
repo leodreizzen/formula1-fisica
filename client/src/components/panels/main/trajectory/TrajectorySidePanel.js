@@ -1,7 +1,7 @@
-import {MiniPlot} from "./MiniPlot";
-import {useVectorsContext} from "../context/VectorsContext";
-import {accelerationColor, normalAccelerationColor, speedColor, tangentialAccelerationColor} from "../styles";
-import {useDriverContext} from "../context/DriverContext";
+import {MiniPlot} from "../../../plots/MiniPlot";
+import {useVectorsContext} from "../../../../context/VectorsContext";
+import {accelerationColor, normalAccelerationColor, speedColor, tangentialAccelerationColor} from "../../../../styles";
+import {useDriverContext} from "../../../../context/DriverContext";
 
 export default function
     TrajectorySidePanel({className, trajectoryData, hoveredPoint}) {

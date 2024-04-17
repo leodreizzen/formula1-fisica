@@ -1,9 +1,9 @@
-import TrajectoryPlot from "../plots/TrajectoryPlot";
+import TrajectoryPlot from "../../../plots/TrajectoryPlot";
 import TrajectorySidePanel from "./TrajectorySidePanel";
-import {useGetTrajectory} from "../api/hooks";
-import {useSessionDataContext} from "../context/SessionDataContext";
-import {useDriverContext} from "../context/DriverContext";
-import {useLapContext} from "../context/LapContext";
+import {useGetTrajectory} from "../../../../api/hooks";
+import {useSessionDataContext} from "../../../../context/SessionDataContext";
+import {useDriverContext} from "../../../../context/DriverContext";
+import {useLapContext} from "../../../../context/LapContext";
 import {useState} from "react";
 
 export default function TrajectoryInfo({className=""}) {

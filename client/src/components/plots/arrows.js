@@ -1,4 +1,4 @@
-import {accelerationColor, normalAccelerationColor, speedColor, tangentialAccelerationColor} from "../styles";
+import {accelerationColor, normalAccelerationColor, speedColor, tangentialAccelerationColor} from "../../styles";
 
 export function speedArrow(vectors, x, y) {
     const speedX = vectors.speed.vX / 10;

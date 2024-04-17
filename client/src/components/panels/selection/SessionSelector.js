@@ -1,4 +1,4 @@
-import {dateUTC_to_LocalTimezone} from "../client-util";
+import {dateUTC_to_LocalTimezone} from "../../../client-util";
 import {useEffect, useState} from "react";
 
 export default function SessionSelector({className, rounds, onLoadDataClick}) {

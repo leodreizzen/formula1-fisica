@@ -1,6 +1,6 @@
-import DriverSelector from "./DriverSelector";
-import AccelerationPlot from "../plots/AccelerationPlot";
-import LapSelector from "./LapSelector";
+import DriverSelector from "../../../inputs/DriverSelector";
+import AccelerationPlot from "../../../plots/AccelerationPlot";
+import LapSelector from "../../../inputs/LapSelector";
 
 export default function AccelerationsPanel({className}){
     return (<div className={className + " flex flex-col items-center overflow-clip h-full"}>
