@@ -126,9 +126,9 @@ function SplitAccelerationPlot({className, timeUnit, traces}) {
         <div ref={ref} className={className + " flex p-0"}>
             <Plot className="w-full h-full"
                   data={[
-                      {...moduleTrace, showlegend: false, xaxis: 'x1', yaxis: 'y1'},
-                      {...tangentialTrace, xaxis: 'x2', yaxis: 'y2', showlegend: false},
-                      {...normalTrace, xaxis: 'x3', yaxis: 'y3', showlegend: false},
+                      {...moduleTrace, xaxis: 'x1', yaxis: 'y1', showlegend: false, name:""},
+                      {...tangentialTrace, xaxis: 'x2', yaxis: 'y2', showlegend: false, name:""},
+                      {...normalTrace, xaxis: 'x3', yaxis: 'y3', showlegend: false, name:""},
                   ]}
                   layout={plotLayout}
                   config={{responsive: true, scrollZoom: true, displayModeBar: false}}
