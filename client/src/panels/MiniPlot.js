@@ -19,12 +19,12 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
 
     const {width, height, ref} = useResizeDetector();
     const {vectors, getVectorsFromTime, vectorsLoading} = useVectorsContext();
-    const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
 
     const arrows = useMemo(() => {
-        if (vectors === null || trajectoryData === null || hoveredPoint === null)
+        if (vectors === null || trajectoryData === null || hoveredPoint === null) {
             return null;
-
+        }
+        const time = trajectoryData[hoveredPoint].time;
         const x = trajectoryData[hoveredPoint].x / 10;
         const y = trajectoryData[hoveredPoint].y / 10;
         const vectorsInTime = getVectorsFromTime(time);

@@ -1,4 +1,3 @@
-import './App.css';
 import MainPanel from "./panels/MainPanel";
 import SelectionMenu from "./panels/SelectionMenu";
 import {useState} from "react";

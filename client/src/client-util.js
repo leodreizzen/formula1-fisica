@@ -32,6 +32,9 @@ export function timeDeltaToTimeUnit(timeDelta, timeUnitString){
         case 'ms':
             timeInUnit = seconds * 1000;
             break;
+        default:
+            console.error("Unidad de tiempo inválida: ", timeUnitString);
+            timeInUnit = null;
     }
 
     return timeInUnit;

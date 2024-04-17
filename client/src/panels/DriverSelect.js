@@ -14,7 +14,7 @@ export default function DriverSelect({className = "", drivers, value, disabled, 
                 </div>
             ),
         };
-    }));
+    }),[drivers]);
     const selectedOption = useMemo(() => options ? options.find(option => option.value === value) : null, [options, value]);
 
     function handleChange(option) {

@@ -5,7 +5,7 @@ import {OrbitProgress} from "react-loading-indicators";
 import {useMemo} from "react";
 import {useVectorsContext} from "../context/VectorsContext";
 
-export default function AccelerationPlot({className, isDataLoading, accelerationData, timeUnit}) {
+export default function AccelerationPlot({className, isDataLoading, timeUnit}) {
     const {vectors, vectorsLoading} = useVectorsContext();
     const moduleTrace = useMemo(() => {
             return {

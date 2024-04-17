@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect} from "react";
 import {useGetLaps} from "../api/hooks";
 import {useStateWithDeps} from "use-state-with-deps";
 

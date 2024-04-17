@@ -32,7 +32,7 @@ export default function LapSelector({className}) {
         }
     }
 
-    return (lapCount !== null ?
+    return (lapCount !== null?
 
             <div className={"flex flex-col sm:flex-row items-center border-2 border-gray-400 rounded-md pl-2 mt-4 " + className}>
                 <>
@@ -45,11 +45,11 @@ export default function LapSelector({className}) {
                     />
                     <button onClick={buttonClick} className={"border border-black my-4 text-white mr-1"}><TbExchange/>
                     </button>
-                    <Pagination variant="outlined" count={lapCount} page={currentLap} onChange={onPaginationChange}
-                                className="grow"/>
+                    {currentLap !== null && <Pagination variant="outlined" count={lapCount} page={currentLap} onChange={onPaginationChange}
+                                className="grow"/>}
                 </>
             </div>
-                : <div class="py-2"><OrbitProgress/></div>
+                : <div className="py-2"><OrbitProgress/></div>
 
     )
 }

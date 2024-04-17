@@ -4,7 +4,7 @@ import {plotStyles} from "../styles";
 import {enforcePlotRange} from "./plot-utils";
 import {useMemo, useState} from "react";
 
-export default function OverlappingAccelerationPlot({className, isDataLoading, accelerationData, timeUnit, traces}) {
+export default function OverlappingAccelerationPlot({className, timeUnit, traces}) {
     const {moduleTrace, tangentialTrace, normalTrace} = traces;
     const {width, height, ref} = useResizeDetector();
 

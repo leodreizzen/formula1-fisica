@@ -28,7 +28,7 @@ export default function SessionSelector({className, rounds, onLoadDataClick}) {
 
     return <div className={className}>
         <label className={"block mb-1 mt-5 text-white text-left p-1"} htmlFor="ronda">Ronda:</label>
-        <select value={selectedRound !== null ? selectedRound : ""}
+        <select value={selectedRound ?? ""}
                 className={"block w-full border border-gray-400 rounded-md text-white bg-gray-900 p-1"} id="ronda"
                 onChange={onRoundChange}>
             {rounds ? (rounds.map((round, i) => <option key={round.roundNumber}
@@ -37,7 +37,7 @@ export default function SessionSelector({className, rounds, onLoadDataClick}) {
         </select>
 
         <label className={"block mb-1 mt-5 text-white text-left p-1"} htmlFor="sesion">Sesión:</label>
-        <select value={selectedSession !== null ? selectedSession : ""}
+        <select value={selectedSession ?? ""}
                 className={" text-white block w-full border border-gray-400 rounded-md bg-gray-900 p-1"} id="sesion"
                 onChange={onSessionChange}>
             {

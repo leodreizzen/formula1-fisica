@@ -17,6 +17,12 @@ code {
     monospace;
 }
 
+.App {
+    height: 100vh;
+    text-align: center;
+    display: flex;
+}
+
 .remove-arrow::-webkit-inner-spin-button,
 .remove-arrow::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -24,10 +30,6 @@ code {
 }
 .remove-arrow {
     -moz-appearance: textfield;
-}
-
-#tabList {
-  background-color: #010409;
 }
 
 .draglayer {

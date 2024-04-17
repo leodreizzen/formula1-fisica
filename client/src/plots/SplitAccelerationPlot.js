@@ -9,14 +9,14 @@ function SplitAccelerationPlot({className, timeUnit, traces}) {
     const {width, height, ref} = useResizeDetector();
 
     //Memos to avoid re-rendering
-    const minX = useMemo(() => Math.min(...moduleTrace.x), [moduleTrace]);
-    const maxX = useMemo(() => Math.max(...moduleTrace.x), [moduleTrace]);
-    const minY1 = useMemo(() => Math.min(...moduleTrace.y), [moduleTrace]);
-    const maxY1 = useMemo(() => Math.max(...moduleTrace.y), [moduleTrace]);
-    const minY2 = useMemo(() => Math.min(...tangentialTrace.y), [tangentialTrace]);
-    const maxY2 = useMemo(() => Math.max(...tangentialTrace.y), [tangentialTrace]);
-    const minY3 = useMemo(() => Math.min(...normalTrace.y), [normalTrace]);
-    const maxY3 = useMemo(() => Math.max(...normalTrace.y), [normalTrace]);
+    const minX = useMemo(() => Math.min(...moduleTrace.x), [moduleTrace.x]);
+    const maxX = useMemo(() => Math.max(...moduleTrace.x), [moduleTrace.x]);
+    const minY1 = useMemo(() => Math.min(...moduleTrace.y), [moduleTrace.y]);
+    const maxY1 = useMemo(() => Math.max(...moduleTrace.y), [moduleTrace.y]);
+    const minY2 = useMemo(() => Math.min(...tangentialTrace.y), [tangentialTrace.y]);
+    const maxY2 = useMemo(() => Math.max(...tangentialTrace.y), [tangentialTrace.y]);
+    const minY3 = useMemo(() => Math.min(...normalTrace.y), [normalTrace.y]);
+    const maxY3 = useMemo(() => Math.max(...normalTrace.y), [normalTrace.y]);
 
     const [xRange, setXRange] = useState([minX, maxX]);
     const [y1Range, setY1Range] = useState([minY1, maxY1]);

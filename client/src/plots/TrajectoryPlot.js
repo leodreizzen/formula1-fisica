@@ -1,5 +1,4 @@
 import Plot from 'react-plotly.js';
-import {useGetTrajectory, useGetVectors} from "../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
 import {useEffect, useMemo, useState} from "react";
 import {useSessionDataContext} from "../context/SessionDataContext";
@@ -8,17 +7,13 @@ import {plotStyles} from "../styles";
 import {enforcePlotRange} from "./plot-utils";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
 import {useDriverContext} from "../context/DriverContext";
-import {useLapContext} from "../context/LapContext";
 import {useVectorsContext} from "../context/VectorsContext";
 
 export default function TrajectoryPlot({className, trajectoryData, trajectoryDataLoading, hoveredPoint, setHoveredPoint}) {
     const sessionData = useSessionDataContext();
     const {currentDriver} = useDriverContext();
-    const {currentLap} = useLapContext();
     const {vectors, getVectorsFromTime, vectorsLoading} = useVectorsContext();
 
-    const {year, round, session} = sessionData;
-    const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
     const {width, height, ref} = useResizeDetector();
 
     const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
@@ -45,7 +40,7 @@ export default function TrajectoryPlot({className, trajectoryData, trajectoryDat
                 y1: maxY + yTolerance
             });
         }
-    }, [trajectoryData]);
+    }, [trajectoryData, minX, minY, maxX, maxY, xTolerance, yTolerance]);
 
     function handleUpdate(state) {
         if (state.layout.xaxis.range[0] !== range.x0 || state.layout.xaxis.range[1] !== range.x1 ||
@@ -64,7 +59,7 @@ export default function TrajectoryPlot({className, trajectoryData, trajectoryDat
     const arrows = useMemo(() => {
         if (vectors === null || trajectoryData === null || hoveredPoint === null)
             return null;
-
+        const time = trajectoryData[hoveredPoint].time;
         const x = trajectoryData[hoveredPoint].x / 10;
         const y = trajectoryData[hoveredPoint].y / 10;
         const vectorsInTime = getVectorsFromTime(time);
