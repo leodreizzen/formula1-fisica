@@ -6,6 +6,7 @@ from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
     accelerationsPlaceholder
+from scipy.signal import savgol_filter
 import pandas as pd
 import numpy as np
 
@@ -128,6 +129,15 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 
     # Eliminar la última fila
     lap_telemetry = lap_telemetry.iloc[:-1]
+
+    # Filtrar los datos con un filtro de Savitzky-Golay
+    lap_telemetry['aceleracion_x'] = savgol_filter(lap_telemetry['aceleracion_x'], 5, 3)
+    lap_telemetry['aceleracion_y'] = savgol_filter(lap_telemetry['aceleracion_y'], 5, 3)
+    lap_telemetry['aceleracion_z'] = savgol_filter(lap_telemetry['aceleracion_z'], 5, 3)
+    lap_telemetry['modulo_aceleracion'] = savgol_filter(lap_telemetry['modulo_aceleracion'], 5, 3)
+    lap_telemetry['modulo_aceleracion_xy'] = savgol_filter(lap_telemetry['modulo_aceleracion_xy'], 5, 3)
+    lap_telemetry['aTangential'] = savgol_filter(lap_telemetry['aTangential'], 5, 3)
+    lap_telemetry['a_normal'] = savgol_filter(lap_telemetry['a_normal'], 5, 3)
 
     #Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
 
