@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "npm run pyinstall && cd client && npm install",
     "start": "npm run dev",
-    "electron": "electron .",
+    "electron": "electron . --remote-debugging-port=9229",
     "python": "python scripts/runPython.py",
     "api": "pyhon api.py",
     "react-dev": "cd client & npm start",
@@ -29,6 +29,7 @@
     "wait-on": "^7.2.0"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "electron-is-dev": "^3.0.1",
     "postinstall": "^0.10.3",
     "python-shell": "^5.0.0",

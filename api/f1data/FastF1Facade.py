@@ -9,7 +9,7 @@ from functools import lru_cache
 
 """ 
 #Tamaño de la cache en memoria de cada funcion de la api 
-#El tamaño esta dado por la cantidad de llamdas con sus parametros que se pueden guardar
+#El tamaño esta dado por la cantidad de llamadas con sus parametros que se pueden guardar
 #Por ejemplo si se quieren guardar 4 llamadas en la cache se debe poner el tamaño en 4
 """
 
