@@ -2,7 +2,7 @@ import Plot from 'react-plotly.js';
 import {OrbitProgress} from "react-loading-indicators";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {useResizeDetector} from 'react-resize-detector';
-import {plotStyles} from "../../styles";
+import {plotStyles, trajectoryColor} from "../../styles";
 import {
     enforcePlotRange,
     enforceSameScaleHorizontal,
@@ -108,10 +108,10 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 y: trajectoryData.map(it => it.y / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: '#' + currentDriver?.teamColor ?? "00FF00"},
+                marker: {color: trajectoryColor},
                 hoverinfo: 'none'
             }
-        ] : null, [trajectoryData, currentDriver?.teamColor]);
+        ] : null, [trajectoryData]);
 
     const plotLayout = useMemo(() => {
         return {

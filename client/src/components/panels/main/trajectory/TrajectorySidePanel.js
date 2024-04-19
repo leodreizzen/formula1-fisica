@@ -8,10 +8,10 @@ export default function
         <div className="m-auto w-full h-full flex flex-col">
             {hoveredPoint !== null ? (
                 <>
-                    <HoveredPointData className="w-full" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
-                    <MiniPlot className="w-full grow mt-4" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
+                    <HoveredPointData className=" w-full" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
+                    <MiniPlot className=" w-full grow mt-4" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
                 </>
             ) : null}
-        < /div>
+        </div>
     </div>
 }

@@ -1,6 +1,6 @@
 import Plot from "react-plotly.js";
 import {useDriverContext} from "../../context/DriverContext";
-import {plotStyles} from "../../styles";
+import {plotStyles, trajectoryColor} from "../../styles";
 import {useMemo} from "react";
 import {useResizeDetector} from "react-resize-detector";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
@@ -60,7 +60,7 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
                 y: trajectoryData.map(it => it.y / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: '#' + currentDriver?.teamColor ?? "00FF00"},
+                marker: {color: trajectoryColor},
                 hoverinfo: 'none'
             }]}
 

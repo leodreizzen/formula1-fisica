@@ -1,4 +1,4 @@
-import {accelerationColor, normalAccelerationColor, speedColor, tangentialAccelerationColor} from "../../../../styles";
+import {accelerationColor, normalAccelerationColor, trajectoryColor, speedColor, tangentialAccelerationColor} from "../../../../styles";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useVectorsContext} from "../../../../context/VectorsContext";
 
@@ -21,7 +21,7 @@ export default function HoveredPointData({trajectoryData, hoveredPoint}){
                 </tr>
                 </thead>
                 <tbody>
-                <tr style={{color: "#" + currentDriver?.teamColor}}>
+                <tr style={{color: trajectoryColor}}>
                     <th>r</th>
                     <td>{(trajectoryData[hoveredPoint].x / 10).toFixed(2)}m</td>
                     <td>{(trajectoryData[hoveredPoint].y / 10).toFixed(2)}m</td>

@@ -20,8 +20,8 @@ export default function MainPanel({className}) {
                             {lapData =>
                                 <VectorsProvider currentDriver={driverData.currentDriver} session={session} round={round} year={year} currentLap={lapData.currentLap}>
                                     <Tabs className=" h-full flex flex-col"
-                                          selectedTabPanelClassName="react-tabs__tab-panel--selected grow"
-                                          selectedTabClassName="bg-gray-500">
+                                            selectedTabPanelClassName="react-tabs__tab-panel--selected grow"
+                                            selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl">
                                         <TabList>
                                             <Tab>Trayectoria</Tab>
                                             <Tab
