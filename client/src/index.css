@@ -38,3 +38,10 @@ code {
 .react-tabs__tab::after {
     display: none;
 }
+
+.no-select{
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
