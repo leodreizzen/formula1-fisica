@@ -836,6 +836,16 @@ vectorsPlaceholder = {
          'module': 280.25702488965374,
          'velocimeter': 280.25702488965374
     },
+    "versors":{
+        "tangent":{
+            'x': 0.707,
+            'y': 0.707
+        },
+        "normal":{
+            'x': 0.707,
+            'y': 0.707
+        }
+    },
     "acceleration": {
         "ax": 0.2,
         "aY": 0.5,

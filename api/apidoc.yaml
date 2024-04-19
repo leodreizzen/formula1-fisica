@@ -126,10 +126,9 @@ paths:
       - $ref: "#/components/parameters/sessionNumber"
       - $ref: "#/components/parameters/driverNumber"
       - $ref: "#/components/parameters/lapNumber"
-      - $ref: "#/components/parameters/relativeTimestamp"
-    
+
     get:
-      description: Obtener la velocidad y aceleración de un conductor en un determinado momento
+      description: Obtener la velocidad y aceleración de un conductor en una vuelta, a lo largo del tiempo
       responses:
         '200':
           description: Velocidad y aceleración del conductor
@@ -138,36 +137,14 @@ paths:
               schema:
                 type: object
                 properties:
+                  time:
+                    $ref: '#/components/parameters/relativeTimestamp'
                   speed:
-                    $ref: '#/components/schemas/Speed'
+                      $ref: '#/components/schemas/Speed'
                   acceleration:
-                    $ref: '#/components/schemas/Acceleration'
-        '400':
-          description: Alguno de los parámetros es inválido
-
-  /accelerations:
-    parameters:
-      - $ref: "#/components/parameters/roundYear"
-      - $ref: "#/components/parameters/roundNumber"
-      - $ref: "#/components/parameters/sessionNumber"
-      - $ref: "#/components/parameters/driverNumber"
-      - $ref: "#/components/parameters/lapNumber"
-    get:
-      description: Obtener las aceleraciones de un conductor en toda una vuelta
-      responses:
-        '200':
-          description: Velocidad y aceleración del conductor
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    aceleracion:
                       $ref: '#/components/schemas/Acceleration'
-                    time:
-                      $ref: '#/components/parameters/relativeTimestamp'
+                  versors:
+                      $ref: "#/components/schemas/Versors"
 
         '400':
           description: Alguno de los parámetros es inválido
@@ -298,6 +275,8 @@ components:
           type: number
         module:
           type: number
+        moduleXY:
+          type: number
         speedometer:
           type: number
     Acceleration:  
@@ -312,7 +291,34 @@ components:
           type: number
         module:
           type: number
+        moduleXY:
+            type: number
         aTangential:
           type: number
         aNormal:
           type: number
+    Versors:
+        type: object
+        description: "Versores"
+        properties:
+            tangent:
+              $ref: "#/components/schemas/TangentVersor"
+            normal:
+                $ref: "#/components/schemas/NormalVersor"
+
+    TangentVersor:
+        type: object
+        description: "Versor tangente"
+        properties:
+            x:
+              type: number
+            y:
+              type: number
+    NormalVersor:
+        type: object
+        description: "Versor normal"
+        properties:
+            x:
+              type: number
+            y:
+              type: number
