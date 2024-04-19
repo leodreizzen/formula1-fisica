@@ -1,10 +1,13 @@
 import Plot from 'react-plotly.js';
 import {OrbitProgress} from "react-loading-indicators";
-import {useEffect, useMemo, useState} from "react";
-import {useSessionDataContext} from "../../context/SessionDataContext";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {useResizeDetector} from 'react-resize-detector';
 import {plotStyles} from "../../styles";
-import {enforcePlotRange} from "./plot-utils";
+import {
+    enforcePlotRange,
+    enforceSameScaleHorizontal,
+    enforceSameScaleVertical, getTolerancesPreservingAspectRatio,
+} from "./plot-utils";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
 import {useDriverContext} from "../../context/DriverContext";
 import {useVectorsContext} from "../../context/VectorsContext";
@@ -20,8 +23,9 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
     const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
 
-    const xTolerance = (maxX - minX) * 0.05;
-    const yTolerance = (maxY - minY) * 0.05;
+    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX,maxX,minY,maxY, width, height,0.05, 0.05)
+
+    const previousSize = useRef({width: 0, height: 0});
 
     const [range, setRange] = useState({
         x0: minX,
@@ -31,6 +35,23 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     });
 
     useEffect(() => {
+        let newRange;
+        if (width !== previousSize.width) {
+            newRange = enforceSameScaleHorizontal(width, height, range, minX, minY, maxX, maxY, xTolerance, yTolerance)
+        }
+        else if (height !== previousSize.height){
+            newRange = enforceSameScaleVertical(width, height, range, minX, minY, maxX, maxY, xTolerance, yTolerance)
+        }
+        if(newRange !== undefined) {
+            setRange(newRange)
+        }
+        previousSize.current = {width, height};
+
+    }, [width, height]);
+
+    useEffect(() => {
+        // Update range when data changes
+        // Side effect: the range is reset when the plot size changes
         if (trajectoryData !== null) {
             setRange({
                 x0: minX - xTolerance,
@@ -50,7 +71,8 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 y0: state.layout.yaxis.range[0],
                 y1: state.layout.yaxis.range[1]
             }
-            setRange(enforcePlotRange(range, newRange, minX - xTolerance, minY - yTolerance, maxX + xTolerance, maxY + yTolerance));
+            let updatedRange = enforcePlotRange(range, newRange, minX - xTolerance, minY - yTolerance, maxX + xTolerance, maxY + yTolerance);
+            setRange(updatedRange);
         }
     }
 
@@ -89,7 +111,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 marker: {color: '#' + currentDriver?.teamColor ?? "00FF00"},
                 hoverinfo: 'none'
             }
-        ] : null, [trajectoryData]);
+        ] : null, [trajectoryData, currentDriver?.teamColor]);
 
     const plotLayout = useMemo(() => {
         return {
@@ -106,7 +128,8 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 color: plotStyles.axisColor,
                 gridcolor: plotStyles.gridColor,
                 gridwidth: 1,
-                range: [range.x0, range.x1]
+                range: [range.x0, range.x1],
+                dtick: 200,
             },
             yaxis: {
                 title: 'Y (m)',
@@ -114,6 +137,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 gridcolor: plotStyles.gridColor,
                 gridwidth: plotStyles.axisGridwidth,
                 range: [range.y0, range.y1],
+                dtick: 200,
             },
             dragmode: "pan",
             annotations: arrows
