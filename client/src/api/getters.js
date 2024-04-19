@@ -38,3 +38,13 @@ export function getTrajectory(year, roundNumber, sessionNumber, driverNumber, la
         lapNumber: lapNumber
     }, options);
 }
+
+export function getVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
+     return APIGetter("/vectors", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber: driverNumber,
+        lapNumber: lapNumber
+    }, options);
+}

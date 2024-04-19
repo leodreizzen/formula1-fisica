@@ -1,13 +1,13 @@
 name: Create release on tag creation
-on: 
+on:
   push:
-    tags: 
+    tags:
       - '**'
 permissions:
   contents: write
 jobs:
   Crear-release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,37 +19,32 @@ jobs:
         uses: actions/setup-python@v5.1.0
         with:
           python-version: '3.12'
-          
+
       - name: Install dependencies
         run: |
           npm install
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt install wine64
-      - name: Install Pyinstaller on Wine
-        run: |
-          wget https://www.python.org/ftp/python/3.12.2/python-3.12.2-amd64.exe
-          wineconsole --backend=curses cmd /c python-3.12.2-amd64.exe /quiet InstallAllUsers=1 PrependPath=1
-          wineconsole --backend=curses python.exe -m pip install pyinstaller
-          
+
       - uses: little-core-labs/get-git-tag@v3.0.1
         id: tagName
-        
+
       - name: Create release files
         run: npm run build
-        
+
       - name: get-package-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        run: |
+          $version = Get-Content -Raw -Path "./package.json" | ConvertFrom-Json | Select-Object -ExpandProperty version
+          $projectName = Get-Content -Raw -Path "./package.json" | ConvertFrom-Json | Select-Object -ExpandProperty name
+          echo version=$version >> "$Env:GITHUB_ENV"
+          echo projectName=$projectName >> "$Env:GITHUB_ENV" 
 
       - name: Make release files
         run: |
           mkdir ../../release_files
-          mv win-unpacked ${{ github.event.repository.name }}
-          mv *.exe ../../release_files/
-          zip -qq -r "../../release_files/${{ github.event.repository.name }}-${{ steps.package-version.outputs.current-version }}.zip" "${{ github.event.repository.name }}"
-        working-directory: ./release/${{ steps.package-version.outputs.current-version }}
-      
+          move win-unpacked ${{ github.event.repository.name }}
+          move *.exe ../../release_files/
+          7z a -tzip -mx=6 "../../release_files/$Env:projectName-$Env:version.zip" "${{ github.event.repository.name }}"
+        working-directory: .\release\${{ env.version }}
+
       - name: Create GitHub release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -61,5 +56,4 @@ jobs:
 
       - name: Cleanup
         run: |
-          rm -rf ./* || true
-          rm -rf ./.??* || true     
+          Remove-Item .\* -Recurse -Force

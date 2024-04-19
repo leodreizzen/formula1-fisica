@@ -1,16 +1,14 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import {API_BASE_URL} from "../settings";
-import {value} from "plotly.js/src/traces/indicator/attributes";
-import {getDrivers, getLaps, getRounds, getTrajectory} from "./getters";
+import {getDrivers, getLaps, getRounds, getTrajectory, getVectors} from "./getters";
+import {useStateWithDeps} from "use-state-with-deps";
 
 function useGetFromAPI(getter, dependencies, validParams) {
-    const [res, setRes] = useState(null)
+    const [res, setRes] = useStateWithDeps(null, dependencies)
     const [isLoading, setIsLoading] = useState(null)
     useEffect(() => {
         const abortController = new AbortController()
         if (validParams) {
-            setRes(null); // TODO VER si debería hacerse esto.
             setIsLoading(true);
             getter({signal: abortController.signal})
                 .then((res) => {
@@ -63,8 +61,12 @@ export function useGetLaps(year, roundNumber, sessionNumber, driverNumber) {
 }
 
 export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
-    const params = [year, roundNumber, sessionNumber, driverNumber, lapNumber];
 
     const [trajectory, isLoading] = useAPIHook(getTrajectory, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [trajectory, isLoading]
+}
+
+export function useGetVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+    const [vectors, isLoading] = useAPIHook(getVectors, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
+    return [vectors, isLoading]
 }
