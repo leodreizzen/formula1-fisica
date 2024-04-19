@@ -87,8 +87,10 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
 @app.get("/vectors")
 def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     # Parámetros del filtro de Savitzky-Golay
-    window_length = 5
-    polyorder = 1
+    window_length_speed = 15
+    polyorder_speed= 2
+    window_length_acceleration = 100
+    polyorder_acceleration = 3
 
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
@@ -96,12 +98,16 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     lap_telemetry['velocidad_y'] = (lap_telemetry['Y'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_z'] = (lap_telemetry['Z'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     # Filtrar velocidad con un filtro de Savitzky-Golay
-    lap_telemetry['velocidad_x'] = savgol_filter(lap_telemetry['velocidad_x'], window_length, polyorder)
-    lap_telemetry['velocidad_y'] = savgol_filter(lap_telemetry['velocidad_y'], window_length, polyorder)
-    lap_telemetry['velocidad_z'] = savgol_filter(lap_telemetry['velocidad_z'], window_length, polyorder)
-    lap_telemetry['aceleracion_x'] = (lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / lap_telemetry['diferencia_tiempo']
-    lap_telemetry['aceleracion_y'] = (lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / lap_telemetry['diferencia_tiempo']
-    lap_telemetry['aceleracion_z'] = (lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / lap_telemetry['diferencia_tiempo']
+    lap_telemetry['velocidad_x'] = savgol_filter(lap_telemetry['velocidad_x'], window_length_speed, polyorder_speed)
+    lap_telemetry['velocidad_y'] = savgol_filter(lap_telemetry['velocidad_y'], window_length_speed, polyorder_speed)
+    lap_telemetry['velocidad_z'] = savgol_filter(lap_telemetry['velocidad_z'], window_length_speed, polyorder_speed)
+    lap_telemetry['aceleracion_x'] = ((lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
+    lap_telemetry['aceleracion_y'] = ((lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
+    lap_telemetry['aceleracion_z'] = ((lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
+    # Filtrar aceleración con un filtro de Savitzky-Golay
+    lap_telemetry['aceleracion_x'] = savgol_filter(lap_telemetry['aceleracion_x'], window_length_acceleration, polyorder_acceleration)
+    lap_telemetry['aceleracion_y'] = savgol_filter(lap_telemetry['aceleracion_y'], window_length_acceleration, polyorder_acceleration)
+    lap_telemetry['aceleracion_z'] = savgol_filter(lap_telemetry['aceleracion_z'], window_length_acceleration, polyorder_acceleration)
     lap_telemetry['modulo_velocidad_xy'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
     lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]], axis=1)
     lap_telemetry['modulo_aceleracion'] = np.linalg.norm(lap_telemetry[['aceleracion_x', 'aceleracion_y', "aceleracion_z"]], axis=1)
@@ -137,16 +143,9 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     # Eliminar la última fila
     lap_telemetry = lap_telemetry.iloc[:-1]
 
-    # Filtrar los datos con un filtro de Savitzky-Golay
-    lap_telemetry['aceleracion_x'] = savgol_filter(lap_telemetry['aceleracion_x'], window_length, polyorder)
-    lap_telemetry['aceleracion_y'] = savgol_filter(lap_telemetry['aceleracion_y'], window_length, polyorder)
-    lap_telemetry['aceleracion_z'] = savgol_filter(lap_telemetry['aceleracion_z'], window_length, polyorder)
-    lap_telemetry['modulo_aceleracion'] = savgol_filter(lap_telemetry['modulo_aceleracion'], window_length, polyorder)
-    lap_telemetry['modulo_aceleracion_xy'] = savgol_filter(lap_telemetry['modulo_aceleracion_xy'], window_length, polyorder)
-    lap_telemetry['aTangential'] = savgol_filter(lap_telemetry['aTangential'], window_length, polyorder)
-    lap_telemetry['a_normal'] = savgol_filter(lap_telemetry['a_normal'], window_length, polyorder)
+    # Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
 
-    #Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
+    # Filtrar los datos con un filtro de Savitzky-Golay
 
     aceleraciones = []
 
