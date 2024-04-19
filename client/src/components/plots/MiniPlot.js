@@ -5,6 +5,7 @@ import {useMemo} from "react";
 import {useResizeDetector} from "react-resize-detector";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
 import {useVectorsContext} from "../../context/VectorsContext";
+import {getTolerancesPreservingAspectRatio} from "./plot-utils";
 
 export function MiniPlot({className, trajectoryData, hoveredPoint}) {
 
@@ -20,13 +21,14 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
     const {width, height, ref} = useResizeDetector();
     const {vectors, getVectorsFromTime} = useVectorsContext();
 
+    const hoveredPointData = trajectoryData[hoveredPoint];
     const arrows = useMemo(() => {
         if (vectors === null || trajectoryData === null || hoveredPoint === null) {
             return null;
         }
-        const time = trajectoryData[hoveredPoint].time;
-        const x = trajectoryData[hoveredPoint].x / 10;
-        const y = trajectoryData[hoveredPoint].y / 10;
+        const time = hoveredPointData.time;
+        const x = hoveredPointData.x / 10;
+        const y = hoveredPointData.y / 10;
         const vectorsInTime = getVectorsFromTime(time);
         if(vectorsInTime === undefined)
             return [];
@@ -34,12 +36,21 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
     }, [vectors, trajectoryData, hoveredPoint, getVectorsFromTime]);
 
 
-    const range = {
+    let range = {
         x0: trajectoryData[hoveredPoint].x / 10 - xSize * radius,
         x1: trajectoryData[hoveredPoint].x / 10 + ySize * radius,
         y0: trajectoryData[hoveredPoint].y / 10 - xSize * radius,
         y1: trajectoryData[hoveredPoint].y / 10 + ySize * radius
     }
+
+    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(range.x0,range.x1,range.y0,range.y1, width, height,0, 0)
+    range = {
+        x0: range.x0 - xTolerance,
+        x1: range.x1 + xTolerance,
+        y0: range.y0 - yTolerance,
+        y1: range.y1 + yTolerance
+    }
+
     const {currentDriver} = useDriverContext();
     return (
         <div ref={ref} className={className + " overflow-clip"}>
@@ -65,7 +76,9 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
                     color: "transparent",
                     gridcolor: plotStyles.gridColor,
                     gridwidth: 1,
-                    range: [range.x0, range.x1]
+                    range: [range.x0, range.x1],
+                    dtick: 50,
+
                 },
                 yaxis: {
                     title: 'Y (m)',
@@ -73,6 +86,7 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
                     gridcolor: plotStyles.gridColor,
                     gridwidth: plotStyles.axisGridwidth,
                     range: [range.y0, range.y1],
+                    dtick: 50,
                 },
                 dragmode: false,
                 height: height,
