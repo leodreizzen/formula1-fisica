@@ -97,7 +97,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
             paper_bgcolor: plotStyles.paper_bgcolor,
             font: plotStyles.font,
 
-            margin: {r: 0},
+            margin: {r: 0, t: 0, b: 0, l: 0 },
 
             width: width,
             height: height,

@@ -9,7 +9,7 @@ export default function HoveredPointData({trajectoryData, hoveredPoint}){
     const {currentDriver} = useDriverContext();
 
     return(
-        <div className="flex flex-col">
+        <div className="flex flex-col text-xs/4 lg:text-xs/5 xl:text-base 2xl:text-xl">
             <p>Tiempo: {trajectoryData[hoveredPoint].time.match(/(\d{2}):(\d{2})\.(\d{3})/)[0]}</p>
             <table className="table-auto">
                 <thead>
@@ -41,21 +41,21 @@ export default function HoveredPointData({trajectoryData, hoveredPoint}){
                 </tr>
                 </tbody>
             </table>
-            <div className="flex mt-2 items-center justify-end">
-                <div className="w-1/2 flex flex-col text-left">
-                    <div className="grid grid-cols-2 ">
-                        <span style={{color: tangentialAccelerationColor}}>a tangencial:</span> <span
+            <div className="flex flex-col lg:flex-row mt-2 items-center lg:justify-center ">
+                <div className="flex flex-col text-left lg:mr-4">
+                    <div className="grid grid-cols-2">
+                        <span style={{color: tangentialAccelerationColor}} className="mr-4 lg:mx-0">a tang.:</span> <span
                         style={{color: tangentialAccelerationColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aTangential / 10).toFixed(2) + "m/s²"}</span>
-                        <span style={{color: normalAccelerationColor}}>a normal:</span> <span
-                        style={{color: normalAccelerationColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aNormal / 10).toFixed(2) + "m/s²"}</span>
-                        <span style={{color: accelerationColor}}>módulo a:</span> <span
+                        <span style={{color: normalAccelerationColor}} className="mr-4 lg:mx-0">a normal:</span> <span
+                        style={{color: normalAccelerationColor}} >{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aNormal / 10).toFixed(2) + "m/s²"}</span>
+                        <span style={{color: accelerationColor}} className="mr-4 lg:mx-0">módulo a:</span> <span
                         style={{color: accelerationColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.module / 10).toFixed(2) + "m/s²"}</span>
                     </div>
                 </div>
-                <div className="grid grid-cols-2">
-                    <span style={{color: speedColor}}>módulo v </span> <span
+                <div className="grid grid-cols-2 text-left">
+                    <span style={{color: speedColor}} className="mr-4 lg:mx-0">módulo v </span> <span
                     style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.speed.module / 10).toFixed(2) + "m/s"}</span>
-                    <span style={{color: speedColor}}>velocímetro: </span> <span
+                    <span style={{color: speedColor}} className="mr-4 lg:mx-0">velocímetro: </span> <span
                     style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.speed.speedometer / 10).toFixed(2) + "m/s"}</span>
                 </div>
             </div>

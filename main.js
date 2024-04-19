@@ -81,12 +81,28 @@ async function installExtensions() {
         });
     }
 }
-
+let previousSize;
 try {
     const createWindow = async () => {
         const win = new BrowserWindow({
             width: 1200,
-            height: 675
+            height: 800,
+            minHeight:650,
+            minWidth:800
+        })
+        previousSize = win.getSize()
+        win.on('resize', (e) => {
+            const size = win.getSize()
+            const [width, height] = size
+            const maxAspectRatio = 1.85;
+            if(height > 0 && width / height > maxAspectRatio) {
+                if (size[0] !== previousSize[0]) {
+                    win.setSize(size[0], Math.round(size[0] / maxAspectRatio))
+                }
+                else
+                    win.setSize(Math.round(size[1] * maxAspectRatio), size[1])
+            }
+            previousSize = size
         })
         win.maximize()
         win.loadURL(isDev ? 'http://localhost:3000' : url.format({
