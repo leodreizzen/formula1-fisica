@@ -4,17 +4,19 @@ import {useMemo} from "react";
 
 export default function DriverSelect({className = "", drivers, value, disabled, onChange}) {
     const theme = useTheme();
-    const options = useMemo(() => drivers.map(driver => {
-        return {
-            value: driver.driverNumber,
-            label: (<div>
-                    {driver.driverNumber} - {driver.fullName} {(driver.countryCode ? (" (" + (driver.countryCode) + ")") : "")} -
-                    <span
-                        style={driver.teamColor ? {color: "#" + driver.teamColor} : undefined}> {driver.teamName}</span>
-                </div>
-            ),
-        };
-    }),[drivers]);
+    const options = useMemo(() => drivers
+        .toSorted((d1, d2) => (Number(d1.driverNumber) - Number(d2.driverNumber)))
+        .map(driver => {
+            return {
+                value: driver.driverNumber,
+                label: (<div>
+                        {driver.driverNumber} - {driver.fullName} {(driver.countryCode ? (" (" + (driver.countryCode) + ")") : "")} -
+                        <span
+                            style={driver.teamColor ? {color: "#" + driver.teamColor} : undefined}> {driver.teamName}</span>
+                    </div>
+                ),
+            };
+        }), [drivers]);
     const selectedOption = useMemo(() => options ? options.find(option => option.value === value) : null, [options, value]);
 
     function handleChange(option) {
