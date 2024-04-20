@@ -1,5 +1,5 @@
 import {plotStyles} from "../../styles";
-import {useMemo, useState} from "react";
+import {useMemo} from "react";
 import BasePlot from "./BasePlot";
 
 function SplitAccelerationPlot({className, timeUnit, traces}) {
