@@ -1,6 +1,6 @@
 import {useResizeDetector} from "react-resize-detector";
 import Plot from "react-plotly.js";
-import {useEffect, useRef} from "react";
+import {useEffect, useMemo, useRef} from "react";
 
 export default function AutoSizePlot({className, onSizeChange, ...props}){
     /*
@@ -16,13 +16,15 @@ export default function AutoSizePlot({className, onSizeChange, ...props}){
             previousSize.current = {width, height};
         }
     }, [width, height]);
+    const layout = useMemo(()=>({...(props.layout), width: width, height: height, autosize: true}), [width, height, props.layout])
+    const config = useMemo(()=>({...props.config, responsive: true}), [props.config])
     return (
         <div ref={ref} className={className}>
             <Plot
                 className="h-full w-full"
                 {...props}
-                layout={{...(props.layout), width: width, height: height, autosize: true}}
-                config={{...props.config, responsive: true}}
+                layout={layout}
+                config={config}
             />
         </div>
     )
