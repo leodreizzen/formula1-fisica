@@ -211,11 +211,11 @@ export default function BasePlot({className, data, layout, config, tolerances = 
         scrollZoom: true, displayModeBar: false
     }
     return <AutoSizePlot
+        {...props}
         className = {className}
         data={data}
         layout={plotLayout}
         config={plotConfig}
         onUpdate={handleUpdate}
-        {...props}
     />
 }
