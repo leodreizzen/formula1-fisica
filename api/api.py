@@ -1,3 +1,5 @@
+import math
+
 import fastapi
 import json
 from fastapi.middleware.cors import CORSMiddleware
@@ -167,8 +169,30 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 
     return aceleraciones
 
+@app.get("/derrapes")
+def derrapes():
+    # radio de giro para umbral
+    wheelbase = 3.6
+    tire_width = 0.305
+    steering_angle_radians = math.radians(30)
+    radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
 
+    #AceleraciónNormal = (VelocidadTangencial) ^2/  Radio
+    # radio = (velTangencial) ^2 / aceleraciónNormal
+    datosAceleraciones = pd.DataFrame(accelerations(2021, 5, 5, 33, 1))
+    seleccion = []
 
+    for index, row in datosAceleraciones.iterrows():
+        #pasaje de dm a m
+        velocidad = row["speed"]["module"]/10
+        aceleracionNormal = row["acceleration"]["aNormal"]/10
+        if aceleracionNormal != 0:
+            radio = (velocidad ** 2) / aceleracionNormal
+            if radio < radio_giro_minimo:
+                row["radio"] = radio
+                seleccion.append(row)
+
+    return seleccion
 
 
 if __name__ == "__main__":
