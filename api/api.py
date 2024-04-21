@@ -18,6 +18,12 @@ facade = FastF1Facade()
 
 origins = ["*"]
 
+# radio de giro para umbral
+wheelbase = 3.6
+tire_width = 0.305
+steering_angle_radians = math.radians(30)
+radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -170,13 +176,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     return aceleraciones
 
 @app.get("/derrapes")
-def derrapes():
-    # radio de giro para umbral
-    wheelbase = 3.6
-    tire_width = 0.305
-    steering_angle_radians = math.radians(30)
-    radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
-
+def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     #AceleraciónNormal = (VelocidadTangencial) ^2/  Radio
     # radio = (velTangencial) ^2 / aceleraciónNormal
     datosAceleraciones = pd.DataFrame(accelerations(2021, 5, 5, 33, 1))
