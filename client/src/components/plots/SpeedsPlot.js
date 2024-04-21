@@ -3,9 +3,8 @@ import {useMemo, useState} from "react";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import {OrbitProgress} from "react-loading-indicators";
 import BasePlot from "./BasePlot";
-import {plotStyles} from "../../styles";
 
-export default function VelocitysPlots({className, timeUnit})  {
+export default function SpeedsPlot({className, timeUnit})  {
     const {vectors} = useVectorsContext();
     const [visible, setVisible] = useState([true, true]);
 
@@ -14,7 +13,7 @@ export default function VelocitysPlots({className, timeUnit})  {
             setVisible([state.data[0].visible, state.data[1].visible])
     }
 
-    const vectorCalculadoConPosTrace = useMemo(() => {
+    const calculatedSpeed = useMemo(() => {
             return {
                 x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
                 y: vectors?.map(it => it.speed.module / 10),
@@ -43,7 +42,7 @@ export default function VelocitysPlots({className, timeUnit})  {
                     title: 'Tiempo [' + timeUnit + "]", tolerance: 0.1
                 },
                 yaxis: {
-                    title: 'Velocidad Calculada/Speedometer', titlefont: yAxisFont, tolerance:0.1
+                    title: 'Velocidad [m/s]', titlefont: yAxisFont, tolerance:0.1
                 },
                 margin: {t: 20},
             }
@@ -56,11 +55,12 @@ export default function VelocitysPlots({className, timeUnit})  {
                     <BasePlot
                         className={className + " flex justify-center w-full"}
                         data={[
-                            {...vectorCalculadoConPosTrace, xaxis: 'x1', yaxis: 'y1', name: "Velocidad Calculada", visible: visible[0]},
-                            {...speedometerTrace, xaxis: 'x1', yaxis: 'y1', name: "Speedometer", visible: visible[1]},
+                            {...calculatedSpeed, xaxis: 'x1', yaxis: 'y1', name: "Velocidad Calculada", visible: visible[0]},
+                            {...speedometerTrace, xaxis: 'x1', yaxis: 'y1', name: "Velocímetro", visible: visible[1]},
                         ]}
                         layout={plotLayout}
                         config={{responsive: true, scrollZoom: true, displayModeBar: false}}
+                        onUpdate={handleUpdate}
                     />
                 </>
                 :
