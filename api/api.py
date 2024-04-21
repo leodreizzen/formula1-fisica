@@ -179,7 +179,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     #AceleraciónNormal = (VelocidadTangencial) ^2/  Radio
     # radio = (velTangencial) ^2 / aceleraciónNormal
-    datosAceleraciones = pd.DataFrame(accelerations(2021, 5, 5, 33, 1))
+    datosAceleraciones = pd.DataFrame(accelerations(2021, 5, 5, 44, 1))
     seleccion = []
 
     for index, row in datosAceleraciones.iterrows():
