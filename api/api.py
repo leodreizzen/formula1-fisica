@@ -192,18 +192,18 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     return aceleraciones
 
 @app.get("/derrapes")
-def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+def drifts(year: int, round_number: int, session_number: int, driver_number: int, lap_number: int):
     #AceleraciónNormal = (VelocidadTangencial) ^2/  Radio
     # radio = (velTangencial) ^2 / aceleraciónNormal
-    datosAceleraciones = pd.DataFrame(accelerations(2021, 5, 5, 44, 1))
+    datosAceleraciones = pd.DataFrame(accelerations(year, round_number, session_number, driver_number, lap_number))
     seleccion = []
 
     for index, row in datosAceleraciones.iterrows():
         #pasaje de dm a m
         velocidad = row["speed"]["module"]/10
-        aceleracionNormal = row["acceleration"]["aNormal"]/10
-        if aceleracionNormal != 0:
-            radio = (velocidad ** 2) / aceleracionNormal
+        aceleracion_normal = row["acceleration"]["aNormal"]/10
+        if aceleracion_normal != 0:
+            radio = (velocidad ** 2) / aceleracion_normal
             if radio < radio_giro_minimo:
                 row["radio"] = radio
                 seleccion.append(row)
