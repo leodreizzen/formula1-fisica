@@ -9,8 +9,6 @@ from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlacehol
 import pandas as pd
 import numpy as np
 
-
-
 app = fastapi.FastAPI()
 facade = FastF1Facade()
 
@@ -75,9 +73,19 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
     puntos = []
     for index, row in lap_telemetry.iterrows():
         puntos.append({
-            "x": row["X"],
-            "y": row["Y"],
-            "z": row["Z"],
+            "cartesian": {
+                "x": row["X"],
+                "y": row["Y"],
+                "z": row["Z"],
+            },
+            "polar": {
+                "r": row["X"], # TODO CAMBIAR
+                "theta": row["X"], # TODO CAMBIAR
+                "z": row["z"]
+            },
+            "intrinsic": {
+                "s": row["X"], # TODO CAMBIAR
+            },
             "time": timedelta_to_string(row["Time"])
         })
     return puntos
@@ -85,18 +93,22 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
 
 @app.get("/vectors")
 def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
     lap_telemetry['velocidad_x'] = (lap_telemetry['X'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_y'] = (lap_telemetry['Y'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_z'] = (lap_telemetry['Z'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
-    lap_telemetry['aceleracion_x'] = (lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / lap_telemetry['diferencia_tiempo']
-    lap_telemetry['aceleracion_y'] = (lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / lap_telemetry['diferencia_tiempo']
-    lap_telemetry['aceleracion_z'] = (lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / lap_telemetry['diferencia_tiempo']
+    lap_telemetry['aceleracion_x'] = (lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / \
+                                     lap_telemetry['diferencia_tiempo']
+    lap_telemetry['aceleracion_y'] = (lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / \
+                                     lap_telemetry['diferencia_tiempo']
+    lap_telemetry['aceleracion_z'] = (lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / \
+                                     lap_telemetry['diferencia_tiempo']
     lap_telemetry['modulo_velocidad_xy'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
-    lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]], axis=1)
-    lap_telemetry['modulo_aceleracion'] = np.linalg.norm(lap_telemetry[['aceleracion_x', 'aceleracion_y', "aceleracion_z"]], axis=1)
+    lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]],
+                                                       axis=1)
+    lap_telemetry['modulo_aceleracion'] = np.linalg.norm(
+        lap_telemetry[['aceleracion_x', 'aceleracion_y', "aceleracion_z"]], axis=1)
     lap_telemetry['modulo_aceleracion_xy'] = np.linalg.norm(lap_telemetry[['aceleracion_x', 'aceleracion_y']], axis=1)
 
     # Calculamos el versor tangente para cada fila
@@ -115,7 +127,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 
     # Calculamos la aceleración normal para cada fila
     lap_telemetry['a_normal'] = ((lap_telemetry['aceleracion_x'] * lap_telemetry['versor_normal_x']) +
-                (lap_telemetry['aceleracion_y'] * lap_telemetry['versor_normal_y']))
+                                 (lap_telemetry['aceleracion_y'] * lap_telemetry['versor_normal_y']))
 
     # Si la aceleración normal es negativa, invertimos el versor normal y la aceleración normal
     a_negativa = lap_telemetry['a_normal'] < 0
@@ -129,7 +141,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     # Eliminar la última fila
     lap_telemetry = lap_telemetry.iloc[:-1]
 
-    #Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
+    # Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
 
     aceleraciones = []
 
@@ -146,7 +158,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
                     "y": row["versor_normal_y"]
                 }
             },
-            "speed": {
+            "velocity": {
                 "vX": row["velocidad_x"],
                 "vY": row["velocidad_y"],
                 "vZ": row["velocidad_z"],
@@ -166,9 +178,6 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
         })
 
     return aceleraciones
-
-
-
 
 
 if __name__ == "__main__":
