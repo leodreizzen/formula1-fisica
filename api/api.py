@@ -74,7 +74,7 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
     origen = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2 + lap_telemetry["Z"] ** 2).iloc[0]
 
     lap_telemetry['r'] = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2)
-    lap_telemetry['theta'] = np.arctan(lap_telemetry["Y"] / lap_telemetry["X"]).fillna(np.pi / 2)
+    lap_telemetry['theta'] = np.arctan2(lap_telemetry["Y"], lap_telemetry["X"])
     lap_telemetry['module'] = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
 
     arreglo_modulos = lap_telemetry["module"].to_numpy()
@@ -94,7 +94,7 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
                 "z": row["Z"]
             },
             "intrinsic": {
-                "s": arreglo_cumsum[index],  
+                "s": arreglo_cumsum[index],
             },
             "time": timedelta_to_string(row["Time"])
         })
