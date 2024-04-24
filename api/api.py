@@ -70,6 +70,16 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+
+    origen = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2 + lap_telemetry["Z"] ** 2).iloc[0]
+
+    lap_telemetry['r'] = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2)
+    lap_telemetry['theta'] = np.arctan(lap_telemetry["Y"] / lap_telemetry["X"]).fillna(np.pi / 2)
+    lap_telemetry['module'] = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
+
+    arreglo_modulos = lap_telemetry["module"].to_numpy()
+    arreglo_cumsum = np.cumsum(arreglo_modulos)
+
     puntos = []
     for index, row in lap_telemetry.iterrows():
         puntos.append({
@@ -79,12 +89,12 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
                 "z": row["Z"],
             },
             "polar": {
-                "r": row["X"], # TODO CAMBIAR
-                "theta": row["X"], # TODO CAMBIAR
-                "z": row["z"]
+                "r": row["r"],
+                "theta": row["theta"],
+                "z": row["Z"]
             },
             "intrinsic": {
-                "s": row["X"], # TODO CAMBIAR
+                "s": arreglo_cumsum[index],  
             },
             "time": timedelta_to_string(row["Time"])
         })
