@@ -14,7 +14,7 @@
     "dev": "concurrently \"cross-env BROWSER=none npm run react-dev\" \"wait-on http://127.0.0.1:3000 && npm run electron\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:electron": "electron-builder --publish=never",
-    "build:react": "cd client & cross-env BUILD_PATH=../build/client npm run build",
+    "build:react": "cd client & cross-env BUILD_PATH=../build/client CI=false npm run build",
     "build:python": "python scripts/pybuild.py",
     "build": "npm run build:react && npm run build:python && npm run build:electron",
     "pyinstall": "python scripts/pyinstall.py"
