@@ -12,10 +12,10 @@ import {useResizeDetector} from "react-resize-detector";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
     const {vectors, getVectorsFromTime} = useVectorsContext();
-    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
-    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
-    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
-    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
+    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.x / 10))) : null, [trajectoryData]);
+    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.y / 10))) : null, [trajectoryData]);
+    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.x  / 10))) : null, [trajectoryData]);
+    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.y / 10))) : null, [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
     const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, width, height, 0.05, 0.05)
 
@@ -39,8 +39,8 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         if (vectors === null || trajectoryData === null || hoveredPoint === null)
             return null;
         const time = trajectoryData[hoveredPoint].time;
-        const x = trajectoryData[hoveredPoint].x / 10;
-        const y = trajectoryData[hoveredPoint].y / 10;
+        const x = trajectoryData[hoveredPoint].cartesian.x / 10;
+        const y = trajectoryData[hoveredPoint].cartesian.y / 10;
         const vectorsInTime = getVectorsFromTime(time);
         if (vectorsInTime === undefined)
             return [];
@@ -62,8 +62,8 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     const plotData = useMemo(() =>
         trajectoryData ? [
             {
-                x: trajectoryData.map(it => it.x / 10),
-                y: trajectoryData.map(it => it.y / 10),
+                x: trajectoryData.map(it => it.cartesian.x / 10),
+                y: trajectoryData.map(it => it.cartesian.y / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: {color: trajectoryColor},

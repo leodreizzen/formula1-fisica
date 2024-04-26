@@ -10,10 +10,10 @@ import {getTolerancesPreservingAspectRatio} from "./plot-utils";
 export function MiniPlot({className, trajectoryData, hoveredPoint}) {
 
     const radius = 0.05;
-    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
-    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
-    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
-    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
+    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.x / 10))) : null, [trajectoryData]);
+    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.y / 10))) : null, [trajectoryData]);
+    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.x / 10))) : null, [trajectoryData]);
+    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.y / 10))) : null, [trajectoryData]);
 
     const xSize = useMemo(() => maxX - minX, [maxX, minX]);
     const ySize = useMemo(() => maxY - minY, [maxY, minY]);
@@ -27,8 +27,8 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
             return null;
         }
         const time = hoveredPointData.time;
-        const x = hoveredPointData.x / 10;
-        const y = hoveredPointData.y / 10;
+        const x = hoveredPointData.cartesian.x / 10;
+        const y = hoveredPointData.cartesian.y / 10;
         const vectorsInTime = getVectorsFromTime(time);
         if(vectorsInTime === undefined)
             return [];
@@ -37,10 +37,10 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
 
 
     let range = {
-        x0: trajectoryData[hoveredPoint].x / 10 - xSize * radius,
-        x1: trajectoryData[hoveredPoint].x / 10 + ySize * radius,
-        y0: trajectoryData[hoveredPoint].y / 10 - xSize * radius,
-        y1: trajectoryData[hoveredPoint].y / 10 + ySize * radius
+        x0: trajectoryData[hoveredPoint].cartesian.x / 10 - xSize * radius,
+        x1: trajectoryData[hoveredPoint].cartesian.x / 10 + ySize * radius,
+        y0: trajectoryData[hoveredPoint].cartesian.y / 10 - xSize * radius,
+        y1: trajectoryData[hoveredPoint].cartesian.y / 10 + ySize * radius
     }
 
     const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(range.x0,range.x1,range.y0,range.y1, width, height,0, 0)
@@ -56,8 +56,8 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
         <div ref={ref} className={className + " overflow-clip"}>
         <Plot
             data={[{
-                x: trajectoryData.map(it => it.x / 10),
-                y: trajectoryData.map(it => it.y / 10),
+                x: trajectoryData.map(it => it.cartesian.x / 10),
+                y: trajectoryData.map(it => it.cartesian.y / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: {color: trajectoryColor},
