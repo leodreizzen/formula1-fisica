@@ -16,7 +16,7 @@ export default function SpeedsPlot({className, timeUnit})  {
     const calculatedSpeed = useMemo(() => {
             return {
                 x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: vectors?.map(it => it.speed.module / 10),
+                y: vectors?.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: {color: 'red'},
@@ -26,7 +26,7 @@ export default function SpeedsPlot({className, timeUnit})  {
     const speedometerTrace = useMemo(()=>{
         return {
             x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-            y: vectors?.map(it => it.speed.speedometer / 10),
+            y: vectors?.map(it => it.velocity.speedometer / 10),
             type: 'scatter',
             mode: 'lines',
             marker: {color: 'orange'},
