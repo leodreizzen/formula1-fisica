@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {enforcePlotSingleAxisRange} from "./plot-utils";
 import {plotStyles} from "../../styles";
 import AutoSizePlot from "./AutoSizePlot";

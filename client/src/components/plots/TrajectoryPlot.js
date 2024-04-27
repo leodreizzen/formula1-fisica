@@ -1,6 +1,5 @@
 import {OrbitProgress} from "react-loading-indicators";
-import {useEffect, useMemo, useRef, useState} from "react";
-import {trajectoryColor} from "../../styles";
+import {useMemo} from "react";
 import {
     enforceSameScaleHorizontal,
     enforceSameScaleVertical, getTolerancesPreservingAspectRatio,
