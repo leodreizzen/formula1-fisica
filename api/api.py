@@ -4,8 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from utilFisica import calcular_vector_velocidad, calcular_vector_aceleracion
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
-from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
-    accelerationsPlaceholder
+from placeholders import driftingPlaceholder
 import pandas as pd
 import numpy as np
 
@@ -167,8 +166,9 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 
     return aceleraciones
 
-
-
+@app.get("/drifting")
+def drifting():
+    return driftingPlaceholder
 
 
 if __name__ == "__main__":

@@ -9,9 +9,11 @@ import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccele
 import {useVectorsContext} from "../../context/VectorsContext";
 import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
+import {useGetDrifting} from "../../api/hooks";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
     const {vectors, getVectorsFromTime} = useVectorsContext();
+    const [driftingData] = useGetDrifting();
     const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
     const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
     const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
@@ -58,18 +60,54 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         if (hoveredPoint === index)
             setHoveredPoint(hovered => hovered === index ? null : hovered);
     }
+    const plotData = useMemo(() => {
+        let data = [];
 
-    const plotData = useMemo(() =>
-        trajectoryData ? [
-            {
+        if (trajectoryData) {
+            data.push({
                 x: trajectoryData.map(it => it.x / 10),
                 y: trajectoryData.map(it => it.y / 10),
-                type: 'scatter',
-                mode: 'lines',
-                marker: {color: trajectoryColor},
+                name: "Trayectoria",
+                type: "scatter",
+                mode: "lines",
+                marker: {color: trajectoryData, hoverinfo: 'none'},
+                showlegend: false
+            })
+        }
+        if (driftingData) {
+            data.push({
+                x: driftingData.map(it => it.x / 10),
+                y: driftingData.map(it => it.y / 10),
+                name: "Derrapes",
+                type: "scatter",
+                mode: "markers",
+                // color: driftingData.map(it => it.drifting),
+                marker: {
+                    color: driftingData.map(it => it.drifting),
+                    colorscale: 'YlOrRd',
+                    hoverinfo: 'none',
+                    colorbar: {
+                        //title: 'Derrapes',
+                        //titleside: "bottom",
+                        // len: 0.8,
+                        xpad: 55,
+                        ypad: 60,
+                        xref:"paper",
+                        yref:"paper",
+                        tickvals: driftingData.map(it => it.drifting),
+                        ticktext: driftingData.map(it => it.drifting),
+                        orientation: 'v',
+                        thickness: 7,
+                       // ticklabelposition: "outside top",
+                        textfont: {size: 1},
+                        dthick: 1
+                    }
+                },
                 hoverinfo: 'none'
-            }
-        ] : null, [trajectoryData]);
+            })
+        }
+        return data;
+    }, [trajectoryData, driftingData]);
 
     const plotLayout = useMemo(() => {
         return {
@@ -84,14 +122,18 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 dtick: 200,
                 tolerance: yTolerance / (maxY - minY)
             },
-            annotations: arrows
+            annotations: arrows,
+            legend:{
+                xref: "paper",
+                yref: "paper"
+            }
         }
     }, [arrows, xTolerance, yTolerance]);
 
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
-            {trajectoryData === null ?
+            {trajectoryData === null || driftingData === null ?
                 <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large'
                                                                                                color="#EFE2E2"
                                                                                                variant='dotted'/></div>

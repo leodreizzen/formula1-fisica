@@ -48,3 +48,7 @@ export function getVectors(year, roundNumber, sessionNumber, driverNumber, lapNu
         lapNumber: lapNumber
     }, options);
 }
+
+export function getDrifting(options){
+     return APIGetter("/drifting", {}, options);
+}

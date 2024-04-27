@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {getDrivers, getLaps, getRounds, getTrajectory, getVectors} from "./getters";
+import {getDrivers, getLaps, getRounds, getTrajectory, getVectors, getDrifting} from "./getters";
 import {useStateWithDeps} from "use-state-with-deps";
 
 function useGetFromAPI(getter, dependencies, validParams) {
@@ -69,4 +69,9 @@ export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber,
 export function useGetVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber){
     const [vectors, isLoading] = useAPIHook(getVectors, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [vectors, isLoading]
+}
+
+export function useGetDrifting(){
+    const [drifting, isLoading] = useAPIHook(getDrifting, [])
+    return [drifting, isLoading]
 }
