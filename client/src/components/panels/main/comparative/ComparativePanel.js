@@ -18,8 +18,8 @@ export default function ComparativePanel({ className }) {
     const round = sessionData.round;
     const session = sessionData.session;
 
-    const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap);
-    const [trajectorySecondaryData,] = useGetTrajectory(year, round, session, currentSecondaryDriver?.driverNumber, currentLap);
+    const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap) || [];
+    const [trajectorySecondaryData,] = useGetTrajectory(year, round, session, currentSecondaryDriver?.driverNumber, currentLap) || [];
 
     const handleSecondaryDriverChange = (driver) => {
         setCurrentSecondaryDriver(driver);
@@ -31,8 +31,15 @@ export default function ComparativePanel({ className }) {
                 <DriverSelector className="w-1/2" />
                 <DriverSelectorNoContext className="w-1/2" currentSecondaryDriver={currentSecondaryDriver} onDriverChange={handleSecondaryDriverChange} />
             </div>
-            <ComparativeSpeedPlot className="grow pt-2" timeUnit={"s"} trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
-            <LapSelector className="mb-3 p-1 pl-6 pr-6" />
+            {trajectoryData === null || trajectorySecondaryData === null ? (
+                <div className="w-full h-full flex items-center justify-center">Por favor, seleccione un piloto rival.</div>
+            ) : (
+                <>
+                    <ComparativeSpeedPlot className="grow pt-2" timeUnit={"s"} trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
+                    <LapSelector className="mb-3 p-1 pl-6 pr-6" />
+                </>
+            )}
         </div>
     );
+    
 }
