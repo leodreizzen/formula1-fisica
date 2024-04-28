@@ -1,15 +1,10 @@
 import fastapi
-import json
 from fastapi.middleware.cors import CORSMiddleware
-from utilFisica import calcular_vector_velocidad, calcular_vector_aceleracion
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
-from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
-    accelerationsPlaceholder
 from scipy.signal import savgol_filter
 import pandas as pd
 import numpy as np
-
 
 
 app = fastapi.FastAPI()
@@ -69,10 +64,11 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
         "fastestLap": facade.fastestLap(year, roundNumber, sessionNumber, driverNumber),
     }
 
-
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    lap_telemetry = telemetryInterpolation(lap_telemetry)
+    lap_telemetry = filterTelemetry(lap_telemetry)
     puntos = []
     for index, row in lap_telemetry.iterrows():
         puntos.append({
@@ -97,39 +93,43 @@ def telemetryInterpolation(lap_telemetry):
     lap_telemetry_x_interpolated = np.interp(time_interval_array, lap_telemetry_time, lap_telemetry_x)
     lap_telemetry_y_interpolated = np.interp(time_interval_array, lap_telemetry_time, lap_telemetry_y)
     lap_telemetry_z_interpolated = np.interp(time_interval_array, lap_telemetry_time, lap_telemetry_z)
+    lap_telemetry_speed = lap_telemetry['Speed']
+    lap_telemetry_speed_interpolated = np.interp(time_interval_array, lap_telemetry_time, lap_telemetry_speed)
     lap_telemetry_interpolated = pd.DataFrame({
-        'Time': time_interval_array,
+        'Time': pd.to_timedelta(time_interval_array, unit='s'),
         'X': lap_telemetry_x_interpolated,
         'Y': lap_telemetry_y_interpolated,
-        'Z': lap_telemetry_z_interpolated
+        'Z': lap_telemetry_z_interpolated,
+        'Speed': lap_telemetry_speed_interpolated
     })
     return lap_telemetry_interpolated
 
 
+def filterTelemetry(lap_telemetry):
+    window_length_pos = 90
+    polyorder_pos = 3
+    x = savgol_filter(lap_telemetry["X"], window_length=window_length_pos, polyorder=polyorder_pos, mode="nearest")
+    y = savgol_filter(lap_telemetry["Y"], window_length=window_length_pos, polyorder=polyorder_pos, mode="nearest")
+    z = savgol_filter(lap_telemetry["Z"], window_length=window_length_pos, polyorder=polyorder_pos, mode="nearest")
+    return lap_telemetry.assign(
+        X=x,
+        Y=y,
+        Z=z)
 @app.get("/vectors")
 def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     # Parámetros del filtro de Savitzky-Golay
-    window_length_speed = 15
-    polyorder_speed= 2
-    window_length_acceleration = 100
-    polyorder_acceleration = 3
 
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    lap_telemetry = telemetryInterpolation(lap_telemetry)
+    lap_telemetry = filterTelemetry(lap_telemetry)
+
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
     lap_telemetry['velocidad_x'] = (lap_telemetry['X'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_y'] = (lap_telemetry['Y'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_z'] = (lap_telemetry['Z'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
-    # Filtrar velocidad con un filtro de Savitzky-Golay
-    lap_telemetry['velocidad_x'] = savgol_filter(lap_telemetry['velocidad_x'], window_length_speed, polyorder_speed)
-    lap_telemetry['velocidad_y'] = savgol_filter(lap_telemetry['velocidad_y'], window_length_speed, polyorder_speed)
-    lap_telemetry['velocidad_z'] = savgol_filter(lap_telemetry['velocidad_z'], window_length_speed, polyorder_speed)
     lap_telemetry['aceleracion_x'] = ((lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
     lap_telemetry['aceleracion_y'] = ((lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
     lap_telemetry['aceleracion_z'] = ((lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
-    # Filtrar aceleración con un filtro de Savitzky-Golay
-    lap_telemetry['aceleracion_x'] = savgol_filter(lap_telemetry['aceleracion_x'], window_length_acceleration, polyorder_acceleration)
-    lap_telemetry['aceleracion_y'] = savgol_filter(lap_telemetry['aceleracion_y'], window_length_acceleration, polyorder_acceleration)
-    lap_telemetry['aceleracion_z'] = savgol_filter(lap_telemetry['aceleracion_z'], window_length_acceleration, polyorder_acceleration)
     lap_telemetry['modulo_velocidad_xy'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
     lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]], axis=1)
     lap_telemetry['modulo_aceleracion'] = np.linalg.norm(lap_telemetry[['aceleracion_x', 'aceleracion_y', "aceleracion_z"]], axis=1)
