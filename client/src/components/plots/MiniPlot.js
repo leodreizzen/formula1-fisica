@@ -5,15 +5,11 @@ import {useMemo} from "react";
 import {useResizeDetector} from "react-resize-detector";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
 import {useVectorsContext} from "../../context/VectorsContext";
-import {getTolerancesPreservingAspectRatio} from "./plot-utils";
+import {getTolerancesPreservingAspectRatio, getTrajectoryExtremes} from "./plot-utils";
 
 export function MiniPlot({className, trajectoryData, hoveredPoint}) {
-
+    const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const radius = 0.05;
-    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.x / 10))) : null, [trajectoryData]);
-    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.y / 10))) : null, [trajectoryData]);
-    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.x / 10))) : null, [trajectoryData]);
-    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.y / 10))) : null, [trajectoryData]);
 
     const xSize = useMemo(() => maxX - minX, [maxX, minX]);
     const ySize = useMemo(() => maxY - minY, [maxY, minY]);
