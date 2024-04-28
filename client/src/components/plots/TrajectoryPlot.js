@@ -11,7 +11,7 @@ import {useResizeDetector} from "react-resize-detector";
 import {useGetDrifting} from "../../api/hooks";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
-    const MARGINS = {r: 150, t: 0, b: 0, l: 0};
+    const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
     const LEGEND_ITEM_WIDTH = 30;
 
     const {vectors, getVectorsFromTime} = useVectorsContext();
@@ -142,16 +142,12 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
             annotations: arrows,
             legend:{
                 xref: "container",
-                x: 1,
+                x: 1 - MARGINS.r / width / 2,
                 valign: "middle",
-                xanchor: "right",
+                xanchor: "center",
                 y: 1,
                 itemwidth: LEGEND_ITEM_WIDTH,
-                title: {
-                    side: "top right",
-                },
                 entrywidth: MARGINS.r - LEGEND_ITEM_WIDTH - 15,
-                orientation: "h"
             }
         }
     }, [arrows, xTolerance, yTolerance]);
