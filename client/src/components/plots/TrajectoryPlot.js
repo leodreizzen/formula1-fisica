@@ -11,6 +11,9 @@ import {useResizeDetector} from "react-resize-detector";
 import {useGetDrifting} from "../../api/hooks";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
+    const MARGINS = {r: 150, t: 0, b: 0, l: 0};
+    const LEGEND_ITEM_WIDTH = 30;
+
     const {vectors, getVectorsFromTime} = useVectorsContext();
     const [driftingData] = useGetDrifting();
     const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
@@ -18,18 +21,31 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
     const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
-    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, width, height, 0.05, 0.05)
+
+    function getPaperWidth(width){
+        return width - MARGINS.l - MARGINS.r;
+    }
+    function getPaperHeight(height){
+        return height - MARGINS.t - MARGINS.b;
+    }
+
+    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, getPaperWidth(width), getPaperHeight(height) , 0.05, 0.05)
+
 
     function handleSizeChange(newSize, previousSize, ranges) {
         const xRangeInput = ranges.xRanges.get("xaxis")
         const yRangeInput = ranges.yRanges.get("yaxis")
         let previousRange = {x0: xRangeInput[0], x1: xRangeInput[1], y0: yRangeInput[0], y1: yRangeInput[1]}
-        if (newSize.width !== previousSize.width) {
-            const newRange = enforceSameScaleHorizontal(newSize.width, newSize.height, previousRange, minX, minY, maxX, maxY, xTolerance, yTolerance)
+
+        const previousPaperSize = {width: getPaperWidth(previousSize.width), height: getPaperHeight(previousSize.height)}
+        const newPaperSize = {width: getPaperWidth(newSize.width), height: getPaperHeight(newSize.height)}
+
+        if (newPaperSize.width !== previousPaperSize.width) {
+            const newRange = enforceSameScaleHorizontal(newPaperSize.width, newPaperSize.height, previousRange, minX, minY, maxX, maxY, xTolerance, yTolerance)
             ranges.xRanges.set("xaxis", [newRange.x0, newRange.x1])
             ranges.yRanges.set("yaxis", [newRange.y0, newRange.y1])
-        } else if (newSize.height !== previousSize.height) {
-            const newRange = enforceSameScaleVertical(newSize.width, newSize.height, previousRange, minX, minY, maxX, maxY, xTolerance, yTolerance)
+        } else if (newPaperSize.height !== previousPaperSize.height) {
+            const newRange = enforceSameScaleVertical(newPaperSize.width, newPaperSize.height, previousRange, minX, minY, maxX, maxY, xTolerance, yTolerance)
             ranges.xRanges.set("xaxis", [newRange.x0, newRange.x1])
             ranges.yRanges.set("yaxis", [newRange.y0, newRange.y1])
         }
@@ -60,6 +76,8 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
             setHoveredPoint(hovered => hovered === index ? null : hovered);
     }
     const plotData = useMemo(() => {
+        const colorBarThickness = 7;
+
         let data = [];
 
         if (trajectoryData) {
@@ -86,20 +104,20 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                     colorscale: 'YlOrRd',
                     hoverinfo: 'none',
                     colorbar: {
-                        //title: 'Derrapes',
-                        //titleside: "bottom",
-                        // len: 0.8,
-                        xpad: 55,
-                        ypad: 60,
-                        xref:"paper",
-                        yref:"paper",
+                        xref:"container",
+                        yref:"container",
+                        x: 1 - (MARGINS.r)/width / 2,
+                        y: 0.5,
+                        len: 0.8,
+                        yanchor: "middle",
+                        xanchor: "center",
                         tickvals: driftingData.map(it => it.drifting),
                         ticktext: driftingData.map(it => it.drifting),
                         orientation: 'v',
-                        thickness: 7,
-                       // ticklabelposition: "outside top",
+                        thickness: colorBarThickness,
+                        tickwidth: 0,
                         textfont: {size: 1},
-                        dthick: 1
+                        dthick: 1,
                     }
                 },
                 hoverinfo: 'none'
@@ -110,7 +128,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
 
     const plotLayout = useMemo(() => {
         return {
-            margin: {r: 0, t: 0, b: 0, l: 0},
+            margin: MARGINS,
             xaxis: {
                 title: 'X (m)',
                 dtick: 200,
@@ -123,8 +141,17 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
             },
             annotations: arrows,
             legend:{
-                xref: "paper",
-                yref: "paper"
+                xref: "container",
+                x: 1,
+                valign: "middle",
+                xanchor: "right",
+                y: 1,
+                itemwidth: LEGEND_ITEM_WIDTH,
+                title: {
+                    side: "top right",
+                },
+                entrywidth: MARGINS.r - LEGEND_ITEM_WIDTH - 15,
+                orientation: "h"
             }
         }
     }, [arrows, xTolerance, yTolerance]);
