@@ -23,15 +23,15 @@ export default function HoveredPointData({trajectoryData, hoveredPoint}){
                 <tbody>
                 <tr style={{color: trajectoryColor}}>
                     <th>r</th>
-                    <td>{(trajectoryData[hoveredPoint].x / 10).toFixed(2)}m</td>
-                    <td>{(trajectoryData[hoveredPoint].y / 10).toFixed(2)}m</td>
-                    <td>{(trajectoryData[hoveredPoint].z / 10).toFixed(2)}m</td>
+                    <td>{(trajectoryData[hoveredPoint].cartesian.x / 10).toFixed(2)}m</td>
+                    <td>{(trajectoryData[hoveredPoint].cartesian.y / 10).toFixed(2)}m</td>
+                    <td>{(trajectoryData[hoveredPoint].cartesian.z / 10).toFixed(2)}m</td>
                 </tr>
                 <tr style={{color: speedColor}}>
                     <th>v</th>
-                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.speed.vX / 10).toFixed(2) + "m/s"}</td>
-                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.speed.vY / 10).toFixed(2) + "m/s"}</td>
-                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.speed.vZ / 10).toFixed(2) + "m/s"}</td>
+                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.vX / 10).toFixed(2) + "m/s"}</td>
+                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.vY / 10).toFixed(2) + "m/s"}</td>
+                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.vZ / 10).toFixed(2) + "m/s"}</td>
                 </tr>
                 <tr style={{color: accelerationColor}}>
                     <th>a</th>
@@ -54,9 +54,9 @@ export default function HoveredPointData({trajectoryData, hoveredPoint}){
                 </div>
                 <div className="grid grid-cols-2 text-left">
                     <span style={{color: speedColor}} className="mr-4 lg:mr-2">módulo v </span> <span
-                    style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.speed.module / 10).toFixed(2) + "m/s"}</span>
+                    style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.module / 10).toFixed(2) + "m/s"}</span>
                     <span style={{color: speedColor}} className="mr-4 lg:mr-2">velocímetro: </span> <span
-                    style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.speed.speedometer / 10).toFixed(2) + "m/s"}</span>
+                    style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.speedometer / 10).toFixed(2) + "m/s"}</span>
                 </div>
             </div>
         </div>
