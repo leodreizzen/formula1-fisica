@@ -2,10 +2,9 @@ from .F1Facade import F1Facade
 from .Round import Round
 from .Session import Session
 from .Driver import Driver
-
 import fastf1 as f1
 from functools import lru_cache
-
+from .utilData import telemetry_interpolation, filter_telemetry
 
 """ 
 #Tamaño de la cache en memoria de cada funcion de la api 
@@ -68,6 +67,8 @@ class FastF1Facade(F1Facade):
     def telemetry(self, year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int):
         session_event = self.__get_session(year, roundNumber, sessionNumber)
         lap_telemetry = session_event.laps.pick_driver(str(driverId)).pick_lap(lapNumber).telemetry
-        return lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]].reset_index()
+        lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]].reset_index()
+        lap_telemetry = telemetry_interpolation(lap_telemetry)
+        return filter_telemetry(lap_telemetry)
     
    
