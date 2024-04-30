@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import BasePlot from "./BasePlot";
 
-export default function ComparativeSpeedPlot({className, timeUnit, data}) {
+export default function ComparativeAccelerationPlot({ className, timeUnit, data }) {
 
     const [visible, setVisible] = useState([true, true]);
 
@@ -19,7 +19,7 @@ export default function ComparativeSpeedPlot({className, timeUnit, data}) {
                 title: 'Distancia (m)', tolerance: 0.1
             },
             yaxis: {
-                title: 'Velocidad [m/s]', titlefont: yAxisFont, tolerance: 0.1
+                title: '|a| [m/s²]', titlefont: yAxisFont, tolerance: 0.1
             },
             margin: { t: 20 },
         }

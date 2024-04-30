@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DriverSelector from "../../../inputs/DriverSelector";
 import DriverSelectorNoContext from "../../../inputs/DriverSelectorNoContext";
 import LapSelector from "../../../inputs/LapSelector";
-import ComparativeSpeedPlot from "../../../plots/ComparativeSpeedPlot";
+import ComparativePlot from "../../../plots/ComparativePlots";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useLapContext} from "../../../../context/LapContext";
@@ -35,7 +35,7 @@ export default function ComparativePanel({ className }) {
                 <div className="w-full h-full flex items-center justify-center">Por favor, seleccione un piloto rival.</div>
             ) : (
                 <>
-                    <ComparativeSpeedPlot className="grow pt-2" timeUnit={"s"} trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
+                    <ComparativePlot className="grow pt-2" timeUnit={"s"} trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
                     <LapSelector className="mb-3 p-1 pl-6 pr-6" />
                 </>
             )}
