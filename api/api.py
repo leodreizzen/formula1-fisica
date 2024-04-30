@@ -2,7 +2,6 @@ import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
-from scipy.signal import savgol_filter
 import pandas as pd
 import numpy as np
 
@@ -64,15 +63,36 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
         "fastestLap": facade.fastestLap(year, roundNumber, sessionNumber, driverNumber),
     }
 
+
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+
+    origen = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2 + lap_telemetry["Z"] ** 2).iloc[0]
+
+    lap_telemetry['r'] = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2)
+    lap_telemetry['theta'] = np.arctan2(lap_telemetry["Y"], lap_telemetry["X"])
+    lap_telemetry['module'] = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
+
+    arreglo_modulos = lap_telemetry["module"].to_numpy()
+    arreglo_cumsum = np.cumsum(arreglo_modulos)
+
     puntos = []
     for index, row in lap_telemetry.iterrows():
         puntos.append({
-            "x": row["X"],
-            "y": row["Y"],
-            "z": row["Z"],
+            "cartesian": {
+                "x": row["X"],
+                "y": row["Y"],
+                "z": row["Z"],
+            },
+            "polar": {
+                "r": row["r"],
+                "theta": row["theta"],
+                "z": row["Z"]
+            },
+            "intrinsic": {
+                "s": arreglo_cumsum[index],
+            },
             "time": timedelta_to_string(row["Time"])
         })
     return puntos
@@ -80,20 +100,22 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
 
 @app.get("/vectors")
 def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    # Parámetros del filtro de Savitzky-Golay
-
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
-
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
     lap_telemetry['velocidad_x'] = (lap_telemetry['X'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_y'] = (lap_telemetry['Y'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_z'] = (lap_telemetry['Z'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
-    lap_telemetry['aceleracion_x'] = ((lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
-    lap_telemetry['aceleracion_y'] = ((lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
-    lap_telemetry['aceleracion_z'] = ((lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / lap_telemetry['diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
+    lap_telemetry['aceleracion_x'] = (lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / \
+                                     lap_telemetry['diferencia_tiempo']
+    lap_telemetry['aceleracion_y'] = (lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / \
+                                     lap_telemetry['diferencia_tiempo']
+    lap_telemetry['aceleracion_z'] = (lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / \
+                                     lap_telemetry['diferencia_tiempo']
     lap_telemetry['modulo_velocidad_xy'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
-    lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]], axis=1)
-    lap_telemetry['modulo_aceleracion'] = np.linalg.norm(lap_telemetry[['aceleracion_x', 'aceleracion_y', "aceleracion_z"]], axis=1)
+    lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]],
+                                                       axis=1)
+    lap_telemetry['modulo_aceleracion'] = np.linalg.norm(
+        lap_telemetry[['aceleracion_x', 'aceleracion_y', "aceleracion_z"]], axis=1)
     lap_telemetry['modulo_aceleracion_xy'] = np.linalg.norm(lap_telemetry[['aceleracion_x', 'aceleracion_y']], axis=1)
 
     # Calculamos el versor tangente para cada fila
@@ -112,7 +134,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 
     # Calculamos la aceleración normal para cada fila
     lap_telemetry['a_normal'] = ((lap_telemetry['aceleracion_x'] * lap_telemetry['versor_normal_x']) +
-                (lap_telemetry['aceleracion_y'] * lap_telemetry['versor_normal_y']))
+                                 (lap_telemetry['aceleracion_y'] * lap_telemetry['versor_normal_y']))
 
     # Si la aceleración normal es negativa, invertimos el versor normal y la aceleración normal
     a_negativa = lap_telemetry['a_normal'] < 0
@@ -127,8 +149,6 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     lap_telemetry = lap_telemetry.iloc[:-1]
 
     # Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
-
-    # Filtrar los datos con un filtro de Savitzky-Golay
 
     aceleraciones = []
 
@@ -145,7 +165,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
                     "y": row["versor_normal_y"]
                 }
             },
-            "speed": {
+            "velocity": {
                 "vX": row["velocidad_x"],
                 "vY": row["velocidad_y"],
                 "vZ": row["velocidad_z"],
@@ -165,9 +185,6 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
         })
 
     return aceleraciones
-
-
-
 
 
 if __name__ == "__main__":
