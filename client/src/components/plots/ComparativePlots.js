@@ -2,9 +2,9 @@ import React, { useState, useMemo } from "react";
 import { useVectorsContext } from "../../context/VectorsContext";
 import BasePlot from "./BasePlot";
 import {OrbitProgress} from "react-loading-indicators";
-import {plotStyles} from "../../styles";
+import {plotStyles, primaryDriverColor, secondaryDriverColor} from "../../styles";
 
-export default function ComparativePlots({ className, timeUnit, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap }) {
+export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap }) {
     const { vectors } = useVectorsContext();
     const [visible, setVisible] = useState([true, true]);
 
@@ -21,7 +21,7 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 y: vectors.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'red' },
+                marker: { color: primaryDriverColor },
                 hoverinfo: 'none',
                 name: currentDriver.fullName,
                 xaxis: 'x1', 
@@ -35,7 +35,7 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 y: vectors.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'yellow' },
+                marker: { color: secondaryDriverColor},
                 hoverinfo: 'none',
                 name: currentSecondaryDriver.fullName,
                 xaxis: 'x1', 
@@ -49,7 +49,7 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 y: vectors.map(it => it.acceleration.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'red' },
+                marker: { color: primaryDriverColor },
                 hoverinfo: 'none',
                 name: currentDriver.fullName,
                 xaxis: 'x2', 
@@ -64,7 +64,7 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 y: vectors.map(it => it.acceleration.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'yellow' },
+                marker: { color: secondaryDriverColor },
                 hoverinfo: 'none',
                 name: currentSecondaryDriver.fullName,
                 xaxis: 'x2', 

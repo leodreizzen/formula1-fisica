@@ -31,14 +31,12 @@ export default function ComparativePanel({ className }) {
                 <DriverSelector className="w-1/2" />
                 <DriverSelectorNoContext className="w-1/2" currentSecondaryDriver={currentSecondaryDriver} onDriverChange={handleSecondaryDriverChange} />
             </div>
-            {trajectoryData === null || trajectorySecondaryData === null ? (
-                <div className="w-full h-full flex items-center justify-center">Por favor, seleccione un piloto rival.</div>
-            ) : (
-            <>
-                <ComparativePlot className="flex grow pt-2" timeUnit={"s"} trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
+            {trajectoryData !== null && trajectorySecondaryData !== null ? (
+                <>
+                <ComparativePlot className="flex grow pt-2" trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
                 <LapSelector className="mb-3 p-1 pl-6 pr-6" />
-            </>
-            )}
+                </>
+            ) : null}
         </div>
     );
 }
