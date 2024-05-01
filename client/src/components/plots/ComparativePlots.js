@@ -22,7 +22,6 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: primaryDriverColor },
-                hoverinfo: 'none',
                 name: currentDriver.fullName,
                 xaxis: 'x1', 
                 yaxis: 'y1',
@@ -36,7 +35,6 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryDriverColor},
-                hoverinfo: 'none',
                 name: currentSecondaryDriver.fullName,
                 xaxis: 'x1', 
                 yaxis: 'y1',
@@ -50,7 +48,6 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: primaryDriverColor },
-                hoverinfo: 'none',
                 name: currentDriver.fullName,
                 xaxis: 'x2', 
                 yaxis: 'y2',
@@ -59,13 +56,11 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 showlegend: false
             },
             {
-                
                 x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
                 y: vectors.map(it => it.acceleration.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryDriverColor },
-                hoverinfo: 'none',
                 name: currentSecondaryDriver.fullName,
                 xaxis: 'x2', 
                 yaxis: 'y2',
