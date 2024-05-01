@@ -14,7 +14,8 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
 
     const plotData = useMemo(() => {
         if (trajectoryData && trajectorySecondaryData && vectors) {
-            return [{
+            return [
+            {
                 x: trajectoryData.map(it => it.intrinsic.s / 10),
                 y: vectors.map(it => it.velocity.module / 10),
                 type: 'scatter',
@@ -24,7 +25,9 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 name: currentDriver.fullName,
                 xaxis: 'x1', 
                 yaxis: 'y1',
-                visible: visible[0]
+                visible: visible[0],
+                legendgroup: currentDriver.fullName,
+                showlegend: true
             },
             {
                 x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
@@ -36,7 +39,9 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 name: currentSecondaryDriver.fullName,
                 xaxis: 'x1', 
                 yaxis: 'y1',
-                visible: visible[0]
+                visible: visible[1],
+                legendgroup: currentSecondaryDriver.fullName,
+                showlegend: true
             },
             {
                 x: trajectoryData.map(it => it.intrinsic.s / 10),
@@ -48,7 +53,9 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 name: currentDriver.fullName,
                 xaxis: 'x2', 
                 yaxis: 'y2',
-                visible: visible[1]
+                visible: visible[0],
+                legendgroup: currentDriver.fullName,
+                showlegend: false
             },
             {
                 
@@ -61,7 +68,9 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 name: currentSecondaryDriver.fullName,
                 xaxis: 'x2', 
                 yaxis: 'y2',
-                visible: visible[1]
+                visible: visible[1],
+                legendgroup: currentSecondaryDriver.fullName,
+                showlegend: false
             }];
         }
     }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible]);
