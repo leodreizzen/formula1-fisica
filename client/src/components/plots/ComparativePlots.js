@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { useVectorsContext } from "../../context/VectorsContext";
 import BasePlot from "./BasePlot";
 import {OrbitProgress} from "react-loading-indicators";
+import {plotStyles} from "../../styles";
 
 export default function ComparativePlots({ className, timeUnit, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap }) {
     const { vectors } = useVectorsContext();
@@ -76,8 +77,16 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
     }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible]);
 
     const plotLayout = useMemo(() => {
+        const xAxisFont = {
+            family: plotStyles.font.family,
+            size:18,
+            color: plotStyles.font.color
+        }
+    
         const yAxisFont = {
-            size: 17
+            family: plotStyles.font.family,
+            size:16,
+            color: plotStyles.font.color
         }
         return {
             xaxis: {
@@ -87,7 +96,7 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
                 title: 'Velocidad [m/s]', titlefont: yAxisFont, tolerance: 0.1
             },
             xaxis2: {
-                title: 'Distancia (m)', tolerance: 0.1
+                title: 'Distancia (m)', titlefont: xAxisFont, tolerance: 0.1
             },
             yaxis2: {
                 title: '|a| [m/s²]', titlefont: yAxisFont, tolerance: 0.1
@@ -98,11 +107,13 @@ export default function ComparativePlots({ className, timeUnit, trajectoryData, 
         }
     }, []);
 
+    
+
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
             {vectors !== null ?
                 <BasePlot
-                    className={className + " w-full p-0"}
+                    className={className + " flex justify-center w-full"}
                     data={plotData}
                     layout={plotLayout}
                     config={{ responsive: true, scrollZoom: true, displayModeBar: false }}
