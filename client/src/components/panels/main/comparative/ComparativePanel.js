@@ -26,7 +26,7 @@ export default function ComparativePanel({ className }) {
     };
 
     return (
-        <div className={`${className} flex flex-col items-center overflow-hidden h-full`}>
+        <div className={`${className} flex flex-col items-center overflow-clip h-full`}>
             <div className="flex flex-row w-full">
                 <DriverSelector className="w-1/2" />
                 <DriverSelectorNoContext className="w-1/2" currentSecondaryDriver={currentSecondaryDriver} onDriverChange={handleSecondaryDriverChange} />
@@ -34,12 +34,11 @@ export default function ComparativePanel({ className }) {
             {trajectoryData === null || trajectorySecondaryData === null ? (
                 <div className="w-full h-full flex items-center justify-center">Por favor, seleccione un piloto rival.</div>
             ) : (
-                <>
-                    <ComparativePlot className="grow pt-2" timeUnit={"s"} trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
-                    <LapSelector className="mb-3 p-1 pl-6 pr-6" />
-                </>
+            <>
+                <ComparativePlot className="flex grow pt-2" timeUnit={"s"} trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} />
+                <LapSelector className="mb-3 p-1 pl-6 pr-6" />
+            </>
             )}
         </div>
     );
-    
 }

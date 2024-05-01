@@ -1,76 +1,112 @@
-import { useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useVectorsContext } from "../../context/VectorsContext";
+import BasePlot from "./BasePlot";
 import {OrbitProgress} from "react-loading-indicators";
-import ComparativeAccelerationPlot from "./ComparativeAccelerationPlot";
-import ComparativeSpeedPlot from "./ComparativeSpeedPlot";
 
 export default function ComparativePlots({ className, timeUnit, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap }) {
     const { vectors } = useVectorsContext();
+    const [visible, setVisible] = useState([true, true]);
 
-    const plotVelocityData = useMemo(() => {
-        let data = [];
+    function handleUpdate(state) {
+        if (state.data[0].visible !== visible[0] || state.data[1].visible !== visible[1])
+            setVisible([state.data[0].visible, state.data[1].visible])
+    }
+
+    const plotData = useMemo(() => {
         if (trajectoryData && trajectorySecondaryData && vectors) {
-            data.push({
+            return [{
                 x: trajectoryData.map(it => it.intrinsic.s / 10),
                 y: vectors.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'red' },
                 hoverinfo: 'none',
-                name: 'Conductor ' + currentDriver.fullName
-            })
-
-            data.push({
+                name: currentDriver.fullName,
+                xaxis: 'x1', 
+                yaxis: 'y1',
+                visible: visible[0]
+            },
+            {
                 x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
                 y: vectors.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'yellow' },
                 hoverinfo: 'none',
-                name: 'Conductor ' + currentSecondaryDriver.fullName
-            })
-        }
-        return data;
-    }, [trajectoryData, trajectorySecondaryData, vectors]);
-
-    const plotAccelerationData = useMemo(() => {
-        let data = [];
-        if (trajectoryData && vectors && trajectorySecondaryData) {
-            data.push({
+                name: currentSecondaryDriver.fullName,
+                xaxis: 'x1', 
+                yaxis: 'y1',
+                visible: visible[0]
+            },
+            {
                 x: trajectoryData.map(it => it.intrinsic.s / 10),
                 y: vectors.map(it => it.acceleration.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'red' },
                 hoverinfo: 'none',
-                name: 'Conductor ' + currentDriver.fullName
-            })
-        
-            data.push({
+                name: currentDriver.fullName,
+                xaxis: 'x2', 
+                yaxis: 'y2',
+                visible: visible[1]
+            },
+            {
+                
                 x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
                 y: vectors.map(it => it.acceleration.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'yellow' },
                 hoverinfo: 'none',
-                name: 'Conductor ' + currentSecondaryDriver.fullName
-            })
+                name: currentSecondaryDriver.fullName,
+                xaxis: 'x2', 
+                yaxis: 'y2',
+                visible: visible[1]
+            }];
         }
-        return data;
-    }, [trajectoryData, trajectorySecondaryData, vectors]);
+    }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible]);
+
+    const plotLayout = useMemo(() => {
+        const yAxisFont = {
+            size: 17
+        }
+        return {
+            xaxis: {
+                title: '', tolerance: 0.1
+            },
+            yaxis: {
+                title: 'Velocidad [m/s]', titlefont: yAxisFont, tolerance: 0.1
+            },
+            xaxis2: {
+                title: 'Distancia (m)', tolerance: 0.1
+            },
+            yaxis2: {
+                title: '|a| [m/s²]', titlefont: yAxisFont, tolerance: 0.1
+            },
+            grid: {rows: 2, columns: 1, pattern: 'independent'},
+            dragmode: "pan",
+            margin: { t: 20 },
+        }
+    }, []);
 
     return (
-        <div className= {className + " flex flex-col items-center w-full overflow-hidden" }>
-            {vectors !== null ? (
-                <div className="flex flex-col w-full justify-center overflow-clip">
-                    <ComparativeSpeedPlot timeUnit={timeUnit} data={plotVelocityData} />
-                    <ComparativeAccelerationPlot timeUnit={timeUnit} data={plotAccelerationData} />
-                </div>
-            ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                    <OrbitProgress size='large' color="#EFE2E2" variant='dotted' />
-                </div>
-            )}
+        <div className={className + " flex justify-center w-full overflow-clip"}>
+            {vectors !== null ?
+                <BasePlot
+                    className={className + " w-full p-0"}
+                    data={plotData}
+                    layout={plotLayout}
+                    config={{ responsive: true, scrollZoom: true, displayModeBar: false }}
+                    onUpdate={handleUpdate}
+                />
+                :
+                <>
+                    <div className="w-full h-full flex items-center justify-center"><OrbitProgress size='large'
+                        color="#EFE2E2"
+                        variant='dotted' />
+                    </div>
+                </>
+            }
         </div>
     );
 }
