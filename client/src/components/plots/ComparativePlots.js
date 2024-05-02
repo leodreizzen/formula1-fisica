@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { useVectorsContext } from "../../context/VectorsContext";
 import BasePlot from "./BasePlot";
-import {OrbitProgress} from "react-loading-indicators";
-import {plotStyles, primaryDriverColor, secondaryDriverColor} from "../../styles";
+import { OrbitProgress } from "react-loading-indicators";
+import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
 
-export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap }) {
+export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap, selectedOption }) {
     const { vectors } = useVectorsContext();
     const [visible, setVisible] = useState([true, true]);
 
@@ -22,13 +22,13 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 mode: 'lines',
                 marker: { color: primaryDriverColor },
                 name: currentDriver.fullName,
-                xaxis: 'x1', 
+                xaxis: 'x1',
                 yaxis: 'y1',
                 visible: visible[0],
                 legendgroup: currentDriver.fullName,
                 showlegend: true
             };
-    
+
             const secondaryDriverData = {
                 x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
                 y: vectors.map(it => it.velocity.module / 10),
@@ -36,32 +36,49 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 mode: 'lines',
                 marker: { color: secondaryDriverColor },
                 name: currentSecondaryDriver.fullName,
-                xaxis: 'x1', 
+                xaxis: 'x1',
                 yaxis: 'y1',
                 visible: visible[1],
                 legendgroup: currentSecondaryDriver.fullName,
                 showlegend: true
             };
-    
+
+            const accelerationFunctions = {
+                module: (it) => it.acceleration.module / 10,
+                tangential: (it) => it.acceleration.aTangential / 10,
+                normal: (it) => it.acceleration.aNormal / 10
+            };
+
+            const getAccelerationType = (option) => {
+                const accelerationFunction = accelerationFunctions[option];
+                if (accelerationFunction) {
+                    return accelerationFunction;
+                } else {
+                    return (it) => it.acceleration.module / 10;
+                }
+            };
+
+            const accelerationData = vectors.map(getAccelerationType(selectedOption));
+
             return currentDriver === currentSecondaryDriver
-                ? [primaryDriverData, { ...primaryDriverData, y: vectors.map(it => it.acceleration.module / 10), xaxis: 'x2', yaxis: 'y2', showlegend: false }]
-                : [primaryDriverData, secondaryDriverData, 
-                    { ...primaryDriverData, y: vectors.map(it => it.acceleration.module / 10), xaxis: 'x2', yaxis: 'y2', showlegend: false },
-                    { ...secondaryDriverData, y: vectors.map(it => it.acceleration.module / 10), xaxis: 'x2', yaxis: 'y2', showlegend: false }];
+                ? [primaryDriverData, { ...primaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }]
+                : [primaryDriverData, secondaryDriverData,
+                    { ...primaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false },
+                    { ...secondaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }];
         }
-    }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible]);
-    
+    }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible, selectedOption]);
+
 
     const plotLayout = useMemo(() => {
         const xAxisFont = {
             family: plotStyles.font.family,
-            size:18,
+            size: 18,
             color: plotStyles.font.color
         }
-    
+
         const yAxisFont = {
             family: plotStyles.font.family,
-            size:16,
+            size: 16,
             color: plotStyles.font.color
         }
         return {
@@ -77,13 +94,13 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
             yaxis2: {
                 title: '|a| [m/s²]', titlefont: yAxisFont, tolerance: 0.1
             },
-            grid: {rows: 2, columns: 1, pattern: 'independent'},
+            grid: { rows: 2, columns: 1, pattern: 'independent' },
             dragmode: "pan",
             margin: { t: 20 },
         }
     }, []);
 
-    
+
 
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
