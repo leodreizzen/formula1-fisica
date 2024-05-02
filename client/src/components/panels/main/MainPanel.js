@@ -7,6 +7,7 @@ import {useSessionDataContext} from "../../../context/SessionDataContext";
 import {DriverContextConsumer, DriverContextProvider} from "../../../context/DriverContext";
 import {LapContextConsumer, LapContextProvider} from "../../../context/LapContext";
 import {VectorsProvider} from "../../../context/VectorsContext";
+import PositionsPanel from "./positions/PositionsPanel";
 
 export default function MainPanel({className}) {
     const {year, round, session} = useSessionDataContext();
@@ -27,6 +28,7 @@ export default function MainPanel({className}) {
                                             <Tab>Trayectoria</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Velocidades</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Aceleraciones</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Posiciones</Tab>
                                         </TabList>
 
                                         <TabPanel className="overflow-clip">
@@ -38,6 +40,9 @@ export default function MainPanel({className}) {
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
                                             <AccelerationsPanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
+                                            <PositionsPanel className="h-full"/>
                                         </TabPanel>
                                     </Tabs>
                                 </VectorsProvider>
