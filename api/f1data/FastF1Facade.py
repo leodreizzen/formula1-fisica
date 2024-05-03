@@ -67,7 +67,8 @@ class FastF1Facade(F1Facade):
     def telemetry(self, year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int):
         session_event = self.__get_session(year, roundNumber, sessionNumber)
         lap_telemetry = session_event.laps.pick_driver(str(driverId)).pick_lap(lapNumber).telemetry
-        lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]].reset_index()
+        lap_telemetry = lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]]
+        lap_telemetry.reset_index(inplace=True)
         lap_telemetry = telemetry_interpolation(lap_telemetry)
         return filter_telemetry(lap_telemetry)
     
