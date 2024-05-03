@@ -3,3 +3,4 @@ fastf1
 uvicorn
 pyinstaller
 pandas
+scipy

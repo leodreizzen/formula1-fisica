@@ -1,13 +1,10 @@
 import fastapi
-import json
 from fastapi.middleware.cors import CORSMiddleware
-from utilFisica import calcular_vector_velocidad, calcular_vector_aceleracion
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
-from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
-    accelerationsPlaceholder
 import pandas as pd
 import numpy as np
+
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
