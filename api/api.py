@@ -118,7 +118,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
                 "vZ": row["velocidad_z"],
                 "module": row["modulo_velocidad"],
                 "moduleXY": row["modulo_velocidad_xy"],
-                "speedometer": row["Speed"] / 3.6 * 10
+                "speedometer": row["Speed"]
             },
             "acceleration": {
                 "aX": row["aceleracion_x"],
@@ -134,7 +134,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     return aceleraciones
 
 
-@app.get("/derrapes")
+@app.get("/drifts")
 def drifts(year: int, round_number: int, session_number: int, driver_number: int, lap_number: int):
     datos_aceleraciones = accelerations_calcs(year, round_number, session_number, driver_number, lap_number)
     seleccion = []
@@ -229,6 +229,8 @@ def accelerations_calcs(year: int, roundNumber: int, sessionNumber: int, driverN
     # Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
 
     # Filtrar los datos con un filtro de Savitzky-Golay
+
+    lap_telemetry['Speed'] = lap_telemetry["Speed"] / 3.6 * 10
 
     return lap_telemetry
 
