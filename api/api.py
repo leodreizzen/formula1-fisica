@@ -137,7 +137,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 @app.get("/drifts")
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
-    seleccion = []
+    derrapes = []
 
     for index, row in datos_aceleraciones.iterrows():
         derrape = {}
@@ -148,12 +148,15 @@ def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, l
             radio = (velocidad ** 2) / aceleracion_normal
             if radio < radio_giro_minimo:
                 proporcion = 1 - (radio / radio_giro_minimo)
-                derrape["time"] = timedelta_to_string(row["Time"])
-                derrape["radio"] = radio
-                derrape["drifting"] = proporcion
-                seleccion.append(row)
+                derrapes.append({
+                    "time": timedelta_to_string(row["Time"]),
+                    "X": row["X"],
+                    "Y": row["Y"],
+                    "Z": row["Z"],
+                    "drifting": proporcion
+                })
 
-    return seleccion
+    return derrapes
 
 
 @lru_cache(maxsize=tamano_cache)
