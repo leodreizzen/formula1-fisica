@@ -41,28 +41,30 @@ export function PositionsPlot({className, timeUnit}) {
 
     return (
         <div className={className + " items-center flex justify-center w-full h-full overflow-clip"}>
-            <div className="flex flex-col items-start">
-                <div className="mt-6">
-                    <input type="radio" id="cartesian" name="coordinateSystem" value="cartesian" className="hidden"
-                           checked={coordinateSystem === "cartesian"} onChange={handleCoordinateSystemChange}/>
-                    <label htmlFor="cartesian"
-                           className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "cartesian" ? "bg-blue-600 text-white " : "")}>Cartesianas</label>
-                </div>
-                <div className="mt-6">
-                    <input type="radio" id="polar" name="coordinateSystem" value="polar" className="hidden"
-                           checked={coordinateSystem === "polar"} onChange={handleCoordinateSystemChange}/>
-                    <label htmlFor="polar"
-                           className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "polar" ? "bg-blue-600 text-white " : "")}>Polares</label>
-                </div>
-                <div className="mt-6">
-                    <input type="radio" id="intrinsic" name="coordinateSystem" value="intrinsic" className="hidden"
-                           checked={coordinateSystem === "intrinsic"} onChange={handleCoordinateSystemChange}/>
-                    <label htmlFor="intrinsic"
-                           className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "intrinsic" ? "bg-blue-600 text-white " : "")}>Intrínsecas</label>
-                </div>
-            </div>
             {trajectoryData !== null ?
                 <>
+                    <div className="flex flex-col items-start">
+                        <div className="mt-6">
+                            <input type="radio" id="cartesian" name="coordinateSystem" value="cartesian"
+                                   className="hidden"
+                                   checked={coordinateSystem === "cartesian"} onChange={handleCoordinateSystemChange}/>
+                            <label htmlFor="cartesian"
+                                   className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "cartesian" ? "bg-blue-600 text-white " : "")}>Cartesianas</label>
+                        </div>
+                        <div className="mt-6">
+                            <input type="radio" id="polar" name="coordinateSystem" value="polar" className="hidden"
+                                   checked={coordinateSystem === "polar"} onChange={handleCoordinateSystemChange}/>
+                            <label htmlFor="polar"
+                                   className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "polar" ? "bg-blue-600 text-white " : "")}>Polares</label>
+                        </div>
+                        <div className="mt-6">
+                            <input type="radio" id="intrinsic" name="coordinateSystem" value="intrinsic"
+                                   className="hidden"
+                                   checked={coordinateSystem === "intrinsic"} onChange={handleCoordinateSystemChange}/>
+                            <label htmlFor="intrinsic"
+                                   className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "intrinsic" ? "bg-blue-600 text-white " : "")}>Intrínsecas</label>
+                        </div>
+                    </div>
                     {determineComponent()}
                 </>
                 :
