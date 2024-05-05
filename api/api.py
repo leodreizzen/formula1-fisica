@@ -19,7 +19,7 @@ facade = FastF1Facade()
 
 origins = ["*"]
 
-# radio de giro para umbral
+# radio de giro para umbral = 7.35metros
 wheelbase = 3.6
 tire_width = 0.305
 steering_angle_radians = math.radians(30)
@@ -204,8 +204,10 @@ def drifts(year: int, round_number: int, session_number: int, driver_number: int
         if aceleracion_normal != 0:
             radio = (velocidad ** 2) / aceleracion_normal
             if radio < radio_giro_minimo:
+                proporcion = 1 - (radio / radio_giro_minimo)
                 derrape["time"] = row["time"]
                 derrape["radio"] = radio
+                derrape["drifting"] = proporcion
                 seleccion.append(row)
 
     return seleccion
