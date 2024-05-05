@@ -140,7 +140,6 @@ def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, l
     derrapes = []
 
     for index, row in datos_aceleraciones.iterrows():
-        derrape = {}
         #pasaje de dm a m
         velocidad = row["modulo_velocidad"] / 10
         aceleracion_normal = row["a_normal"] / 10
