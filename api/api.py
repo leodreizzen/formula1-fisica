@@ -135,20 +135,20 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 
 
 @app.get("/drifts")
-def drifts(year: int, round_number: int, session_number: int, driver_number: int, lap_number: int):
-    datos_aceleraciones = accelerations_calcs(year, round_number, session_number, driver_number, lap_number)
+def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     seleccion = []
 
     for index, row in datos_aceleraciones.iterrows():
         derrape = {}
         #pasaje de dm a m
-        velocidad = row["speed"]["module"] / 10
-        aceleracion_normal = row["acceleration"]["aNormal"] / 10
+        velocidad = row["modulo_velocidad"] / 10
+        aceleracion_normal = row["a_normal"] / 10
         if aceleracion_normal != 0:
             radio = (velocidad ** 2) / aceleracion_normal
             if radio < radio_giro_minimo:
                 proporcion = 1 - (radio / radio_giro_minimo)
-                derrape["time"] = row["time"]
+                derrape["time"] = timedelta_to_string(row["Time"])
                 derrape["radio"] = radio
                 derrape["drifting"] = proporcion
                 seleccion.append(row)
