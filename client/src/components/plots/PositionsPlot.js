@@ -26,18 +26,22 @@ export function PositionsPlot({className, timeUnit}) {
         setCoordinateSystem(event.target.value);
     };
 
-    const determineComponent = () => {
-        switch (coordinateSystem) {
-            case "cartesian":
-                return (<CartesianPositionPlot className="w-1/2 h-full" timeUnit={timeUnit} trajectoryData={trajectoryData} />);
-            case "intrinsic":
-                return <IntrinsicPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
-            case "polar":
-                return <PolarPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
-            default:
-                return null;
-        }
-    };
+    let plots;
+    switch (coordinateSystem) {
+        case "cartesian":
+            plots =  (<CartesianPositionPlot className="w-1/2 h-full" timeUnit={timeUnit} trajectoryData={trajectoryData} />);
+            break;
+        case "intrinsic":
+            plots =  <IntrinsicPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            break;
+        case "polar":
+            plots =  <PolarPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            break;
+        default:
+            plots =  null;
+            break;
+    }
+
 
     return (
         <div className={className + " items-center flex justify-center w-full h-full overflow-clip"}>
@@ -65,7 +69,7 @@ export function PositionsPlot({className, timeUnit}) {
                                    className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "intrinsic" ? "bg-blue-600 text-white " : "")}>Intrínsecas</label>
                         </div>
                     </div>
-                    {determineComponent()}
+                    {plots}
                 </>
                 :
                 <>
