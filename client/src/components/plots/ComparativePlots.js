@@ -68,6 +68,16 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
         }
     }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible, selectedOption]);
 
+    const getYAxis2Title = (selectedOption) => {
+        switch (selectedOption) {
+            case 'tangential':
+                return 'a tangencial [m/s²]';
+            case 'normal':
+                return 'a normal [m/s²]';
+            default:
+                return '|a| [m/s²]';
+        }
+    };
 
     const plotLayout = useMemo(() => {
         const xAxisFont = {
@@ -81,6 +91,8 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
             size: 16,
             color: plotStyles.font.color
         }
+        const yaxis2Title = getYAxis2Title(selectedOption);
+
         return {
             xaxis: {
                 title: '', tolerance: 0.1
@@ -89,18 +101,18 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 title: 'Velocidad [m/s]', titlefont: yAxisFont, tolerance: 0.1
             },
             xaxis2: {
+                anchor: 'x',
+                matches: 'x',
                 title: 'Distancia (m)', titlefont: xAxisFont, tolerance: 0.1
             },
             yaxis2: {
-                title: '|a| [m/s²]', titlefont: yAxisFont, tolerance: 0.1
+                title: yaxis2Title, titlefont: yAxisFont, tolerance: 0.1
             },
             grid: { rows: 2, columns: 1, pattern: 'independent' },
             dragmode: "pan",
             margin: { t: 20 },
         }
-    }, []);
-
-
+    }, [selectedOption]);
 
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
