@@ -8,6 +8,7 @@ import { useDriverContext } from "../../../../context/DriverContext";
 import { useLapContext } from "../../../../context/LapContext";
 import { useGetTrajectory } from "../../../../api/hooks";
 import AccelerationTypeSelector from "../../../inputs/AccelerationTypeSelector";
+import {OrbitProgress} from "react-loading-indicators";
 
 export default function ComparativePanel({ className }) {
     const [selectedOption, setSelectedOption] = useState("module");
@@ -45,7 +46,9 @@ export default function ComparativePanel({ className }) {
                     <AccelerationTypeSelector onChange={handleOptionChange} value={selectedOption} />
                     <LapSelector className="mb-3 p-1 pl-6 pr-6" />
                 </>
-            ) : null}
+            ) : <OrbitProgress size='large'
+                color="#EFE2E2"
+                variant='dotted'/>}
         </div>
     );
 }
