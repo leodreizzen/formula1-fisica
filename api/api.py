@@ -2,16 +2,12 @@ import math
 from functools import lru_cache
 
 import fastapi
-import json
 from fastapi.middleware.cors import CORSMiddleware
-from utilFisica import calcular_vector_velocidad, calcular_vector_aceleracion
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
-from placeholders import driversPlaceholder, lapsPlaceholder, trajectoryPlaceholder, vectorsPlaceholder, \
-    accelerationsPlaceholder
-from scipy.signal import savgol_filter
 import pandas as pd
 import numpy as np
+
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
@@ -82,12 +78,32 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
 @app.get("/trajectory")
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+
+    origen = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2 + lap_telemetry["Z"] ** 2).iloc[0]
+
+    lap_telemetry['r'] = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2)
+    lap_telemetry['theta'] = np.arctan2(lap_telemetry["Y"], lap_telemetry["X"])
+    lap_telemetry['module'] = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
+
+    arreglo_modulos = lap_telemetry["module"].to_numpy()
+    arreglo_cumsum = np.cumsum(arreglo_modulos)
+
     puntos = []
     for index, row in lap_telemetry.iterrows():
         puntos.append({
-            "x": row["X"],
-            "y": row["Y"],
-            "z": row["Z"],
+            "cartesian": {
+                "x": row["X"],
+                "y": row["Y"],
+                "z": row["Z"],
+            },
+            "polar": {
+                "r": row["r"],
+                "theta": row["theta"],
+                "z": row["Z"]
+            },
+            "intrinsic": {
+                "s": arreglo_cumsum[index],
+            },
             "time": timedelta_to_string(row["Time"])
         })
     return puntos
@@ -133,7 +149,7 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
 
     return aceleraciones
 
-
+  
 @app.get("/drifts")
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
@@ -166,6 +182,7 @@ def accelerations_calcs(year: int, roundNumber: int, sessionNumber: int, driverN
     window_length_acceleration = 100
     polyorder_acceleration = 3
 
+
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
     lap_telemetry['velocidad_x'] = (lap_telemetry['X'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
@@ -191,6 +208,7 @@ def accelerations_calcs(year: int, roundNumber: int, sessionNumber: int, driverN
                                                    polyorder_acceleration)
     lap_telemetry['aceleracion_z'] = savgol_filter(lap_telemetry['aceleracion_z'], window_length_acceleration,
                                                    polyorder_acceleration)
+
     lap_telemetry['modulo_velocidad_xy'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
     lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]],
                                                        axis=1)

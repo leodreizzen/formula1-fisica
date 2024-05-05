@@ -83,15 +83,36 @@ paths:
                 items:
                   type: object
                   properties:
-                    x:
-                      type: number
-                      description: Coordenada x de posición
-                    y:
-                      type: number
-                      description: Coordenada y de posición
-                    z:
-                      type: number
-                      description: Coordenada z de posición
+                    cartesian:
+                      type: object
+                      properties:
+                        x:
+                          type: number
+                          description: Coordenada x de posición
+                        y:
+                          type: number
+                          description: Coordenada y de posición
+                        z:
+                          type: number
+                          description: Coordenada z de posición
+                    polar:
+                      type: object
+                      properties:
+                        r:
+                          type: number
+                          description: Radio de posición
+                        theta:
+                          type: number
+                          description: Ángulo de posición
+                        z:
+                          type: number
+                          description: Coordenada z de posición
+                    intrinsic:
+                        type: object
+                        properties:
+                            s:
+                              type: number
+                              description: Coordenada s de posición (longitud de arco)
                     time:
                       $ref: '#/components/schemas/RelativeTimestamp'
         '400':
@@ -156,8 +177,8 @@ paths:
                 properties:
                   time:
                     $ref: '#/components/parameters/relativeTimestamp'
-                  speed:
-                      $ref: '#/components/schemas/Speed'
+                  velocity:
+                      $ref: '#/components/schemas/Velocity'
                   acceleration:
                       $ref: '#/components/schemas/Acceleration'
                   versors:
@@ -165,7 +186,6 @@ paths:
 
         '400':
           description: Alguno de los parámetros es inválido
-
 
 components:
   parameters:
@@ -280,7 +300,7 @@ components:
     LapNumber:
       type: integer
       description: Número de vuelta
-    Speed:
+    Velocity:
       type: object
       description: "Velocidad de un conductor, en coordenadas cartesianas"
       properties:
