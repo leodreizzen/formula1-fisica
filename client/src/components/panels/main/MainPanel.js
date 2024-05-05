@@ -26,9 +26,9 @@ export default function MainPanel({className}) {
                                             selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl">
                                         <TabList>
                                             <Tab>Trayectoria</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Posiciones</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Velocidades</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Aceleraciones</Tab>
-                                            <Tab disabled={driverData.drivers === null ? true : null}>Posiciones</Tab>
                                         </TabList>
 
                                         <TabPanel className="overflow-clip">
@@ -36,14 +36,15 @@ export default function MainPanel({className}) {
                                                 className="grow"/>
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
+                                            <PositionsPanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
                                             <VelocitiesPanel className="h-full"/>
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
                                             <AccelerationsPanel className="h-full"/>
                                         </TabPanel>
-                                        <TabPanel className="overflow-clip">
-                                            <PositionsPanel className="h-full"/>
-                                        </TabPanel>
+
                                     </Tabs>
                                 </VectorsProvider>
                             }
