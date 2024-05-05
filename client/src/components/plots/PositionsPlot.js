@@ -9,8 +9,6 @@ import {useGetTrajectory} from "../../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
 
 export function PositionsPlot({className, timeUnit}) {
-
-
     const sessionData = useSessionDataContext();
     const {currentDriver} = useDriverContext();
     const {currentLap} = useLapContext();
@@ -53,20 +51,20 @@ export function PositionsPlot({className, timeUnit}) {
                                    className="hidden"
                                    checked={coordinateSystem === "cartesian"} onChange={handleCoordinateSystemChange}/>
                             <label htmlFor="cartesian"
-                                   className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "cartesian" ? "bg-blue-600 text-white " : "")}>Cartesianas</label>
+                                   className={"no-select p-2 border border-white rounded-full cursor-pointer " + (coordinateSystem === "cartesian" ? "bg-blue-600 text-white " : "bg-white text-black ")}>Cartesianas</label>
                         </div>
                         <div className="mt-6">
                             <input type="radio" id="polar" name="coordinateSystem" value="polar" className="hidden"
                                    checked={coordinateSystem === "polar"} onChange={handleCoordinateSystemChange}/>
                             <label htmlFor="polar"
-                                   className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "polar" ? "bg-blue-600 text-white " : "")}>Polares</label>
+                                   className={"no-select p-2 border border-white rounded-full cursor-pointer " + (coordinateSystem === "polar" ? "bg-blue-600 text-white " : "bg-white text-black ")}>Polares</label>
                         </div>
                         <div className="mt-6">
                             <input type="radio" id="intrinsic" name="coordinateSystem" value="intrinsic"
                                    className="hidden"
                                    checked={coordinateSystem === "intrinsic"} onChange={handleCoordinateSystemChange}/>
                             <label htmlFor="intrinsic"
-                                   className={"no-select p-2 border border-white rounded-full cursor-pointer bg-white text-black " + (coordinateSystem === "intrinsic" ? "bg-blue-600 text-white " : "")}>Intrínsecas</label>
+                                   className={"no-select p-2 border border-white rounded-full cursor-pointer " + (coordinateSystem === "intrinsic" ? "bg-blue-600 text-white " : "bg-white text-black ")}>Intrínsecas</label>
                         </div>
                     </div>
                     {plots}
