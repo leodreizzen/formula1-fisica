@@ -46,9 +46,9 @@ export default function ComparativePanel({className}) {
 
     return (
         <div className={`${className} flex flex-col items-center overflow-clip h-full`}>
-            <div className="flex flex-row w-full">
-                <MainDriverSelector className="w-1/2"/>
-                <DriverSelector className="w-1/2" currentSecondaryDriver={currentSecondaryDriver}
+            <div className="flex flex-row w-full justify-evenly">
+                <MainDriverSelector/>
+                <DriverSelector currentSecondaryDriver={currentSecondaryDriver}
                                 onDriverChange={handleSecondaryDriverChange}/>
             </div>
             {currentSecondaryDriver !== null ?
