@@ -16,12 +16,7 @@ export default function ComparativePanel({className}) {
     const [currentSecondaryDriver, setCurrentSecondaryDriver] = useState(null);
     const sessionData = useSessionDataContext();
     const {currentDriver} = useDriverContext();
-    const {lapCount: mainLapCount, currentLap: mainCurrentLap, setCurrentLap: setCurrentL} = useLapContext()
-
-    function setCurrentLap(lap) {
-        console.log(lap)
-        setCurrentL(lap);
-    }
+    const {lapCount: mainLapCount, currentLap: mainCurrentLap, setCurrentLap} = useLapContext()
 
     const year = sessionData?.year;
     const round = sessionData?.round;
