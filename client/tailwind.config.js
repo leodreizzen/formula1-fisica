@@ -4,7 +4,20 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundColor: {
+        '::-webkit-scrollbar-track': '#FFFFFF'
+      },
+      scrollbarWidth: {
+        thin: '1px', 
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/container-queries'),
+    require('tailwind-scrollbar')({
+      nocompatible: true, 
+      boxShadow: 'none', 
+    }),
+  ],
 }

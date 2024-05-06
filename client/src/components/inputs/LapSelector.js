@@ -38,7 +38,7 @@ export default function LapSelector({className}) {
                 <>
                     <p className="mr-2 text-white">Vuelta</p>
                     <input type="number" min={1}
-                           className="bg-[#8F8F8F] w-10 max-h-10 h-[90%] border-2 border-black rounded-lg p-2 mr-2 remove-arrow text-black"
+                           className="bg-[#8F8F8F] w-10 max-h-10 h-[90%] border-2 border-black rounded-lg p-2 mr-2 remove-arrow text-black text-center font-semibold"
                            value={currentLapInput.toString()}
                            onChange={onLapInputChange}
                            onKeyDown={handleKeyDown}

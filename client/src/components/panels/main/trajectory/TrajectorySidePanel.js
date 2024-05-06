@@ -9,7 +9,7 @@ export default function
             {hoveredPoint !== null ? (
                 <>
                     <HoveredPointData className=" w-full" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
-                    <MiniPlot className=" w-full grow mt-4" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
+                    <MiniPlot className=" w-full grow mt-1 h-max" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint}/>
                 </>
             ) : null}
         </div>

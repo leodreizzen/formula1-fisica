@@ -1,10 +1,10 @@
 import {dateUTC_to_LocalTimezone} from "../../../client-util";
 import {useEffect, useState} from "react";
 
+
 export default function SessionSelector({className, rounds, onLoadDataClick}) {
     const [selectedRound, setSelectedRound] = useState(null);
     const [selectedSession, setSelectedSession] = useState(null);
-
     useEffect(() => {
         if (rounds !== null && rounds.length > 0) {
             setSelectedRound(0);
@@ -29,8 +29,10 @@ export default function SessionSelector({className, rounds, onLoadDataClick}) {
     return <div className={className}>
         <label className={"block mb-1 mt-5 text-white text-left p-1"} htmlFor="ronda">Ronda:</label>
         <select value={selectedRound ?? ""}
-                className={"block w-full border border-gray-400 rounded-md text-white bg-gray-900 p-1"} id="ronda"
-                onChange={onRoundChange}>
+                className="block w-full border border-gray-400 rounded-md text-sm text-white bg-gray-900 py-2 px-3 scrollbar-thin scrollbar-thumb-white scrollbar-thumb-rounded"
+                id="ronda"
+                onChange={onRoundChange}
+                >
             {rounds ? (rounds.map((round, i) => <option key={round.roundNumber}
                                                         value={i}>{round.roundNumber + " - " + round.eventName + " - " + round.country + " - " + round.location}</option>))
                 : null}

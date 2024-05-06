@@ -1,5 +1,5 @@
 import {OrbitProgress} from "react-loading-indicators";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useMemo} from "react";
 import {trajectoryColor} from "../../styles";
 import {
     enforceSameScaleHorizontal,
@@ -92,7 +92,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large'
                                                                                                color="#EFE2E2"
                                                                                                variant='dotted'/></div>
-                : <BasePlot className="w-full h-full p-0 m-0"
+                : <BasePlot className=" w-full h-full p-0 m-0 "
                             data={plotData}
                             layout={plotLayout}
                             config={{doubleClick: false}}
