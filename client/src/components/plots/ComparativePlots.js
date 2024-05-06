@@ -4,7 +4,7 @@ import BasePlot from "./BasePlot";
 import { OrbitProgress } from "react-loading-indicators";
 import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
 
-export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap, selectedOption }) {
+export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap, selectedOption}) {
     const { vectors } = useVectorsContext();
     const [visible, setVisible] = useState([true, true]);
 

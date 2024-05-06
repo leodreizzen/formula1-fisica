@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DriverSelector from "../../../inputs/DriverSelector";
 import DriverSelectorNoContext from "../../../inputs/DriverSelectorNoContext";
-import LapSelector from "../../../inputs/LapSelector";
+import LapSelectorComparative from "../../../inputs/LapSelectorComparative";
 import ComparativePlot from "../../../plots/ComparativePlots";
 import { useSessionDataContext } from "../../../../context/SessionDataContext";
 import { useDriverContext } from "../../../../context/DriverContext";
 import { useLapContext } from "../../../../context/LapContext";
-import { useGetTrajectory } from "../../../../api/hooks";
+import { useGetTrajectory, useGetLaps } from "../../../../api/hooks";
 import AccelerationTypeSelector from "../../../inputs/AccelerationTypeSelector";
 import {OrbitProgress} from "react-loading-indicators";
 
@@ -22,8 +22,19 @@ export default function ComparativePanel({ className }) {
     const round = sessionData.round;
     const session = sessionData.session;
 
+    const [secondaryDriverLaps, ] = useGetLaps(year, round, session, currentSecondaryDriver?.driverNumber) || [];
+
     const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap) || [];
-    const [trajectorySecondaryData,] = useGetTrajectory(year, round, session, currentSecondaryDriver?.driverNumber, currentLap) || [];
+    
+    let correctedLap = null;
+    if (secondaryDriverLaps !== null && currentLap <= secondaryDriverLaps.lapCount) {
+        correctedLap = currentLap;
+    } 
+
+    const [trajectorySecondaryData,] = useGetTrajectory(year, round, session, currentSecondaryDriver?.driverNumber, correctedLap) || [];
+
+    useEffect(() => {
+    }, [currentSecondaryDriver, currentDriver, currentLap])
 
     const handleSecondaryDriverChange = (driver) => {
         setCurrentSecondaryDriver(driver);
@@ -39,12 +50,13 @@ export default function ComparativePanel({ className }) {
                 <DriverSelector className="w-1/2" />
                 <DriverSelectorNoContext className="w-1/2" currentSecondaryDriver={currentSecondaryDriver} onDriverChange={handleSecondaryDriverChange} />
             </div>
-            {trajectoryData !== null && trajectorySecondaryData !== null ? (
+            {trajectoryData !== null && trajectorySecondaryData !== null && secondaryDriverLaps !== null ? (
                 <>
                     <ComparativePlot className="flex grow pt-2" trajectoryData={trajectoryData} trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver} 
-                                        currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} selectedOption={selectedOption} />
+                                        currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap} selectedOption={selectedOption} 
+                                        secondaryLapsCount={secondaryDriverLaps.lapCount} />
                     <AccelerationTypeSelector onChange={handleOptionChange} value={selectedOption} />
-                    <LapSelector className="mb-3 p-1 pl-6 pr-6" />
+                    <LapSelectorComparative className="mb-3 p-1 pl-6 pr-6" secondaryLapsCount={secondaryDriverLaps.lapCount}/>
                 </>
             ) : <OrbitProgress size='large'
                 color="#EFE2E2"
