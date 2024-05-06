@@ -2,7 +2,7 @@ import {OrbitProgress} from "react-loading-indicators";
 import {useMemo} from "react";
 import {
     enforceSameScaleHorizontal,
-    enforceSameScaleVertical, getTolerancesPreservingAspectRatio,
+    enforceSameScaleVertical, getTolerancesPreservingAspectRatio, getTrajectoryExtremes,
 } from "./plot-utils";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
 import {useVectorsContext} from "../../context/VectorsContext";
@@ -15,11 +15,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     const LEGEND_ITEM_WIDTH = 30;
 
     const {vectors, getVectorsFromTime} = useVectorsContext();
-    const [driftingData] = useGetDrifting();
-    const minX = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
-    const minY = useMemo(() => trajectoryData ? Math.min(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
-    const maxX = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.x / 10))) : null, [trajectoryData]);
-    const maxY = useMemo(() => trajectoryData ? Math.max(...(trajectoryData.map(it => it.y / 10))) : null, [trajectoryData]);
+    const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
 
     function getPaperWidth(width){
@@ -56,8 +52,8 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         if (vectors === null || trajectoryData === null || hoveredPoint === null)
             return null;
         const time = trajectoryData[hoveredPoint].time;
-        const x = trajectoryData[hoveredPoint].x / 10;
-        const y = trajectoryData[hoveredPoint].y / 10;
+        const x = trajectoryData[hoveredPoint].cartesian.x / 10;
+        const y = trajectoryData[hoveredPoint].cartesian.y / 10;
         const vectorsInTime = getVectorsFromTime(time);
         if (vectorsInTime === undefined)
             return [];

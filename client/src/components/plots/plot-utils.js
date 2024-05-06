@@ -1,3 +1,13 @@
+import {useMemo} from "react";
+
+export function getTrajectoryExtremes(trajectoryData) {
+    const minX = trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.x / 10))) : null;
+    const minY = trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.y / 10))) : null;
+    const maxX = trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.x / 10))) : null;
+    const maxY = trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.y / 10))) : null;
+    return {minX, minY, maxX, maxY};
+}
+
 export function enforcePlotRange(oldRange, newRange, minX, minY, maxX, maxY){
     const xRange = enforcePlotSingleAxisRange([oldRange.x0, oldRange.x1], [newRange.x0, newRange.x1], minX, maxX);
     const yRange = enforcePlotSingleAxisRange([oldRange.y0, oldRange.y1], [newRange.y0, newRange.y1], minY, maxY);
