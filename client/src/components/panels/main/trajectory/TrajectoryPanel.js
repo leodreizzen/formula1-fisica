@@ -1,4 +1,4 @@
-import DriverSelector from "../../../inputs/DriverSelector"
+import MainDriverSelector from "../../../inputs/MainDriverSelector"
 import MainLapSelector from "../../../inputs/MainLapSelector";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
@@ -15,7 +15,7 @@ export default function TrajectoryPanel({className}) {
             (
                 drivers !== null?
                     <>
-                        <DriverSelector/>
+                        <MainDriverSelector/>
                         {currentLap !== null ?
                             <div className="flex flex-col items-center w-full h-full grow pl-1 overflow-clip">
                                 <TrajectoryInfo className="w-full grow" key={currentDriver.driverNumber + " " + currentLap}/>

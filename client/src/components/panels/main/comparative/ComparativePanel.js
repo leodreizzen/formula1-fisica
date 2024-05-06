@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
+import MainDriverSelector from "../../../inputs/MainDriverSelector";
 import DriverSelector from "../../../inputs/DriverSelector";
-import DriverSelectorNoContext from "../../../inputs/DriverSelectorNoContext";
 import ComparativePlot from "../../../plots/ComparativePlots";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
@@ -52,9 +52,9 @@ export default function ComparativePanel({className}) {
     return (
         <div className={`${className} flex flex-col items-center overflow-clip h-full`}>
             <div className="flex flex-row w-full">
-                <DriverSelector className="w-1/2"/>
-                <DriverSelectorNoContext className="w-1/2" currentSecondaryDriver={currentSecondaryDriver}
-                                         onDriverChange={handleSecondaryDriverChange}/>
+                <MainDriverSelector className="w-1/2"/>
+                <DriverSelector className="w-1/2" currentSecondaryDriver={currentSecondaryDriver}
+                                onDriverChange={handleSecondaryDriverChange}/>
             </div>
             {currentSecondaryDriver !== null ?
                 (trajectoryData !== null && trajectorySecondaryData !== null && currentLap !== null) ? (
