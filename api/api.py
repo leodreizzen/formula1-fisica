@@ -165,9 +165,9 @@ def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, l
                 proporcion = 1 - (radio / radio_giro_minimo)
                 derrapes.append({
                     "time": timedelta_to_string(row["Time"]),
-                    "X": row["X"],
-                    "Y": row["Y"],
-                    "Z": row["Z"],
+                    "x": row["X"],
+                    "y": row["Y"],
+                    "z": row["Z"],
                     "drifting": proporcion
                 })
 
