@@ -8,7 +8,10 @@ import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccele
 import {useVectorsContext} from "../../context/VectorsContext";
 import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
-import {useGetDrifting} from "../../api/hooks";
+import {useGetDrifts} from "../../api/hooks";
+import {useSessionDataContext} from "../../context/SessionDataContext";
+import {useLapContext} from "../../context/LapContext";
+import {useDriverContext} from "../../context/DriverContext";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
     const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
@@ -17,7 +20,14 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     const {vectors, getVectorsFromTime} = useVectorsContext();
     const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
+    const sessionData = useSessionDataContext()
+    const year = sessionData?.year;
+    const round = sessionData?.round;
+    const session = sessionData?.session;
+    const {currentDriver} = useDriverContext();
+    const {currentLap} = useLapContext();
 
+    const [driftingData,] = useGetDrifts(year, round, session, currentDriver?.driverNumber, currentLap);
     function getPaperWidth(width){
         return width - MARGINS.l - MARGINS.r;
     }
@@ -78,8 +88,8 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
 
         if (trajectoryData) {
             data.push({
-                x: trajectoryData.map(it => it.x / 10),
-                y: trajectoryData.map(it => it.y / 10),
+                x: trajectoryData.map(it => it.cartesian.x / 10),
+                y: trajectoryData.map(it => it.cartesian.y / 10),
                 name: "Trayectoria",
                 type: "scatter",
                 mode: "lines",
@@ -147,7 +157,6 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
             }
         }
     }, [arrows, xTolerance, yTolerance]);
-
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
