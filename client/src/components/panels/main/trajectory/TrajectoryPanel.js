@@ -1,5 +1,5 @@
 import DriverSelector from "../../../inputs/DriverSelector"
-import LapSelector from "../../../inputs/LapSelector";
+import MainLapSelector from "../../../inputs/MainLapSelector";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useLapContext} from "../../../../context/LapContext";
@@ -19,7 +19,7 @@ export default function TrajectoryPanel({className}) {
                         {currentLap !== null ?
                             <div className="flex flex-col items-center w-full h-full grow pl-1 overflow-clip">
                                 <TrajectoryInfo className="w-full grow" key={currentDriver.driverNumber + " " + currentLap}/>
-                                <LapSelector className="mb-3 p-1 pl-6 pr-6"/>
+                                <MainLapSelector className="mb-3 p-1 pl-6 pr-6"/>
                             </div>
                             : null
                         }

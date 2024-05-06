@@ -4,7 +4,7 @@ import { TbExchange } from "react-icons/tb";
 import {useLapContext} from "../../context/LapContext";
 import {OrbitProgress} from "react-loading-indicators";
 
-export default function LapSelector({className, secondaryLapsCount}) {
+export default function LapSelectorComparative({className, secondaryLapsCount}) {
     const {lapCount, currentLap, setCurrentLap} = useLapContext();
     const [currentLapInput, setCurrentLapInput] = useState(currentLap);
     const minLapsCount = Math.min(lapCount, secondaryLapsCount);
