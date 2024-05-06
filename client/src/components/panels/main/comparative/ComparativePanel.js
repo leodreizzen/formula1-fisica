@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import DriverSelector from "../../../inputs/DriverSelector";
 import DriverSelectorNoContext from "../../../inputs/DriverSelectorNoContext";
-import LapSelectorComparative from "../../../inputs/LapSelectorComparative";
 import ComparativePlot from "../../../plots/ComparativePlots";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
