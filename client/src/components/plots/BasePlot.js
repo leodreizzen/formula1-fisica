@@ -89,6 +89,11 @@ export default function BasePlot({className, data, layout, config, tolerances = 
         initYRanges()
     )
 
+    useEffect(() => {
+        setXRanges(initXRanges())
+        setYRanges(initYRanges())
+    }, [data])
+
     function initXRanges() {
         const res = new Map()
         xAxisAssignments.forEach((traces, axis) => {
