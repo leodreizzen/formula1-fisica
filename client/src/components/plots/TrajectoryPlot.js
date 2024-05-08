@@ -92,12 +92,12 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         if (hoveredPoint === index)
             setHoveredPoint(hovered => hovered === index ? null : hovered);
     }
+
     const plotData = useMemo(() => {
         const colorBarThickness = 7;
 
         let data = [];
 
-        console.log(trajectoryData)
         if (trajectoryData) {
             data.push({
                 x: trajectoryData.map(it => it.cartesian.x / 10),
@@ -111,7 +111,6 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         }
 
         if (driftingData) {
-            console.log(driftingData)
 
             data.push({
                 x: driftingData.map(it => it.x / 10),
@@ -119,10 +118,10 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 name: "Derrapes",
                 type: "scatter",
                 mode: "markers",
+                text: driftingData.map(it => it.drifting),
                 marker: {
                     color: driftingData.map(it => it.drifting),
-                   //,Bluered,Jet,,Viridis,YlGnBu,YlOrRd.
-                    colorscale: 'Reds', //'YlOrRd',
+                    colorscale: 'Reds',
                     hoverinfo: 'none',
                     colorbar: {
                         xref: "container",
@@ -132,18 +131,13 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                         len: 0.8,
                         yanchor: "middle",
                         xanchor: "center",
-                        tickvals: driftingData.map(it => it.drifting), // Number(it.drifting.toFixed(3)
-                        ticktext: driftingData.map(it => it.drifting.toPrecision(3)), //.toPrecision(3)
                         orientation: 'v',
                         thickness: colorBarThickness,
                         tickwidth: 0,
                         textfont: {size: 1},
                         tickmode: "auto",
-                     /*   tick0: 0.0,
-                        dtick: 10 */
                     }
                 },
-                hoverinfo: 'none'
             })
         }
         return data;
