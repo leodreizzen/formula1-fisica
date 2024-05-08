@@ -86,6 +86,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
 
         let data = [];
 
+        console.log(trajectoryData)
         if (trajectoryData) {
             data.push({
                 x: trajectoryData.map(it => it.cartesian.x / 10),
@@ -97,40 +98,45 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 showlegend: false
             })
         }
+
         if (driftingData) {
+            console.log(driftingData)
+
             data.push({
                 x: driftingData.map(it => it.x / 10),
                 y: driftingData.map(it => it.y / 10),
                 name: "Derrapes",
                 type: "scatter",
                 mode: "markers",
-                // color: driftingData.map(it => it.drifting),
                 marker: {
                     color: driftingData.map(it => it.drifting),
-                    colorscale: 'YlOrRd',
+                   //,Bluered,Jet,,Viridis,YlGnBu,YlOrRd.
+                    colorscale: 'Reds', //'YlOrRd',
                     hoverinfo: 'none',
                     colorbar: {
-                        xref:"container",
-                        yref:"container",
-                        x: 1 - (MARGINS.r)/width / 2,
+                        xref: "container",
+                        yref: "container",
+                        x: 1 - (MARGINS.r) / width / 2,
                         y: 0.5,
                         len: 0.8,
                         yanchor: "middle",
                         xanchor: "center",
-                        tickvals: driftingData.map(it => it.drifting),
-                        ticktext: driftingData.map(it => it.drifting),
+                        tickvals: driftingData.map(it => it.drifting), // Number(it.drifting.toFixed(3)
+                        ticktext: driftingData.map(it => it.drifting.toPrecision(3)), //.toPrecision(3)
                         orientation: 'v',
                         thickness: colorBarThickness,
                         tickwidth: 0,
                         textfont: {size: 1},
-                        dthick: 1,
+                        tickmode: "auto",
+                     /*   tick0: 0.0,
+                        dtick: 10 */
                     }
                 },
                 hoverinfo: 'none'
             })
         }
         return data;
-    }, [trajectoryData, driftingData]);
+    }, [trajectoryData, driftingData, MARGINS.r, width]);
 
     const plotLayout = useMemo(() => {
         return {
@@ -156,7 +162,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 entrywidth: MARGINS.r - LEGEND_ITEM_WIDTH - 15,
             }
         }
-    }, [arrows, xTolerance, yTolerance]);
+    }, [arrows, xTolerance, yTolerance, MARGINS, width, maxX, maxY, minX, minY]);
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
