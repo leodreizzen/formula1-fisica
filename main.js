@@ -30,7 +30,6 @@ function processApiStderr(data) {
             serverReady();
         }
     }
-    console.log(data);
 }
 
 if (isDev) {

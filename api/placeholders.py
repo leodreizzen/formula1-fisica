@@ -8525,3 +8525,16 @@ accelerationsPlaceholder = [
     }
   }
 ]
+
+driftingPlaceholder = [
+    {'x': -71, 'y': 4861, "drifting": 0.5},
+    {'x': -71, 'y': 4872, "drifting": 0.8},
+    {'x': -71, 'y': 4881, "drifting": 1.2},
+    {'x': -69, 'y': 4921, "drifting": 0.9},
+    {'x': -68, 'y': 4948, "drifting": 1.0},
+    {'x': -67, 'y': 4959, "drifting": 0.7},
+    {'x': -65, 'y': 5007, "drifting": 1.5},
+    {'x': -64, 'y': 5022, "drifting": 1.3},
+    {'x': -63, 'y': 5054, "drifting": 1.1},
+    {'x': -62, 'y': 5060, "drifting": 1.8}
+]

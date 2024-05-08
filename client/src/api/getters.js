@@ -48,3 +48,13 @@ export function getVectors(year, roundNumber, sessionNumber, driverNumber, lapNu
         lapNumber: lapNumber
     }, options);
 }
+
+export function getDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
+     return APIGetter("/drifts", {
+         year: year,
+         roundNumber: roundNumber,
+         sessionNumber: sessionNumber,
+         driverNumber: driverNumber,
+         lapNumber: lapNumber
+     }, options);
+}
