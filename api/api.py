@@ -1,3 +1,6 @@
+import math
+from functools import lru_cache
+
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
@@ -10,6 +13,14 @@ app = fastapi.FastAPI()
 facade = FastF1Facade()
 
 origins = ["*"]
+
+tamano_cache = 1
+
+# radio de giro para umbral = 7.35metros
+wheelbase = 3.6
+tire_width = 0.305
+steering_angle_radians = math.radians(30)
+radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
 
 app.add_middleware(
     CORSMiddleware,
@@ -100,17 +111,92 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
 
 @app.get("/vectors")
 def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    lap_telemetry = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+
+    aceleraciones = []
+
+    for index, row in lap_telemetry.iterrows():
+        aceleraciones.append({
+            "time": timedelta_to_string(row["Time"]),
+            "versors": {
+                "tangent": {
+                    "x": row["versor_tangente"][0],
+                    "y": row["versor_tangente"][1]
+                },
+                "normal": {
+                    "x": row["versor_normal_x"],
+                    "y": row["versor_normal_y"]
+                }
+            },
+            "velocity": {
+                "vX": row["velocidad_x"],
+                "vY": row["velocidad_y"],
+                "vZ": row["velocidad_z"],
+                "module": row["modulo_velocidad"],
+                "moduleXY": row["modulo_velocidad_xy"],
+                "speedometer": row["Speed"]
+            },
+            "acceleration": {
+                "aX": row["aceleracion_x"],
+                "aY": row["aceleracion_y"],
+                "aZ": row["aceleracion_z"],
+                "module": row["modulo_aceleracion"],
+                "moduleXY": row["modulo_aceleracion_xy"],
+                "aTangential": row["aTangential"],
+                "aNormal": row["a_normal"]
+            }
+        })
+
+    return aceleraciones
+
+  
+@app.get("/drifts")
+def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    derrapes = []
+
+    for index, row in datos_aceleraciones.iterrows():
+        #pasaje de dm a m
+        velocidad = row["modulo_velocidad"] / 10
+        aceleracion_normal = row["a_normal"] / 10
+        if aceleracion_normal != 0:
+            radio = (velocidad ** 2) / aceleracion_normal
+            if radio < radio_giro_minimo:
+                proporcion = 1 - (radio / radio_giro_minimo)
+                derrapes.append({
+                    "time": timedelta_to_string(row["Time"]),
+                    "X": row["X"],
+                    "Y": row["Y"],
+                    "Z": row["Z"],
+                    "drifting": proporcion
+                })
+
+    return derrapes
+
+
+@lru_cache(maxsize=tamano_cache)
+def accelerations_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    # Parámetros del filtro de Savitzky-Golay
+    window_length_speed = 15
+    polyorder_speed = 2
+    window_length_acceleration = 100
+    polyorder_acceleration = 3
+
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
     lap_telemetry['velocidad_x'] = (lap_telemetry['X'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_y'] = (lap_telemetry['Y'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_z'] = (lap_telemetry['Z'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
-    lap_telemetry['aceleracion_x'] = (lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / \
-                                     lap_telemetry['diferencia_tiempo']
-    lap_telemetry['aceleracion_y'] = (lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / \
-                                     lap_telemetry['diferencia_tiempo']
-    lap_telemetry['aceleracion_z'] = (lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / \
-                                     lap_telemetry['diferencia_tiempo']
+    lap_telemetry['aceleracion_x'] = (
+            (lap_telemetry['velocidad_x'].shift(-1) - lap_telemetry['velocidad_x']) / lap_telemetry[
+        'diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
+    lap_telemetry['aceleracion_y'] = (
+            (lap_telemetry['velocidad_y'].shift(-1) - lap_telemetry['velocidad_y']) / lap_telemetry[
+        'diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
+    lap_telemetry['aceleracion_z'] = (
+            (lap_telemetry['velocidad_z'].shift(-1) - lap_telemetry['velocidad_z']) / lap_telemetry[
+        'diferencia_tiempo']).fillna(0).replace([np.inf, -np.inf], 0)
+
     lap_telemetry['modulo_velocidad_xy'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y']], axis=1)
     lap_telemetry['modulo_velocidad'] = np.linalg.norm(lap_telemetry[['velocidad_x', 'velocidad_y', "velocidad_z"]],
                                                        axis=1)
@@ -148,43 +234,9 @@ def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber:
     # Eliminar la última fila
     lap_telemetry = lap_telemetry.iloc[:-1]
 
-    # Le sacamos la primera fila(primer punto de la vuelta) y la ultima fila(ultimo punto) para que no haya NaN ni valores en Infinito
+    lap_telemetry['Speed'] = lap_telemetry["Speed"] / 3.6 * 10
 
-    aceleraciones = []
-
-    for index, row in lap_telemetry.iterrows():
-        aceleraciones.append({
-            "time": timedelta_to_string(row["Time"]),
-            "versors": {
-                "tangent": {
-                    "x": row["versor_tangente"][0],
-                    "y": row["versor_tangente"][1]
-                },
-                "normal": {
-                    "x": row["versor_normal_x"],
-                    "y": row["versor_normal_y"]
-                }
-            },
-            "velocity": {
-                "vX": row["velocidad_x"],
-                "vY": row["velocidad_y"],
-                "vZ": row["velocidad_z"],
-                "module": row["modulo_velocidad"],
-                "moduleXY": row["modulo_velocidad_xy"],
-                "speedometer": row["Speed"] / 3.6 * 10
-            },
-            "acceleration": {
-                "aX": row["aceleracion_x"],
-                "aY": row["aceleracion_y"],
-                "aZ": row["aceleracion_z"],
-                "module": row["modulo_aceleracion"],
-                "moduleXY": row["modulo_aceleracion_xy"],
-                "aTangential": row["aTangential"],
-                "aNormal": row["a_normal"]
-            }
-        })
-
-    return aceleraciones
+    return lap_telemetry
 
 
 if __name__ == "__main__":
