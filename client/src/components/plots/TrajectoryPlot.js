@@ -58,6 +58,23 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         return ranges
     }
 
+    function handleHover(data) {
+        const point = data.points[0]
+        const index = data.points[0].pointIndex;
+        if (point.curveNumber === 0)
+            setHoveredPoint(index);
+        else if (point.curveNumber === 1){
+            const trajectoryPoint = trajectoryData.findIndex(it => it.cartesian.x / 10 === point.x && it.cartesian.y / 10 === point.y)
+            if (trajectoryPoint !== undefined)
+                setHoveredPoint(trajectoryPoint);
+            else
+                console.log("Point not found")
+        }
+        else
+            throw new Error("Unknown curve");
+    }
+
+
     const arrows = useMemo(() => {
         if (vectors === null || trajectoryData === null || hoveredPoint === null)
             return null;
@@ -69,12 +86,6 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
             return [];
         return [speedArrow(vectorsInTime, x, y), accelerationArrow(vectorsInTime, x, y), tangentialAccelerationArrow(vectorsInTime, x, y), normalAccelerationArrow(vectorsInTime, x, y)]
     }, [vectors, trajectoryData, hoveredPoint, getVectorsFromTime]);
-
-
-    function handleHover(data) {
-        const index = data.points[0].pointIndex;
-        setHoveredPoint(index);
-    }
 
     function handleUnhover(data) {
         const index = data.points[0].pointIndex;
