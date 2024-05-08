@@ -2,15 +2,13 @@ import React from "react";
 import { useDriverContext } from "../../context/DriverContext";
 import DriverSelect from "./DriverSelect";
 
-export default function DriverSelector({ className, currentDriver, onDriverChange, isPrimaryDriver = true }) {
+export default function DriverSelector({ className, currentDriver, onDriverChange, label="Conductor" }) {
     const { drivers } = useDriverContext();
 
     function onDriverSelectionChange(val) {
         const selected = drivers.find((driver) => driver.driverNumber === val);
         onDriverChange(selected);
     }
-
-    const label = isPrimaryDriver ? "Conductor" : "Conductor Rival";
 
     return (
         <div className={"text-white " + className}>

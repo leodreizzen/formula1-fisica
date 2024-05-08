@@ -49,7 +49,7 @@ export default function ComparativePanel({className}) {
             <div className="flex flex-row w-full justify-evenly">
                 <MainDriverSelector/>
                 <DriverSelector currentSecondaryDriver={currentSecondaryDriver}
-                                onDriverChange={handleSecondaryDriverChange} isPrimaryDriver={false}/>
+                                onDriverChange={handleSecondaryDriverChange} label="Conductor rival"/>
             </div>
             {currentSecondaryDriver !== null ?
                 (trajectoryData !== null && trajectorySecondaryData !== null && currentLap !== null) ? (
