@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from "react";
-import { useVectorsContext } from "../../context/VectorsContext";
+import { useKinematicVectorsContext } from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
 import { OrbitProgress } from "react-loading-indicators";
 import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
 
 export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap, selectedOption}) {
-    const { vectors } = useVectorsContext();
+    const { vectors } = useKinematicVectorsContext();
     const [visible, setVisible] = useState([true, true]);
 
     function handleUpdate(state) {

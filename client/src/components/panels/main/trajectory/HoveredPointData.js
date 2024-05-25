@@ -1,11 +1,11 @@
 import {accelerationColor, normalAccelerationColor, trajectoryColor, speedColor, tangentialAccelerationColor} from "../../../../styles";
 import {useDriverContext} from "../../../../context/DriverContext";
-import {useVectorsContext} from "../../../../context/VectorsContext";
+import {useKinematicVectorsContext} from "../../../../context/KinematicVectorsContext";
 
 export default function HoveredPointData({trajectoryData, hoveredPoint}){
-    const {getVectorsFromTime} = useVectorsContext();
+    const {getKinematicVectorsFromTime} = useKinematicVectorsContext();
     const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
-    const vectorsInTime = getVectorsFromTime(time);
+    const vectorsInTime = getKinematicVectorsFromTime(time);
     const {currentDriver} = useDriverContext();
 
     return(

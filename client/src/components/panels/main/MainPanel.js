@@ -6,7 +6,7 @@ import 'react-tabs/style/react-tabs.css';
 import {useSessionDataContext} from "../../../context/SessionDataContext";
 import {DriverContextConsumer, DriverContextProvider} from "../../../context/DriverContext";
 import {LapContextConsumer, LapContextProvider} from "../../../context/LapContext";
-import {VectorsProvider} from "../../../context/VectorsContext";
+import {KinematicVectorsProvider} from "../../../context/KinematicVectorsContext";
 import ComparativePanel from "./comparative/ComparativePanel.js";
 import PositionsPanel from "./positions/PositionsPanel";
 
@@ -21,7 +21,7 @@ export default function MainPanel({className}) {
                                         selectedDriver={driverData.currentDriver ? driverData.currentDriver.driverNumber : null}>
                         <LapContextConsumer>
                             {lapData =>
-                                <VectorsProvider currentDriver={driverData.currentDriver} session={session} round={round} year={year} currentLap={lapData.currentLap}>
+                                <KinematicVectorsProvider currentDriver={driverData.currentDriver} session={session} round={round} year={year} currentLap={lapData.currentLap}>
                                     <Tabs className=" h-full flex flex-col"
                                             selectedTabPanelClassName="react-tabs__tab-panel--selected grow"
                                             selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl">
@@ -50,7 +50,7 @@ export default function MainPanel({className}) {
                                             <ComparativePanel className="h-full"/>
                                         </TabPanel>
                                     </Tabs>
-                                </VectorsProvider>
+                                </KinematicVectorsProvider>
                             }
                         </LapContextConsumer>
                     </LapContextProvider>
