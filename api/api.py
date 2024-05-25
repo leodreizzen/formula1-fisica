@@ -7,6 +7,7 @@ from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import pandas as pd
 import numpy as np
+from placeholders import dynamicsPlaceholder
 
 
 app = fastapi.FastAPI()
@@ -172,6 +173,13 @@ def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, l
                 })
 
     return derrapes
+
+
+@app.get("/dynamics")
+def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    dynamic = dynamicsPlaceholder
+
+    return dynamic
 
 
 @lru_cache(maxsize=tamano_cache)

@@ -8538,3 +8538,123 @@ driftingPlaceholder = [
     {'x': -63, 'y': 5054, "drifting": 1.1},
     {'x': -62, 'y': 5060, "drifting": 1.8}
 ]
+
+dynamicsPlaceholder = [
+    {
+        "forces":  [
+            {
+                "time": "0000-00-00T00:01:24.156",
+                "friction": {
+                   "module": 0.0,
+                   "tangential": 0.0,
+                   "normal": 0.0,
+                },
+                "neck": {
+                   "tangential": 0.0,
+                   "normal": 0.0,
+                   "z": 0.0
+                },
+                "coefficient_friction": 0.0,
+            },
+            {
+                "time": "0000-00-00T00:01:24.348",
+                "friction": {
+                    "module": 0.0,
+                    "tangential": 0.0,
+                    "normal": 0.0,
+                },
+                "neck": {
+                    "tangential": 0.0,
+                    "normal": 0.0,
+                    "z": 0.0
+                },
+                "coefficient_friction": 0.0,
+            },
+            {
+                "time": "0000-00-00T00:01:24.400",
+                "friction": {
+                   "module": 0.1,
+                   "tangential": 0.2,
+                   "normal": 0.3,
+                },
+                "neck": {
+                   "tangential": 0.4,
+                   "normal": 0.5,
+                   "z": 0.6
+                },
+                "coefficient_friction": 0.7,
+            },
+            {
+                "time": "0000-00-00T00:01:24.500",
+                "friction": {
+                    "module": 0.8,
+                    "tangential": 0.9,
+                    "normal": 1.0,
+                },
+                "neck": {
+                    "tangential": 1.1,
+                    "normal": 1.2,
+                    "z": 1.3
+                },
+                "coefficient_friction": 1.4,
+            },
+            {
+                "time": "0000-00-00T00:01:24.600",
+                "friction": {
+                    "module": 1.5,
+                    "tangential": 1.6,
+                    "normal": 1.7,
+                },
+                "neck": {
+                    "tangential": 1.8,
+                    "normal": 1.9,
+                    "z": 2.0
+                },
+                "coefficient_friction": 2.1,
+            },
+            {
+                "time": "0000-00-00T00:01:24.700",
+                "friction": {
+                    "module": 2.2,
+                    "tangential": 2.3,
+                    "normal": 2.4,
+                },
+                "neck": {
+                    "tangential": 2.5,
+                    "normal": 2.6,
+                    "z": 2.7
+                },
+                "coefficient_friction": 2.8,
+            },
+            {
+                "time": "0000-00-00T00:01:24.800",
+                "friction": {
+                    "module": 3.0,
+                    "tangential": 3.1,
+                    "normal": 3.2,
+                },
+                "neck": {
+                    "tangential": 3.3,
+                    "normal": 3.4,
+                    "z": 3.5
+                },
+                "coefficient_friction": 3.6,
+            },
+            {
+                "time": "0000-00-00T00:01:24.900",
+                "friction": {
+                    "module": 3.7,
+                    "tangential": 3.8,
+                    "normal": 3.9,
+                },
+                "neck": {
+                    "tangential": 4.0,
+                    "normal": 4.1,
+                    "z": 4.2
+                },
+                "coefficient_friction": 4.3,
+            },
+        ]
+    }
+]
+
