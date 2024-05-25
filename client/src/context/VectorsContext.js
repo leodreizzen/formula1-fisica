@@ -1,10 +1,10 @@
 import {createContext, useContext, useMemo} from "react";
-import {useGetVectors} from "../api/hooks";
+import {useGetKinematicVectors} from "../api/hooks";
 
 export const VectorContext = createContext(null);
 
 export function VectorsProvider({year, round, session, currentDriver, currentLap, ...props}) {
-    const [vectors, vectorsLoading] = useGetVectors(year, round, session, currentDriver?.driverNumber, currentLap)
+    const [vectors, vectorsLoading] = useGetKinematicVectors(year, round, session, currentDriver?.driverNumber, currentLap)
     const vectorsMap = useMemo(() => {
         const vectorsMap = new Map();
         if (vectors !== null)

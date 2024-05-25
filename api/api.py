@@ -109,8 +109,8 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
     return puntos
 
 
-@app.get("/vectors")
-def accelerations(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+@app.get("/kinematics_vectors")
+def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
 
     aceleraciones = []
