@@ -8538,3 +8538,865 @@ driftingPlaceholder = [
     {'x': -63, 'y': 5054, "drifting": 1.1},
     {'x': -62, 'y': 5060, "drifting": 1.8}
 ]
+
+dynamicsPlaceholder = [
+    {
+        "forces":  [
+            {
+                "time": "0000-00-00T00:01:24.156",
+                "friction": {
+                   "module": 0.0,
+                   "tangential": 0.0,
+                   "normal": 0.0,
+                },
+                "neck": {
+                   "tangential": 0.0,
+                   "normal": 0.0,
+                   "z": 0.0
+                },
+                "coefficient_friction": 0.0,
+            },
+            {
+                "time": "0000-00-00T00:01:24.348",
+                "friction": {
+                    "module": 0.0,
+                    "tangential": 0.0,
+                    "normal": 0.0,
+                },
+                "neck": {
+                    "tangential": 0.0,
+                    "normal": 0.0,
+                    "z": 0.0
+                },
+                "coefficient_friction": 0.0,
+            },
+            {
+                "time": "0000-00-00T00:01:24.400",
+                "friction": {
+                   "module": 0.1,
+                   "tangential": 0.2,
+                   "normal": 0.3,
+                },
+                "neck": {
+                   "tangential": 0.4,
+                   "normal": 0.5,
+                   "z": 0.6
+                },
+                "coefficient_friction": 0.7,
+            },
+            {
+                "time": "0000-00-00T00:01:24.500",
+                "friction": {
+                    "module": 0.8,
+                    "tangential": 0.9,
+                    "normal": 1.0,
+                },
+                "neck": {
+                    "tangential": 1.1,
+                    "normal": 1.2,
+                    "z": 1.3
+                },
+                "coefficient_friction": 1.4,
+            },
+            {
+                "time": "0000-00-00T00:01:24.600",
+                "friction": {
+                    "module": 1.5,
+                    "tangential": 1.6,
+                    "normal": 1.7,
+                },
+                "neck": {
+                    "tangential": 1.8,
+                    "normal": 1.9,
+                    "z": 2.0
+                },
+                "coefficient_friction": 2.1,
+            },
+            {
+                "time": "0000-00-00T00:01:24.700",
+                "friction": {
+                    "module": 2.2,
+                    "tangential": 2.3,
+                    "normal": 2.4,
+                },
+                "neck": {
+                    "tangential": 2.5,
+                    "normal": 2.6,
+                    "z": 2.7
+                },
+                "coefficient_friction": 2.8,
+            },
+            {
+                "time": "0000-00-00T00:01:24.800",
+                "friction": {
+                    "module": 3.0,
+                    "tangential": 3.1,
+                    "normal": 3.2,
+                },
+                "neck": {
+                    "tangential": 3.3,
+                    "normal": 3.4,
+                    "z": 3.5
+                },
+                "coefficient_friction": 3.6,
+            },
+            {
+                "time": "0000-00-00T00:01:24.900",
+                "friction": {
+                    "module": 3.7,
+                    "tangential": 3.8,
+                    "normal": 3.9,
+                },
+                "neck": {
+                    "tangential": 4.0,
+                    "normal": 4.1,
+                    "z": 4.2
+                },
+                "coefficient_friction": 4.3,
+            },
+            {
+                "time": "0000-00-00T00:01:25.000",
+                "friction": {
+                    "module": 4.4,
+                    "tangential": 4.5,
+                    "normal": 4.6,
+                },
+                "neck": {
+                    "tangential": 4.7,
+                    "normal": 4.8,
+                    "z": 4.9
+                },
+                "coefficient_friction": 5.0,
+            },
+            {
+                "time": "0000-00-00T00:01:25.100",
+                "friction": {
+                    "module": 5.1,
+                    "tangential": 5.2,
+                    "normal": 5.3,
+                },
+                "neck": {
+                    "tangential": 5.4,
+                    "normal": 5.5,
+                    "z": 5.6
+                },
+                "coefficient_friction": 5.7,
+            },
+            {
+                "time": "0000-00-00T00:01:25.200",
+                "friction": {
+                    "module": 5.8,
+                    "tangential": 5.9,
+                    "normal": 6.0,
+                },
+                "neck": {
+                    "tangential": 6.1,
+                    "normal": 6.2,
+                    "z": 6.3
+                },
+                "coefficient_friction": 6.4,
+            },
+            {
+                "time": "0000-00-00T00:01:25.300",
+                "friction": {
+                    "module": 6.5,
+                    "tangential": 6.6,
+                    "normal": 6.7,
+                },
+                "neck": {
+                    "tangential": 6.8,
+                    "normal": 6.9,
+                    "z": 7.0
+                },
+                "coefficient_friction": 7.1,
+            },
+            {
+                "time": "0000-00-00T00:01:25.400",
+                "friction": {
+                    "module": 7.2,
+                    "tangential": 7.3,
+                    "normal": 7.4,
+                },
+                "neck": {
+                    "tangential": 7.5,
+                    "normal": 7.6,
+                    "z": 7.7
+                },
+                "coefficient_friction": 7.8,
+            },
+            {
+                "time": "0000-00-00T00:01:25.500",
+                "friction": {
+                    "module": 7.9,
+                    "tangential": 8.0,
+                    "normal": 8.1,
+                },
+                "neck": {
+                    "tangential": 8.2,
+                    "normal": 8.3,
+                    "z": 8.4
+                },
+                "coefficient_friction": 8.5,
+            },
+            {
+                "time": "0000-00-00T00:01:25.600",
+                "friction": {
+                    "module": 8.6,
+                    "tangential": 8.7,
+                    "normal": 8.8,
+                },
+                "neck": {
+                    "tangential": 8.9,
+                    "normal": 9.0,
+                    "z": 9.1
+                },
+                "coefficient_friction": 9.2,
+            },
+            {
+                "time": "0000-00-00T00:01:25.700",
+                "friction": {
+                    "module": 9.3,
+                    "tangential": 9.4,
+                    "normal": 9.5,
+                },
+                "neck": {
+                    "tangential": 9.6,
+                    "normal": 9.7,
+                    "z": 9.8
+                },
+                "coefficient_friction": 9.9,
+            },
+            {
+                "time": "0000-00-00T00:01:25.800",
+                "friction": {
+                    "module": 10.0,
+                    "tangential": 10.1,
+                    "normal": 10.2,
+                },
+                "neck": {
+                    "tangential": 10.3,
+                    "normal": 10.4,
+                    "z": 10.5
+                },
+                "coefficient_friction": 10.6,
+            },
+            {
+                "time": "0000-00-00T00:01:25.900",
+                "friction": {
+                    "module": 10.7,
+                    "tangential": 10.8,
+                    "normal": 10.9,
+                },
+                "neck": {
+                    "tangential": 11.0,
+                    "normal": 11.1,
+                    "z": 11.2
+                },
+                "coefficient_friction": 11.3,
+            },
+            {
+                "time": "0000-00-00T00:01:26.000",
+                "friction": {
+                    "module": 11.4,
+                    "tangential": 11.5,
+                    "normal": 11.6,
+                },
+                "neck": {
+                    "tangential": 11.7,
+                    "normal": 11.8,
+                    "z": 11.9
+                },
+                "coefficient_friction": 12.0,
+            },
+            {
+                "time": "0000-00-00T00:01:26.100",
+                "friction": {
+                    "module": 12.1,
+                    "tangential": 12.2,
+                    "normal": 12.3,
+                },
+                "neck": {
+                    "tangential": 12.4,
+                    "normal": 12.5,
+                    "z": 12.6
+                },
+                "coefficient_friction": 12.7,
+            },
+            {
+                "time": "0000-00-00T00:01:26.200",
+                "friction": {
+                    "module": 12.8,
+                    "tangential": 12.9,
+                    "normal": 13.0,
+                },
+                "neck": {
+                    "tangential": 13.1,
+                    "normal": 13.2,
+                    "z": 13.3
+                },
+                "coefficient_friction": 13.4,
+            },
+            {
+                "time": "0000-00-00T00:01:26.300",
+                "friction": {
+                    "module": 13.5,
+                    "tangential": 13.6,
+                    "normal": 13.7,
+                },
+                "neck": {
+                    "tangential": 13.8,
+                    "normal": 13.9,
+                    "z": 14.0
+                },
+                "coefficient_friction": 14.1,
+            },
+            {
+                "time": "0000-00-00T00:01:26.400",
+                "friction": {
+                    "module": 14.2,
+                    "tangential": 14.3,
+                    "normal": 14.4,
+                },
+                "neck": {
+                    "tangential": 14.5,
+                    "normal": 14.6,
+                    "z": 14.7
+                },
+                "coefficient_friction": 14.8,
+            },
+            {
+                "time": "0000-00-00T00:01:26.500",
+                "friction": {
+                    "module": 14.9,
+                    "tangential": 15.0,
+                    "normal": 15.1,
+                },
+                "neck": {
+                    "tangential": 15.2,
+                    "normal": 15.3,
+                    "z": 15.4
+                },
+                "coefficient_friction": 15.5,
+            },
+            {
+                "time": "0000-00-00T00:01:26.600",
+                "friction": {
+                    "module": 15.6,
+                    "tangential": 15.7,
+                    "normal": 15.8,
+                },
+                "neck": {
+                    "tangential": 15.9,
+                    "normal": 16.0,
+                    "z": 16.1
+                },
+                "coefficient_friction": 16.2,
+            },
+            {
+                "time": "0000-00-00T00:01:26.700",
+                "friction": {
+                    "module": 16.3,
+                    "tangential": 16.4,
+                    "normal": 16.5,
+                },
+                "neck": {
+                    "tangential": 16.6,
+                    "normal": 16.7,
+                    "z": 16.8
+                },
+                "coefficient_friction": 16.9,
+            },
+            {
+                "time": "0000-00-00T00:01:26.800",
+                "friction": {
+                    "module": 17.0,
+                    "tangential": 17.1,
+                    "normal": 17.2,
+                },
+                "neck": {
+                    "tangential": 17.3,
+                    "normal": 17.4,
+                    "z": 17.5
+                },
+                "coefficient_friction": 17.6,
+            },
+            {
+                "time": "0000-00-00T00:01:26.900",
+                "friction": {
+                    "module": 17.7,
+                    "tangential": 17.8,
+                    "normal": 17.9,
+                },
+                "neck": {
+                    "tangential": 18.0,
+                    "normal": 18.1,
+                    "z": 18.2
+                },
+                "coefficient_friction": 18.3,
+            },
+            {
+                "time": "0000-00-00T00:01:27.000",
+                "friction": {
+                    "module": 18.4,
+                    "tangential": 18.5,
+                    "normal": 18.6,
+                },
+                "neck": {
+                    "tangential": 18.7,
+                    "normal": 18.8,
+                    "z": 18.9
+                },
+                "coefficient_friction": 19.0,
+            },
+            {
+                "time": "0000-00-00T00:01:27.100",
+                "friction": {
+                    "module": 19.1,
+                    "tangential": 19.2,
+                    "normal": 19.3,
+                },
+                "neck": {
+                    "tangential": 19.4,
+                    "normal": 19.5,
+                    "z": 19.6
+                },
+                "coefficient_friction": 19.7,
+            },
+            {
+                "time": "0000-00-00T00:01:27.200",
+                "friction": {
+                    "module": 19.8,
+                    "tangential": 19.9,
+                    "normal": 20.0,
+                },
+                "neck": {
+                    "tangential": 20.1,
+                    "normal": 20.2,
+                    "z": 20.3
+                },
+                "coefficient_friction": 20.4,
+            },
+            {
+                "time": "0000-00-00T00:01:27.300",
+                "friction": {
+                    "module": 20.5,
+                    "tangential": 20.6,
+                    "normal": 20.7,
+                },
+                "neck": {
+                    "tangential": 20.8,
+                    "normal": 20.9,
+                    "z": 21.0
+                },
+                "coefficient_friction": 21.1,
+            },
+            {
+                "time": "0000-00-00T00:01:27.400",
+                "friction": {
+                    "module": 21.2,
+                    "tangential": 21.3,
+                    "normal": 21.4,
+                },
+                "neck": {
+                    "tangential": 21.5,
+                    "normal": 21.6,
+                    "z": 21.7
+                },
+                "coefficient_friction": 21.8,
+            },
+            {
+                "time": "0000-00-00T00:01:27.500",
+                "friction": {
+                    "module": 21.9,
+                    "tangential": 22.0,
+                    "normal": 22.1,
+                },
+                "neck": {
+                    "tangential": 22.2,
+                    "normal": 22.3,
+                    "z": 22.4
+                },
+                "coefficient_friction": 22.5,
+            },
+            {
+                "time": "0000-00-00T00:01:27.600",
+                "friction": {
+                    "module": 22.6,
+                    "tangential": 22.7,
+                    "normal": 22.8,
+                },
+                "neck": {
+                    "tangential": 22.9,
+                    "normal": 23.0,
+                    "z": 23.1
+                },
+                "coefficient_friction": 23.2,
+            },
+            {
+                "time": "0000-00-00T00:01:27.700",
+                "friction": {
+                    "module": 23.3,
+                    "tangential": 23.4,
+                    "normal": 23.5,
+                },
+                "neck": {
+                    "tangential": 23.6,
+                    "normal": 23.7,
+                    "z": 23.8
+                },
+                "coefficient_friction": 23.9,
+            },
+            {
+                "time": "0000-00-00T00:01:27.800",
+                "friction": {
+                    "module": 24.0,
+                    "tangential": 24.1,
+                    "normal": 24.2,
+                },
+                "neck": {
+                    "tangential": 24.3,
+                    "normal": 24.4,
+                    "z": 24.5
+                },
+                "coefficient_friction": 24.6,
+            },
+            {
+                "time": "0000-00-00T00:01:27.900",
+                "friction": {
+                    "module": 24.7,
+                    "tangential": 24.8,
+                    "normal": 24.9,
+                },
+                "neck": {
+                    "tangential": 25.0,
+                    "normal": 25.1,
+                    "z": 25.2
+                },
+                "coefficient_friction": 25.3,
+            },
+            {
+                "time": "0000-00-00T00:01:28.000",
+                "friction": {
+                    "module": 25.4,
+                    "tangential": 25.5,
+                    "normal": 25.6,
+                },
+                "neck": {
+                    "tangential": 25.7,
+                    "normal": 25.8,
+                    "z": 25.9
+                },
+                "coefficient_friction": 26.0,
+            },
+            {
+                "time": "0000-00-00T00:01:28.100",
+                "friction": {
+                    "module": 26.1,
+                    "tangential": 26.2,
+                    "normal": 26.3,
+                },
+                "neck": {
+                    "tangential": 26.4,
+                    "normal": 26.5,
+                    "z": 26.6
+                },
+                "coefficient_friction": 26.7,
+            },
+            {
+                "time": "0000-00-00T00:01:28.200",
+                "friction": {
+                    "module": 26.8,
+                    "tangential": 26.9,
+                    "normal": 27.0,
+                },
+                "neck": {
+                    "tangential": 27.1,
+                    "normal": 27.2,
+                    "z": 27.3
+                },
+                "coefficient_friction": 27.4,
+            },
+            {
+                "time": "0000-00-00T00:01:28.300",
+                "friction": {
+                    "module": 27.5,
+                    "tangential": 27.6,
+                    "normal": 27.7,
+                },
+                "neck": {
+                    "tangential": 27.8,
+                    "normal": 27.9,
+                    "z": 28.0
+                },
+                "coefficient_friction": 28.1,
+            },
+            {
+                "time": "0000-00-00T00:01:28.400",
+                "friction": {
+                    "module": 28.2,
+                    "tangential": 28.3,
+                    "normal": 28.4,
+                },
+                "neck": {
+                    "tangential": 28.5,
+                    "normal": 28.6,
+                    "z": 28.7
+                },
+                "coefficient_friction": 28.8,
+            },
+            {
+                "time": "0000-00-00T00:01:28.500",
+                "friction": {
+                    "module": 28.9,
+                    "tangential": 29.0,
+                    "normal": 29.1,
+                },
+                "neck": {
+                    "tangential": 29.2,
+                    "normal": 29.3,
+                    "z": 29.4
+                },
+                "coefficient_friction": 29.5,
+            },
+            {
+                "time": "0000-00-00T00:01:28.600",
+                "friction": {
+                    "module": 29.6,
+                    "tangential": 29.7,
+                    "normal": 29.8,
+                },
+                "neck": {
+                    "tangential": 29.9,
+                    "normal": 30.0,
+                    "z": 30.1
+                },
+                "coefficient_friction": 30.2,
+            },
+            {
+                "time": "0000-00-00T00:01:28.700",
+                "friction": {
+                    "module": 30.3,
+                    "tangential": 30.4,
+                    "normal": 30.5,
+                },
+                "neck": {
+                    "tangential": 30.6,
+                    "normal": 30.7,
+                    "z": 30.8
+                },
+                "coefficient_friction": 30.9,
+            },
+            {
+                "time": "0000-00-00T00:01:28.800",
+                "friction": {
+                    "module": 31.0,
+                    "tangential": 31.1,
+                    "normal": 31.2,
+                },
+                "neck": {
+                    "tangential": 31.3,
+                    "normal": 31.4,
+                    "z": 31.5
+                },
+                "coefficient_friction": 31.6,
+            },
+            {
+                "time": "0000-00-00T00:01:28.900",
+                "friction": {
+                    "module": 31.7,
+                    "tangential": 31.8,
+                    "normal": 31.9,
+                },
+                "neck": {
+                    "tangential": 32.0,
+                    "normal": 32.1,
+                    "z": 32.2
+                },
+                "coefficient_friction": 32.3,
+            },
+            {
+                "time": "0000-00-00T00:01:29.000",
+                "friction": {
+                    "module": 32.4,
+                    "tangential": 32.5,
+                    "normal": 32.6,
+                },
+                "neck": {
+                    "tangential": 32.7,
+                    "normal": 32.8,
+                    "z": 32.9
+                },
+                "coefficient_friction": 33.0,
+            },
+            {
+                "time": "0000-00-00T00:01:29.100",
+                "friction": {
+                    "module": 33.1,
+                    "tangential": 33.2,
+                    "normal": 33.3,
+                },
+                "neck": {
+                    "tangential": 33.4,
+                    "normal": 33.5,
+                    "z": 33.6
+                },
+                "coefficient_friction": 33.7,
+            },
+            {
+                "time": "0000-00-00T00:01:29.200",
+                "friction": {
+                    "module": 33.8,
+                    "tangential": 33.9,
+                    "normal": 34.0,
+                },
+                "neck": {
+                    "tangential": 34.1,
+                    "normal": 34.2,
+                    "z": 34.3
+                },
+                "coefficient_friction": 34.4,
+            },
+            {
+                "time": "0000-00-00T00:01:29.300",
+                "friction": {
+                    "module": 34.5,
+                    "tangential": 34.6,
+                    "normal": 34.7,
+                },
+                "neck": {
+                    "tangential": 34.8,
+                    "normal": 34.9,
+                    "z": 35.0
+                },
+                "coefficient_friction": 35.1,
+            },
+            {
+                "time": "0000-00-00T00:01:29.400",
+                "friction": {
+                    "module": 35.2,
+                    "tangential": 35.3,
+                    "normal": 35.4,
+                },
+                "neck": {
+                    "tangential": 35.5,
+                    "normal": 35.6,
+                    "z": 35.7
+                },
+                "coefficient_friction": 35.8,
+            },
+            {
+                "time": "0000-00-00T00:01:29.500",
+                "friction": {
+                    "module": 35.9,
+                    "tangential": 36.0,
+                    "normal": 36.1,
+                },
+                "neck": {
+                    "tangential": 36.2,
+                    "normal": 36.3,
+                    "z": 36.4
+                },
+                "coefficient_friction": 36.5,
+            },
+            {
+                "time": "0000-00-00T00:01:29.600",
+                "friction": {
+                    "module": 36.6,
+                    "tangential": 36.7,
+                    "normal": 36.8,
+                },
+                "neck": {
+                    "tangential": 36.9,
+                    "normal": 37.0,
+                    "z": 37.1
+                },
+                "coefficient_friction": 37.2,
+            },
+            {
+                "time": "0000-00-00T00:01:29.700",
+                "friction": {
+                    "module": 37.3,
+                    "tangential": 37.4,
+                    "normal": 37.5,
+                },
+                "neck": {
+                    "tangential": 37.6,
+                    "normal": 37.7,
+                    "z": 37.8
+                },
+                "coefficient_friction": 37.9,
+            },
+            {
+                "time": "0000-00-00T00:01:29.800",
+                "friction": {
+                    "module": 38.0,
+                    "tangential": 38.1,
+                    "normal": 38.2,
+                },
+                "neck": {
+                    "tangential": 38.3,
+                    "normal": 38.4,
+                    "z": 38.5
+                },
+                "coefficient_friction": 38.6,
+            },
+            {
+                "time": "0000-00-00T00:01:29.900",
+                "friction": {
+                    "module": 38.7,
+                    "tangential": 38.8,
+                    "normal": 38.9,
+                },
+                "neck": {
+                    "tangential": 39.0,
+                    "normal": 39.1,
+                    "z": 39.2
+                },
+                "coefficient_friction": 39.3,
+            },
+            {
+                "time": "0000-00-00T00:01:30.000",
+                "friction": {
+                    "module": 39.4,
+                    "tangential": 39.5,
+                    "normal": 39.6,
+                },
+                "neck": {
+                    "tangential": 39.7,
+                    "normal": 39.8,
+                    "z": 39.9
+                },
+                "coefficient_friction": 40.0,
+            },
+            {
+                "time": "0000-00-00T00:01:30.100",
+                "friction": {
+                    "module": 40.1,
+                    "tangential": 40.2,
+                    "normal": 40.3,
+                },
+                "neck": {
+                    "tangential": 40.4,
+                    "normal": 40.5,
+                    "z": 40.6
+                },
+                "coefficient_friction": 40.7,
+            },
+            {
+                "time": "0000-00-00T00:01:30.200",
+                "friction": {
+                    "module": 40.8,
+                    "tangential": 40.9,
+                    "normal": 41.0,
+                },
+                "neck": {
+                    "tangential": 41.1,
+                    "normal": 41.2,
+                    "z": 41.3
+                },
+                "coefficient_friction": 41.4,
+            }
+        ]
+    }
+]
+

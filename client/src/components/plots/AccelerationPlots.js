@@ -3,10 +3,10 @@ import SplitAccelerationPlot from "./SplitAccelerationPlot";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import {OrbitProgress} from "react-loading-indicators";
 import {useMemo} from "react";
-import {useVectorsContext} from "../../context/VectorsContext";
+import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 
 export default function AccelerationPlots({className, timeUnit}) {
-    const {vectors} = useVectorsContext();
+    const {vectors} = useKinematicVectorsContext();
     const moduleTrace = useMemo(() => {
             return {
                 x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),

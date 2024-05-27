@@ -4,7 +4,7 @@ import {plotStyles, trajectoryColor} from "../../styles";
 import {useMemo} from "react";
 import {useResizeDetector} from "react-resize-detector";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
-import {useVectorsContext} from "../../context/VectorsContext";
+import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import {getTolerancesPreservingAspectRatio, getTrajectoryExtremes} from "./plot-utils";
 
 export function MiniPlot({className, trajectoryData, hoveredPoint}) {
@@ -15,7 +15,7 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
     const ySize = useMemo(() => maxY - minY, [maxY, minY]);
 
     const {width, height, ref} = useResizeDetector();
-    const {vectors, getVectorsFromTime} = useVectorsContext();
+    const {vectors, getKinematicVectorsFromTime} = useKinematicVectorsContext();
 
     const hoveredPointData = trajectoryData[hoveredPoint];
     const arrows = useMemo(() => {
@@ -25,11 +25,11 @@ export function MiniPlot({className, trajectoryData, hoveredPoint}) {
         const time = hoveredPointData.time;
         const x = hoveredPointData.cartesian.x / 10;
         const y = hoveredPointData.cartesian.y / 10;
-        const vectorsInTime = getVectorsFromTime(time);
+        const vectorsInTime = getKinematicVectorsFromTime(time);
         if(vectorsInTime === undefined)
             return [];
         return [speedArrow(vectorsInTime, x, y), accelerationArrow(vectorsInTime, x, y), tangentialAccelerationArrow(vectorsInTime, x, y), normalAccelerationArrow(vectorsInTime, x, y)]
-    }, [vectors, trajectoryData, hoveredPoint, getVectorsFromTime]);
+    }, [vectors, trajectoryData, hoveredPoint, getKinematicVectorsFromTime]);
 
 
     let range = {

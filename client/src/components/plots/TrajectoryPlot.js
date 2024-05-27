@@ -5,7 +5,7 @@ import {
     enforceSameScaleVertical, getTolerancesPreservingAspectRatio, getTrajectoryExtremes,
 } from "./plot-utils";
 import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
-import {useVectorsContext} from "../../context/VectorsContext";
+import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
 import {useGetDrifts} from "../../api/hooks";
@@ -17,7 +17,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
     const LEGEND_ITEM_WIDTH = 30;
 
-    const {vectors, getVectorsFromTime} = useVectorsContext();
+    const {vectors, getKinematicVectorsFromTime} = useKinematicVectorsContext();
     const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
     const sessionData = useSessionDataContext()
@@ -86,11 +86,11 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         const time = trajectoryData[hoveredPoint].time;
         const x = trajectoryData[hoveredPoint].cartesian.x / 10;
         const y = trajectoryData[hoveredPoint].cartesian.y / 10;
-        const vectorsInTime = getVectorsFromTime(time);
+        const vectorsInTime = getKinematicVectorsFromTime(time);
         if (vectorsInTime === undefined)
             return [];
         return [speedArrow(vectorsInTime, x, y), accelerationArrow(vectorsInTime, x, y), tangentialAccelerationArrow(vectorsInTime, x, y), normalAccelerationArrow(vectorsInTime, x, y)]
-    }, [vectors, trajectoryData, hoveredPoint, getVectorsFromTime]);
+    }, [vectors, trajectoryData, hoveredPoint, getKinematicVectorsFromTime]);
 
     function handleUnhover(data) {
         const index = getPointFromHoverData(data)
