@@ -3,11 +3,14 @@ from functools import lru_cache
 
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
+
+from utilFisica import calcular_coordenadas_polares
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import pandas as pd
 import numpy as np
 from placeholders import dynamicsPlaceholder
+from numpy import cos, arctan2
 
 
 app = fastapi.FastAPI()
@@ -80,10 +83,10 @@ def laps(year: int, roundNumber: int, sessionNumber: int, driverNumber: int):
 def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
 
-    origen = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2 + lap_telemetry["Z"] ** 2).iloc[0]
+    polar_origin_X = lap_telemetry["X"].iloc[0]
+    polar_origin_Y = lap_telemetry["Y"].iloc[0]
 
-    lap_telemetry['r'] = np.sqrt(lap_telemetry["X"] ** 2 + lap_telemetry["Y"] ** 2)
-    lap_telemetry['theta'] = np.arctan2(lap_telemetry["Y"], lap_telemetry["X"])
+    lap_telemetry = calcular_coordenadas_polares(lap_telemetry,polar_origin_X,polar_origin_Y)
     lap_telemetry['module'] = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
 
     arreglo_modulos = lap_telemetry["module"].to_numpy()
@@ -100,7 +103,9 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
             "polar": {
                 "r": row["r"],
                 "theta": row["theta"],
-                "z": row["Z"]
+                "z": row["Z"],
+                "origin_x": polar_origin_X,
+                "origin_y": polar_origin_Y
             },
             "intrinsic": {
                 "s": arreglo_cumsum[index],
@@ -112,7 +117,7 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
 
 @app.get("/kinematics_vectors")
 def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    lap_telemetry = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    lap_telemetry = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
 
     aceleraciones = []
 
@@ -135,6 +140,8 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
                 "vZ": row["velocidad_z"],
                 "module": row["modulo_velocidad"],
                 "moduleXY": row["modulo_velocidad_xy"],
+                "v_eR": row["v_eR"],
+                "v_eT": row["v_eT"],
                 "speedometer": row["Speed"]
             },
             "acceleration": {
@@ -144,7 +151,9 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
                 "module": row["modulo_aceleracion"],
                 "moduleXY": row["modulo_aceleracion_xy"],
                 "aTangential": row["aTangential"],
-                "aNormal": row["a_normal"]
+                "aNormal": row["a_normal"],
+                "a_eR": row["a_eR"],
+                "a_eT": row["a_eT"]
             }
         })
 
@@ -153,7 +162,7 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
   
 @app.get("/drifts")
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    datos_aceleraciones = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     derrapes = []
 
     for index, row in datos_aceleraciones.iterrows():
@@ -183,13 +192,7 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
 
 
 @lru_cache(maxsize=tamano_cache)
-def accelerations_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    # Parámetros del filtro de Savitzky-Golay
-    window_length_speed = 15
-    polyorder_speed = 2
-    window_length_acceleration = 100
-    polyorder_acceleration = 3
-
+def vector_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
     lap_telemetry['velocidad_x'] = (lap_telemetry['X'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
@@ -229,6 +232,24 @@ def accelerations_calcs(year: int, roundNumber: int, sessionNumber: int, driverN
     # Calculamos la aceleración normal para cada fila
     lap_telemetry['a_normal'] = ((lap_telemetry['aceleracion_x'] * lap_telemetry['versor_normal_x']) +
                                  (lap_telemetry['aceleracion_y'] * lap_telemetry['versor_normal_y']))
+
+    # Coordenadas polares
+
+    polar_origin_X = lap_telemetry["X"].iloc[0]
+
+    polar_origin_Y = lap_telemetry["Y"].iloc[0]
+
+    lap_telemetry = calcular_coordenadas_polares(lap_telemetry, polar_origin_X, polar_origin_Y)
+
+    lap_telemetry['v_eR'] = (lap_telemetry['r'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
+    lap_telemetry['v_eT'] = (lap_telemetry['theta'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
+
+    lap_telemetry['a_eR'] = (
+            (lap_telemetry['v_eR'].shift(-1) - lap_telemetry['v_eR']) / lap_telemetry['diferencia_tiempo']).fillna(
+        0).replace([np.inf, -np.inf], 0)
+    lap_telemetry['a_eT'] = (
+            (lap_telemetry['v_eT'].shift(-1) - lap_telemetry['v_eT']) / lap_telemetry['diferencia_tiempo']).fillna(
+        0).replace([np.inf, -np.inf], 0)
 
     # Si la aceleración normal es negativa, invertimos el versor normal y la aceleración normal
     a_negativa = lap_telemetry['a_normal'] < 0
