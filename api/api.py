@@ -3,12 +3,13 @@ from functools import lru_cache
 
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
+
+from api.f1data.utilData import telemetry_interpolation, filter_telemetry
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import pandas as pd
 import numpy as np
 from placeholders import dynamicsPlaceholder
-
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
@@ -150,7 +151,7 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
 
     return aceleraciones
 
-  
+
 @app.get("/drifts")
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
@@ -180,6 +181,98 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
     dynamic = dynamicsPlaceholder
 
     return dynamic
+
+
+@app.get("/kinematics_comparison")
+def kinematics_comparison(year: int, roundNumber: int, sessionNumber: int, driverNumber1: int, driverNumber2: int,
+                          lapNumber: int):
+    driver_1_data = facade.telemetry(year, roundNumber, sessionNumber, driverNumber1, lapNumber, False)
+    driver_2_data = facade.telemetry(year, roundNumber, sessionNumber, driverNumber2, lapNumber, False)
+
+    # Obtener vector que va entre el primer y segundo punto del primer conductor
+    # Trazar perpendicular entre el vector y el primer punto de driver2. Ver si la intersección está en el mismo sentido o al revés
+
+    t = proyectar(driver_1_data["X"][0],
+                  driver_1_data["X"][1],
+                  driver_1_data["Y"][0],
+                  driver_1_data["Y"][1],
+                  driver_2_data["X"][0],
+                  driver_2_data["Y"][0]
+                  )[0]
+
+    # Si t>=0, el primer conductor empezó antes. Si no, empezó antes el segundo.
+
+    #Buscar punto más cercano al primero del otro
+    if t >= 0:
+        index = nearest_point(driver_1_data, driver_2_data["X"][0], driver_2_data["Y"][0])
+        nuevo_t, proyeccion = proyectar(driver_1_data["X"][index], driver_1_data["X"][index + 1],
+                                        driver_1_data["Y"][index], driver_1_data["Y"][index + 1], driver_2_data["X"][0],
+                                        driver_2_data["Y"][0])
+        if nuevo_t < 0 and index > 0:
+            index -= 1
+            nuevo_t, proyeccion = proyectar(driver_1_data["X"][index], driver_1_data["X"][index + 1],
+                                            driver_1_data["Y"][index], driver_1_data["Y"][index + 1],
+                                            driver_2_data["X"][0], driver_2_data["Y"][0])
+        parte_izq = driver_1_data.head(index + 1)
+        parte_der = driver_1_data.iloc[index + 1:]
+
+        parte_izq = pd.concat([parte_izq,
+                               pd.DataFrame(
+                                   {"X": proyeccion[0], "Y": proyeccion[1], "Speed": parte_izq["Speed"][index]})
+                               ], copy=True)
+
+        parte_der = pd.concat([
+            pd.DataFrame(
+                {"X": proyeccion[0], "Y": proyeccion[1], "Speed": parte_izq["Speed"][index]}),
+            parte_der,
+        ], copy=True)
+        
+        # TODO: Interpolar a cada mitad, teniendo cuidado que el punto (index) coincida
+        # TODO: Calcular intrínsecas, haciendo negativo en la parte izquierda
+        # TODO: Juntar mitades
+
+
+    else:
+        index = nearest_point(driver_2_data, driver_1_data["X"][0], driver_1_data["Y"][0])
+        nuevo_t, proyeccion = proyectar(driver_2_data["X"][index], driver_2_data["X"][index + 1],
+                                        driver_2_data["Y"][index], driver_2_data["Y"][index + 1], driver_1_data["X"][0],
+                                        driver_1_data["Y"][0])
+        if nuevo_t < 0 and index > 0:
+            index -= 1
+            nuevo_t, proyeccion = proyectar(driver_2_data["X"][index], driver_2_data["X"][index + 1],
+                                            driver_2_data["Y"][index], driver_2_data["Y"][index + 1],
+                                            driver_1_data["X"][0],
+                                            driver_1_data["Y"][0])
+            parte_izq = driver_2_data.head(index + 1)
+            parte_der = driver_2_data.iloc[index + 1:]
+
+
+def proyectar(x1, x2, y1, y2, x, y):
+    # (x_1 + t(x_2 - x_1) - x_3)(x_2 - x_1) + (y_1 + t(y_2 - y_1) - y_3)(y_2 - y_1) = 0
+
+    # Calcula el numerador de la expresión
+    numerador = (-x1 * x2 + x1 ** 2 + x2 * x - x1 * x - y1 * y2 + y1 ** 2 + y2 * y - y1 * y)
+
+    # Calcula el denominador de la expresión
+    denominador = (x2 ** 2 - 2 * x1 * x2 + x1 ** 2 + y2 ** 2 - 2 * y1 * y2 + y1 ** 2)
+
+    # Calcula el valor de t
+    t = numerador / denominador
+    proyeccion = np.array([x1 + t * (x2 - x1), y1 + t * (y2 - y1)])
+    return (t, proyeccion)
+
+
+def nearest_point(telemetry, x, y):
+    # Se busca entre el primer 10%
+    cant_filas_buscar = len(telemetry) * 0.1
+    filas = telemetry.head(cant_filas_buscar)
+
+    dx = telemetry["X"] - x
+    dy = telemetry["Y"] - y
+    distancia = np.sqrt(dx ** 2 + dy ** 2)
+
+    min = np.argmin(distancia)
+    return min
 
 
 @lru_cache(maxsize=tamano_cache)
