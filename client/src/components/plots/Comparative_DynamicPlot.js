@@ -3,6 +3,7 @@ import { useKinematicVectorsContext } from "../../context/KinematicVectorsContex
 import BasePlot from "./BasePlot";
 import { OrbitProgress } from "react-loading-indicators";
 import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
+import {data} from "plotly.js/src/plots/frame_attributes";
 
 export default function Comparative_DynamicPlot({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver,
                                                     selectedOption}) {
@@ -15,14 +16,14 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
     }
 
     const plotData = useMemo(() => {
-        const accelerationFunctions = {
-            module: (it) => it.acceleration.module / 10,
-            tangential: (it) => it.acceleration.aTangential / 10,
-            normal: (it) => it.acceleration.aNormal / 10
+        const frictionsFunctions = {
+            module: (it) => it.friction.module / 10,
+            tangential: (it) => it.friction.tangential / 10,
+            normal: (it) => it.friction.normal / 10
         };
 
-        const getAccelerationType = (option) => {
-            const accelerationFunction = accelerationFunctions[option];
+        const getFrictionsType = (option) => {
+            const accelerationFunction = frictionsFunctions[option];
             if (accelerationFunction) {
                 return accelerationFunction;
             } else {
@@ -30,12 +31,12 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
             }
         };
 
-        const accelerationData = vectors.map(getAccelerationType(selectedOption));
+        const frictionsData = data.forces.map(getFrictionsType(selectedOption));
 
         if (trajectoryData && trajectorySecondaryData && vectors) {
             const primaryDriverData = {
                 x: trajectoryData.map(it => it.intrinsic.s / 10),
-                y: accelerationData,
+                y: frictionsData,
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: primaryDriverColor },
@@ -49,7 +50,7 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
 
             const secondaryDriverData = {
                 x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
-                y: accelerationData,
+                y: frictionsData,
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryDriverColor },
@@ -62,10 +63,10 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
             };
 
             return currentDriver === currentSecondaryDriver
-                ? [primaryDriverData, { ...primaryDriverData,y: accelerationData, xaxis: 'x1', yaxis: 'y1', showlegend: false }]
+                ? [primaryDriverData, { ...primaryDriverData,y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false }]
                 : [primaryDriverData, secondaryDriverData,
-                    { ...primaryDriverData, y: accelerationData, xaxis: 'x1', yaxis: 'y1', showlegend: false },
-                    { ...secondaryDriverData, y: accelerationData, xaxis: 'x1', yaxis: 'y1', showlegend: false }];
+                    { ...primaryDriverData, y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false },
+                    { ...secondaryDriverData, y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false }];
         }
     }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible, selectedOption]);
 

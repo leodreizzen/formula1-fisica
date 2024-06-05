@@ -5,10 +5,10 @@ import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useLapContext} from "../../../../context/LapContext";
 import {useGetTrajectory, useGetLaps} from "../../../../api/hooks";
-import AccelerationTypeSelector from "../../../inputs/AccelerationTypeSelector";
 import {OrbitProgress} from "react-loading-indicators";
 import LapSelector from "../../../inputs/LapSelector";
 import Comparative_DynamicPlot from "../../../plots/Comparative_DynamicPlot";
+import AccelerationTypeSelector from "../../../inputs/AccelerationTypeSelector";
 
 export default function Comparative_DynamicPanel({className}) {
     const [selectedOption, setSelectedOption] = useState("module");
