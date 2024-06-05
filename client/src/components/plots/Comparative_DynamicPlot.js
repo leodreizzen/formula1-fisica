@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from "react";
-import { useKinematicVectorsContext } from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
 import { OrbitProgress } from "react-loading-indicators";
 import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
-import {data} from "plotly.js/src/plots/frame_attributes";
+import {useDynamics} from "../../api/hooks";
 
 export default function Comparative_DynamicPlot({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver,
                                                     selectedOption}) {
-    const { vectors } = useKinematicVectorsContext();
+    const { dynamicData } = useDynamics(currentDriver.year, currentDriver.round, currentDriver.session, currentDriver.driverNumber, currentDriver.lapNumber);
+    const { dynamicSecondaryData } = useDynamics(currentDriver.year, currentDriver.round, currentDriver.session, currentDriver.driverNumber, currentDriver.lapNumber);
+
     const [visible, setVisible] = useState([true, true]);
 
     function handleUpdate(state) {
@@ -27,7 +28,7 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
             if (accelerationFunction) {
                 return accelerationFunction;
             } else {
-                return (it) => it.acceleration.module / 10;
+                throw new Error("Wrong friction option")
             }
         };
 
@@ -35,7 +36,7 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
 
         if (trajectoryData && trajectorySecondaryData && vectors) {
             const primaryDriverData = {
-                x: trajectoryData.map(it => it.intrinsic.s / 10),
+                x: trajectoryData.map((it, index) => index / 10),
                 y: frictionsData,
                 type: 'scatter',
                 mode: 'lines',
@@ -49,7 +50,8 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
             };
 
             const secondaryDriverData = {
-                x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
+                x: Array.from({length: secondaryDynamics.length}, (_, i) => i + 1),
+
                 y: frictionsData,
                 type: 'scatter',
                 mode: 'lines',
