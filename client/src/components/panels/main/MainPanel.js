@@ -9,6 +9,7 @@ import {LapContextConsumer, LapContextProvider} from "../../../context/LapContex
 import {KinematicVectorsProvider} from "../../../context/KinematicVectorsContext";
 import ComparativePanel from "./comparative/ComparativePanel.js";
 import PositionsPanel from "./positions/PositionsPanel";
+import Comparative_DynamicPanel from "./dynamic_comparative/Comparative_DynamicPanel";
 
 export default function MainPanel({className}) {
     const {year, round, session} = useSessionDataContext();
@@ -31,6 +32,7 @@ export default function MainPanel({className}) {
                                             <Tab disabled={driverData.drivers === null ? true : null}>Velocidades</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Aceleraciones</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Comparativas</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Comparativas Dinamica</Tab>
                                         </TabList>
 
                                         <TabPanel className="overflow-clip">
@@ -48,6 +50,9 @@ export default function MainPanel({className}) {
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
                                             <ComparativePanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
+                                            <Comparative_DynamicPanel className="h-full"/>
                                         </TabPanel>
                                     </Tabs>
                                 </KinematicVectorsProvider>
