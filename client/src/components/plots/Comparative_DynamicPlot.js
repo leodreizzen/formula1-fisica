@@ -2,13 +2,9 @@ import React, { useState, useMemo } from "react";
 import BasePlot from "./BasePlot";
 import { OrbitProgress } from "react-loading-indicators";
 import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
-import {useDynamics} from "../../api/hooks";
 
-export default function Comparative_DynamicPlot({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver,
+export default function Comparative_DynamicPlot({ className, dynamicData, dynamicSecondaryData, currentDriver, currentSecondaryDriver,
                                                     selectedOption}) {
-    const { dynamicData } = useDynamics(currentDriver.year, currentDriver.round, currentDriver.session, currentDriver.driverNumber, currentDriver.lapNumber);
-    const { dynamicSecondaryData } = useDynamics(currentDriver.year, currentDriver.round, currentDriver.session, currentDriver.driverNumber, currentDriver.lapNumber);
-
     const [visible, setVisible] = useState([true, true]);
 
     function handleUpdate(state) {
@@ -24,19 +20,20 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
         };
 
         const getFrictionsType = (option) => {
-            const accelerationFunction = frictionsFunctions[option];
-            if (accelerationFunction) {
-                return accelerationFunction;
+            const frictionFunction = frictionsFunctions[option];
+            if (frictionFunction) {
+                return frictionFunction;
             } else {
                 throw new Error("Wrong friction option")
             }
         };
+        console.log(dynamicData);
 
-        const frictionsData = data.forces.map(getFrictionsType(selectedOption));
+        const frictionsData = dynamicData.forces.map(getFrictionsType(selectedOption));
 
-        if (trajectoryData && trajectorySecondaryData && vectors) {
+        if (dynamicData && dynamicSecondaryData && dynamicData) {
             const primaryDriverData = {
-                x: trajectoryData.map((it, index) => index / 10),
+                x: Array.from({length: dynamicData.length}, (_, i) => i + 1),
                 y: frictionsData,
                 type: 'scatter',
                 mode: 'lines',
@@ -50,8 +47,7 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
             };
 
             const secondaryDriverData = {
-                x: Array.from({length: secondaryDynamics.length}, (_, i) => i + 1),
-
+                x: Array.from({length: dynamicSecondaryData.length}, (_, i) => i + 1),
                 y: frictionsData,
                 type: 'scatter',
                 mode: 'lines',
@@ -70,7 +66,7 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
                     { ...primaryDriverData, y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false },
                     { ...secondaryDriverData, y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false }];
         }
-    }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible, selectedOption]);
+    }, [dynamicData, dynamicSecondaryData, currentDriver, currentSecondaryDriver, visible, selectedOption]);
 
     const getYAxisTitle = (selectedOption) => {
         switch (selectedOption) {
@@ -112,7 +108,7 @@ export default function Comparative_DynamicPlot({ className, trajectoryData, tra
 
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
-            {vectors !== null ?
+            {dynamicData !== null ?
                 <BasePlot
                     className={className + " flex justify-center w-full"}
                     data={plotData}

@@ -8539,8 +8539,7 @@ driftingPlaceholder = [
     {'x': -62, 'y': 5060, "drifting": 1.8}
 ]
 
-dynamicsPlaceholder = [
-    {
+dynamicsPlaceholder = {
         "forces":  [
             {
                 "time": "0000-00-00T00:01:24.156",
@@ -9398,5 +9397,5 @@ dynamicsPlaceholder = [
             }
         ]
     }
-]
+
 

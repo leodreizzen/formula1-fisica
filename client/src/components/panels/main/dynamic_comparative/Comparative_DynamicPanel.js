@@ -4,7 +4,7 @@ import DriverSelector from "../../../inputs/DriverSelector";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useLapContext} from "../../../../context/LapContext";
-import {useGetTrajectory, useGetLaps} from "../../../../api/hooks";
+import {useGetLaps, useGetDynamics} from "../../../../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
 import LapSelector from "../../../inputs/LapSelector";
 import Comparative_DynamicPlot from "../../../plots/Comparative_DynamicPlot";
@@ -27,8 +27,8 @@ export default function Comparative_DynamicPanel({className}) {
     const commonLaps = (mainLapCount !== null && secondaryLapCount !== null) ? Math.min(mainLapCount, secondaryLapCount) : null;
     const currentLap = (mainCurrentLap !== null && commonLaps !== null) ? Math.min(mainCurrentLap, commonLaps) : null;
 
-    const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap) || [];
-    const [trajectorySecondaryData,] = useGetTrajectory(year, round, session, currentSecondaryDriver?.driverNumber, currentLap) || [];
+    const [dynamicData,]  = useGetDynamics(year, round, session, currentDriver?.driverNumber, currentLap) || [];
+    const [dynamicSecondaryData,] = useGetDynamics(year, round, session, currentSecondaryDriver?.driverNumber, currentLap) || [];
 
     useEffect(() => {
         if (currentLap !== null && currentLap !== mainCurrentLap) {
@@ -52,10 +52,10 @@ export default function Comparative_DynamicPanel({className}) {
                                 onDriverChange={handleSecondaryDriverChange} label="Conductor rival"/>
             </div>
             {currentSecondaryDriver !== null ?
-                (trajectoryData !== null && trajectorySecondaryData !== null && currentLap !== null) ? (
+                (dynamicData !== null && dynamicSecondaryData !== null && currentLap !== null) ? (
                     <>
-                        <Comparative_DynamicPlot className="flex grow pt-2" trajectoryData={trajectoryData}
-                                         trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver}
+                        <Comparative_DynamicPlot className="flex grow pt-2" dynamicData={dynamicData}
+                                                 dynamicSecondaryData={dynamicSecondaryData} currentDriver={currentDriver}
                                          currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap}
                                          selectedOption={selectedOption}/>
                         <AccelerationTypeSelector onChange={handleOptionChange} value={selectedOption}/>

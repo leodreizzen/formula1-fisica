@@ -61,7 +61,6 @@ export function useGetLaps(year, roundNumber, sessionNumber, driverNumber) {
 }
 
 export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
-
     const [trajectory, isLoading] = useAPIHook(getTrajectory, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [trajectory, isLoading]
 }
@@ -76,7 +75,7 @@ export function useGetDrifts(year, roundNumber, sessionNumber, driverNumber, lap
     return [drifting, isLoading]
 }
 
-export function useDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+export function useGetDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber){
     const [dynamic, isLoading] = useAPIHook(getDynamics, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [dynamic, isLoading]
 }
