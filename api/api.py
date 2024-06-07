@@ -190,6 +190,14 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
 
     return dynamic
 
+@app.get("/neck_forces")
+def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    lap_telemetry = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    #Peso de una cabeza + Peso casco ≈ 7kg
+    #Fuerzas G = Aceleración/Gravedad
+    #Tomamos (módulo de aceleración xy) + (Fuerzas G) = Newton que debe aplicar el cuello
+    masa = 7
+
 
 @lru_cache(maxsize=tamano_cache)
 def vector_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
