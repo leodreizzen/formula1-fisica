@@ -180,13 +180,9 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
     datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     maxAceleracion = datos_aceleraciones["a_normal"].max()
 
-    # Ajustamos las unidades
-    datos_aceleraciones["modulo_velocidad_adjusted"] = datos_aceleraciones["modulo_velocidad_xy"]
-    datos_aceleraciones["a_normal_adjusted"] = datos_aceleraciones["a_normal"]
-
     # Calculando el radio para cada fila
     datos_aceleraciones["radio"] = datos_aceleraciones.apply(
-        lambda row: (row["modulo_velocidad_adjusted"] ** 2) / row["a_normal_adjusted"] if row["a_normal_adjusted"] != 0 else float('inf'),
+        lambda row: (row["modulo_velocidad_xy"] ** 2) / row["a_normal"] if row["a_normal"] != 0 else float('inf'),
         axis=1
     )
 
@@ -195,17 +191,17 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
         lambda row: math.sqrt(maxAceleracion * row["radio"]) if row["radio"] != float('inf') else 0,
         axis=1
     )
-
     dynamic = pd.DataFrame()
     dynamic["X"] = datos_aceleraciones["X"]
     dynamic["Y"] = datos_aceleraciones["Y"]
     dynamic["maxAceleracion"] = maxAceleracion
-    dynamic["velActual"] = datos_aceleraciones["modulo_velocidad_adjusted"]
+    dynamic["velActual"] = datos_aceleraciones["modulo_velocidad_xy"]
     dynamic["velMaxima"] = datos_aceleraciones["velMaxima"]
     dynamic["radio"] = datos_aceleraciones["radio"]
 
     result = dynamic.to_dict(orient='records')
     return {"data": result}
+
 
 @lru_cache(maxsize=tamano_cache)
 def accelerations_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
