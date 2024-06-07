@@ -107,6 +107,12 @@ paths:
                         z:
                           type: number
                           description: Coordenada z de posición
+                        origin_x:
+                          type: number
+                          description: Polo coordenada x
+                        origin_y:
+                          type: number
+                          description: Polo coordenada y
                     intrinsic:
                         type: object
                         properties:
@@ -157,7 +163,7 @@ paths:
            description: Alguno de los parámetros es inválido  
 
 
-  /vectors:
+  /kinematics_vectors:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -314,6 +320,14 @@ components:
           type: number
         moduleXY:
           type: number
+        v_eR:
+          type: number
+        v_eT:
+          type: number
+        r_dot:
+          type: number
+        theta_dot:
+          type: number
         speedometer:
           type: number
     Acceleration:  
@@ -334,6 +348,14 @@ components:
           type: number
         aNormal:
           type: number
+        a_eR:
+          type: number
+        a_eT:
+          type: number
+        r_double_dot:
+            type: number
+        theta_double_dot:
+            type: number
     Versors:
         type: object
         description: "Versores"
