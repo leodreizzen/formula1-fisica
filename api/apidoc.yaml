@@ -324,6 +324,10 @@ components:
           type: number
         v_eT:
           type: number
+        r_dot:
+          type: number
+        theta_dot:
+          type: number
         speedometer:
           type: number
     Acceleration:  
@@ -348,6 +352,10 @@ components:
           type: number
         a_eT:
           type: number
+        r_double_dot:
+            type: number
+        theta_double_dot:
+            type: number
     Versors:
         type: object
         description: "Versores"

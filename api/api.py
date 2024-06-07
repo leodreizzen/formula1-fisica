@@ -140,8 +140,8 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
                 "vZ": row["velocidad_z"],
                 "module": row["modulo_velocidad"],
                 "moduleXY": row["modulo_velocidad_xy"],
-                "v_eR": row["v_eR"],
-                "v_eT": row["v_eT"],
+                "r_dot": row["r_dot"],
+                "theta_dot": row["theta_dot"],
                 "speedometer": row["Speed"]
             },
             "acceleration": {
@@ -152,8 +152,8 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
                 "moduleXY": row["modulo_aceleracion_xy"],
                 "aTangential": row["aTangential"],
                 "aNormal": row["a_normal"],
-                "a_eR": row["a_eR"],
-                "a_eT": row["a_eT"]
+                "r_double_dot": row["r_double_dot"],
+                "theta_double_dot": row["theta_double_dot"]
             }
         })
 
@@ -236,19 +236,17 @@ def vector_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: 
     # Coordenadas polares
 
     polar_origin_X = lap_telemetry["X"].iloc[0]
-
     polar_origin_Y = lap_telemetry["Y"].iloc[0]
-
     lap_telemetry = calcular_coordenadas_polares(lap_telemetry, polar_origin_X, polar_origin_Y)
 
-    lap_telemetry['v_eR'] = (lap_telemetry['r'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
-    lap_telemetry['v_eT'] = (lap_telemetry['theta'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
+    lap_telemetry['r_dot'] = (lap_telemetry['r'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
+    lap_telemetry['theta_dot'] = (lap_telemetry['theta'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
 
-    lap_telemetry['a_eR'] = (
-            (lap_telemetry['v_eR'].shift(-1) - lap_telemetry['v_eR']) / lap_telemetry['diferencia_tiempo']).fillna(
+    lap_telemetry['r_double_dot'] = (
+            (lap_telemetry['r_dot'].shift(-1) - lap_telemetry['r_dot']) / lap_telemetry['diferencia_tiempo']).fillna(
         0).replace([np.inf, -np.inf], 0)
-    lap_telemetry['a_eT'] = (
-            (lap_telemetry['v_eT'].shift(-1) - lap_telemetry['v_eT']) / lap_telemetry['diferencia_tiempo']).fillna(
+    lap_telemetry['theta_double_dot'] = (
+            (lap_telemetry['theta_dot'].shift(-1) - lap_telemetry['theta_dot']) / lap_telemetry['diferencia_tiempo']).fillna(
         0).replace([np.inf, -np.inf], 0)
 
     # Si la aceleración normal es negativa, invertimos el versor normal y la aceleración normal
