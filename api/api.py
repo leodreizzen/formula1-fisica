@@ -255,11 +255,14 @@ def vector_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: 
     lap_telemetry.loc[a_negativa, 'versor_normal_x'] *= -1
     lap_telemetry.loc[a_negativa, 'versor_normal_y'] *= -1
 
-    # Eliminar la primera fila
-    lap_telemetry = lap_telemetry.iloc[1:]
+    # Eliminar las primeras dos filas
+    # La primera fila no tiene datos de velocidad, y en la segunda el theta punto no es fiable ya que en el punto anterior no hay radio
+    lap_telemetry = lap_telemetry.iloc[2:]
 
     # Eliminar la última fila
     lap_telemetry = lap_telemetry.iloc[:-1]
+
+    lap_telemetry.reset_index(drop=True, inplace=True)
 
     lap_telemetry['Speed'] = lap_telemetry["Speed"] / 3.6 * 10
 
