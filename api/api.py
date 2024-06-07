@@ -20,6 +20,8 @@ origins = ["*"]
 
 tamano_cache = 1
 
+gravedad = 9.81
+
 # radio de giro para umbral = 7.35metros
 wheelbase = 3.6
 tire_width = 0.305
@@ -197,6 +199,18 @@ def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: i
     #Fuerzas G = Aceleración/Gravedad
     #Tomamos (módulo de aceleración xy) + (Fuerzas G) = Newton que debe aplicar el cuello
     masa = 7
+    fuerzas_cuello = []
+    for index, row in lap_telemetry.iterrows():
+        fuerzaG = row["modulo_aceleracion_xy"] / gravedad
+        fuerza_cuello = row["a_normal"] + fuerzaG
+        fuerzas_cuello.append({
+                    "x": row["X"],
+                    "y": row["Y"],
+                    "z": row["Z"],
+                    "fuerza_cuello": fuerza_cuello #En NM
+        })
+
+    return fuerzas_cuello
 
 
 @lru_cache(maxsize=tamano_cache)
