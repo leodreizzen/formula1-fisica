@@ -177,9 +177,30 @@ def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, l
 
 @app.get("/dynamics")
 def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    dynamic = dynamicsPlaceholder
+    datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    maxAceleracion = datos_aceleraciones["a_normal"].max()
 
-    return dynamic
+    # Calculando el radio para cada fila
+    datos_aceleraciones["radio"] = datos_aceleraciones.apply(
+        lambda row: (row["modulo_velocidad_xy"] ** 2) / row["a_normal"] if row["a_normal"] != 0 else float('inf'),
+        axis=1
+    )
+
+    # Calculando velMaxima usando maxAceleracion y el radio
+    datos_aceleraciones["velMaxima"] = datos_aceleraciones.apply(
+        lambda row: math.sqrt(maxAceleracion * row["radio"]) if row["radio"] != float('inf') else 0,
+        axis=1
+    )
+    dynamic = pd.DataFrame()
+    dynamic["X"] = datos_aceleraciones["X"]
+    dynamic["Y"] = datos_aceleraciones["Y"]
+    dynamic["maxAceleracion"] = maxAceleracion
+    dynamic["velActual"] = datos_aceleraciones["modulo_velocidad_xy"]
+    dynamic["velMaxima"] = datos_aceleraciones["velMaxima"]
+    dynamic["radio"] = datos_aceleraciones["radio"]
+
+    result = dynamic.to_dict(orient='records')
+    return {"data": result}
 
 
 @lru_cache(maxsize=tamano_cache)
