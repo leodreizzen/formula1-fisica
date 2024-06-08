@@ -3,12 +3,21 @@ import pandas as pd
 from scipy.signal import savgol_filter
 
 
-def telemetry_interpolation(lap_telemetry):
+def telemetry_interpolation(lap_telemetry, keep_last_point=False):
     time_interval = 100  # ms
-    lap_telemetry['Time'] = lap_telemetry['Time'].apply(lambda x: x.total_seconds())
-    time_interval_array = np.linspace(lap_telemetry['Time'].iloc[0],
-                                      lap_telemetry['Time'].iloc[-1],
-                                      int((lap_telemetry['Time'].iloc[-1] - lap_telemetry['Time'].iloc[0]) * 1000 / time_interval))
+    times = lap_telemetry['Time'].apply(lambda x: x.total_seconds())
+    pointCount = int((times.iloc[-1] - times.iloc[0]) * 1000 / time_interval)
+    time_interval_array = []
+    if not keep_last_point:
+        time_interval_array = np.linspace(times.iloc[0],
+                                          times.iloc[-1],
+                                          pointCount)
+    else:
+        time_interval_array = np.flip(np.linspace(times.iloc[-1],
+                                          times.iloc[0],
+                                          pointCount))
+    time_interval_array = pd.to_timedelta(time_interval_array, unit='s')
+
     lap_telemetry_time = lap_telemetry['Time']
     lap_telemetry_x = lap_telemetry['X']
     lap_telemetry_y = lap_telemetry['Y']

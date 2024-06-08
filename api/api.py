@@ -4,7 +4,7 @@ from functools import lru_cache
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.f1data.utilData import telemetry_interpolation, filter_telemetry
+from f1data.utilData import telemetry_interpolation, filter_telemetry
 
 from utilFisica import calcular_coordenadas_polares
 from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
@@ -12,7 +12,6 @@ from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import pandas as pd
 import numpy as np
 from placeholders import dynamicsPlaceholder
-from numpy import cos, arctan2
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
@@ -87,7 +86,7 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
     polar_origin_X = lap_telemetry["X"].iloc[0]
     polar_origin_Y = lap_telemetry["Y"].iloc[0]
 
-    lap_telemetry = calcular_coordenadas_polares(lap_telemetry,polar_origin_X,polar_origin_Y)
+    lap_telemetry = calcular_coordenadas_polares(lap_telemetry, polar_origin_X, polar_origin_Y)
     lap_telemetry['module'] = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
 
     arreglo_modulos = lap_telemetry["module"].to_numpy()
@@ -118,7 +117,7 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
 
 @app.get("/kinematics_vectors")
 def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    lap_telemetry = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    lap_telemetry = vector_data(year, roundNumber, sessionNumber, driverNumber, lapNumber)
 
     aceleraciones = []
 
@@ -163,11 +162,11 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
 
 @app.get("/drifts")
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    datos_aceleraciones = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    datos_aceleraciones = vector_data(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     derrapes = []
 
     for index, row in datos_aceleraciones.iterrows():
-        #pasaje de dm a m
+        # pasaje de dm a m
         velocidad = row["modulo_velocidad"] / 10
         aceleracion_normal = row["a_normal"] / 10
         if aceleracion_normal != 0:
@@ -202,58 +201,141 @@ def kinematics_comparison(year: int, roundNumber: int, sessionNumber: int, drive
     # Trazar perpendicular entre el vector y el primer punto de driver2. Ver si la intersección está en el mismo sentido o al revés
 
     t = proyectar(driver_1_data["X"][0],
-                  driver_1_data["X"][1],
+                  driver_1_data["X"][10],
                   driver_1_data["Y"][0],
-                  driver_1_data["Y"][1],
+                  driver_1_data["Y"][10],
                   driver_2_data["X"][0],
                   driver_2_data["Y"][0]
                   )[0]
 
-    # Si t>=0, el primer conductor empezó antes. Si no, empezó antes el segundo.
-
-    #Buscar punto más cercano al primero del otro
+    #Si t >= 0, el 1º conductor empezó más atrás que el 2º
     if t >= 0:
-        index = nearest_point(driver_1_data, driver_2_data["X"][0], driver_2_data["Y"][0])
-        nuevo_t, proyeccion = proyectar(driver_1_data["X"][index], driver_1_data["X"][index + 1],
-                                        driver_1_data["Y"][index], driver_1_data["Y"][index + 1], driver_2_data["X"][0],
-                                        driver_2_data["Y"][0])
-        if nuevo_t < 0 and index > 0:
-            index -= 1
-            nuevo_t, proyeccion = proyectar(driver_1_data["X"][index], driver_1_data["X"][index + 1],
-                                            driver_1_data["Y"][index], driver_1_data["Y"][index + 1],
-                                            driver_2_data["X"][0], driver_2_data["Y"][0])
-        parte_izq = driver_1_data.head(index + 1)
-        parte_der = driver_1_data.iloc[index + 1:]
-
-        parte_izq = pd.concat([parte_izq,
-                               pd.DataFrame(
-                                   {"X": proyeccion[0], "Y": proyeccion[1], "Speed": parte_izq["Speed"][index]})
-                               ], copy=True)
-
-        parte_der = pd.concat([
-            pd.DataFrame(
-                {"X": proyeccion[0], "Y": proyeccion[1], "Speed": parte_izq["Speed"][index]}),
-            parte_der,
-        ], copy=True)
-
-        # TODO: Interpolar a cada mitad, teniendo cuidado que el punto (index) coincida
-        # TODO: Calcular intrínsecas, haciendo negativo en la parte izquierda
-        # TODO: Juntar mitades
-
-
+        first_driver = driver_1_data
+        second_driver = driver_2_data
     else:
-        index = nearest_point(driver_2_data, driver_1_data["X"][0], driver_1_data["Y"][0])
-        nuevo_t, proyeccion = proyectar(driver_2_data["X"][index], driver_2_data["X"][index + 1],
-                                        driver_2_data["Y"][index], driver_2_data["Y"][index + 1], driver_1_data["X"][0],
-                                        driver_1_data["Y"][0])
-        if nuevo_t < 0 and index > 0:
-            index -= 1
-            nuevo_t, proyeccion = proyectar(driver_2_data["X"][index], driver_2_data["X"][index + 1],
-                                            driver_2_data["Y"][index], driver_2_data["Y"][index + 1],
-                                            driver_1_data["X"][0],
-                                            driver_1_data["Y"][0])
-            parte_izq = driver_2_data.head(index + 1)
-            parte_der = driver_2_data.iloc[index + 1:]
+        first_driver = driver_2_data
+        second_driver = driver_1_data
+
+    parte_der_filtrada, parte_izq_filtrada = break_to_align(first_driver, second_driver)
+
+    s_izq = -np.flip(calculate_intrinsic_s(parte_izq_filtrada.iloc[::-1]))
+    s_der = calculate_intrinsic_s(parte_der_filtrada)
+
+    full_data = pd.concat([parte_izq_filtrada, parte_der_filtrada], ignore_index=True)
+    full_data["s"] = np.concatenate([s_izq, s_der])
+
+    vectors = vector_calcs(full_data)
+
+    segundo_conductor_filtrado = filter_telemetry(telemetry_interpolation(second_driver))
+    vectors_segundo_conductor = vector_calcs(segundo_conductor_filtrado)
+    vectors_segundo_conductor["s"] = calculate_intrinsic_s(segundo_conductor_filtrado)
+
+    res = [None, None]
+    if t >= 0:
+        res[0] = vectors
+        res[1] = vectors_segundo_conductor
+    else:
+        res[0] = vectors_segundo_conductor
+        res[1] = vectors
+
+    driver_numbers = [driverNumber1, driverNumber2]
+    response = []
+    for i, driver_res in enumerate(res):
+        driver_response = []
+        for index, row in driver_res.iterrows():
+            driver_response.append(
+                {
+                    "time": timedelta_to_string(row["Time"]),
+                    "s": row["s"],
+                    "versors": {
+                        "tangent": {
+                            "x": row["versor_tangente"][0],
+                            "y": row["versor_tangente"][1]
+                        },
+                        "normal": {
+                            "x": row["versor_normal_x"],
+                            "y": row["versor_normal_y"]
+                        }
+                    },
+                    "velocity": {
+                        "vX": row["velocidad_x"],
+                        "vY": row["velocidad_y"],
+                        "vZ": row["velocidad_z"],
+                        "module": row["modulo_velocidad"],
+                        "moduleXY": row["modulo_velocidad_xy"],
+                        "r_dot": row["r_dot"],
+                        "theta_dot": row["theta_dot"],
+                        "speedometer": row["Speed"]
+                    },
+                    "acceleration": {
+                        "aX": row["aceleracion_x"],
+                        "aY": row["aceleracion_y"],
+                        "aZ": row["aceleracion_z"],
+                        "module": row["modulo_aceleracion"],
+                        "moduleXY": row["modulo_aceleracion_xy"],
+                        "aTangential": row["aTangential"],
+                        "aNormal": row["a_normal"],
+                        "r_double_dot": row["r_double_dot"],
+                        "theta_double_dot": row["theta_double_dot"]
+                    }
+                }
+            )
+        response.append({
+            "driverNumber": driver_numbers[i],
+            "data":driver_response
+        })
+    return response
+
+
+def calculate_intrinsic_s(lap_telemetry):
+    modules = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
+    return np.cumsum(modules)
+
+
+def break_to_align(driver_data_to_break, reference_driver_data):
+    index = nearest_point(driver_data_to_break, reference_driver_data["X"][0], reference_driver_data["Y"][0])
+    nuevo_t, proyeccion = proyectar(driver_data_to_break["X"][index], driver_data_to_break["X"][index + 1],
+                                    driver_data_to_break["Y"][index], driver_data_to_break["Y"][index + 1],
+                                    reference_driver_data["X"][0],
+                                    reference_driver_data["Y"][0])
+    if nuevo_t < 0 and index > 0:
+        index -= 1
+        nuevo_t, proyeccion = proyectar(driver_data_to_break["X"][index], driver_data_to_break["X"][index + 1],
+                                        driver_data_to_break["Y"][index], driver_data_to_break["Y"][index + 1],
+                                        reference_driver_data["X"][0], reference_driver_data["Y"][0])
+    parte_izq = driver_data_to_break.head(index + 1)
+    parte_der = driver_data_to_break.iloc[index + 1:]
+
+    dx_total = driver_data_to_break["X"][index + 1] - driver_data_to_break["X"][index]
+    dy_total = driver_data_to_break["Y"][index + 1] - driver_data_to_break["Y"][index]
+    dtotal = np.sqrt(dx_total ** 2 + dy_total ** 2)
+    dx_proyeccion = proyeccion[0] - driver_data_to_break["X"][index]
+    dy_proyeccion = proyeccion[1] - driver_data_to_break["Y"][index]
+    dproyeccion = np.sqrt(dx_proyeccion ** 2 + dy_proyeccion ** 2)
+
+
+    centro = pd.DataFrame(
+        {
+            "X": proyeccion[0],
+            "Y": proyeccion[1],
+            "Z": np.interp(dproyeccion, [0, dtotal],
+                               [driver_data_to_break["Z"][index], driver_data_to_break["Z"][index + 1]]),
+            "nGear": parte_izq["nGear"][0],
+            "Speed": np.interp(dproyeccion, [0, dtotal], [driver_data_to_break["Speed"][index], driver_data_to_break["Speed"][index + 1]]),
+
+            "Time": pd.Timedelta(seconds=np.interp(dproyeccion, [0, dtotal], [driver_data_to_break["Time"][index].total_seconds(), driver_data_to_break["Time"][index + 1].total_seconds()])),
+        }, index=[0])
+
+    parte_izq = pd.concat([parte_izq,centro], copy=True, ignore_index=True)
+    parte_der = pd.concat([centro, parte_der], copy=True, ignore_index=True)
+    parte_der_interp = telemetry_interpolation(parte_der).iloc[1:]
+    parte_der_interp.reset_index(drop=True, inplace=True)
+    parte_izq_interp = telemetry_interpolation(parte_izq, keep_last_point=True)
+    result = pd.concat([parte_izq_interp, parte_der_interp], ignore_index=True)
+    result = filter_telemetry(result)
+    parte_izq_filtrada = result.head(index + 1)
+    parte_der_filtrada = result.iloc[index + 1:]
+    return parte_der_filtrada, parte_izq_filtrada
 
 
 def proyectar(x1, x2, y1, y2, x, y):
@@ -273,11 +355,11 @@ def proyectar(x1, x2, y1, y2, x, y):
 
 def nearest_point(telemetry, x, y):
     # Se busca entre el primer 10%
-    cant_filas_buscar = len(telemetry) * 0.1
+    cant_filas_buscar = math.ceil(len(telemetry) * 0.8)
     filas = telemetry.head(cant_filas_buscar)
 
-    dx = telemetry["X"] - x
-    dy = telemetry["Y"] - y
+    dx = filas["X"] - x
+    dy = filas["Y"] - y
     distancia = np.sqrt(dx ** 2 + dy ** 2)
 
     min = np.argmin(distancia)
@@ -285,8 +367,12 @@ def nearest_point(telemetry, x, y):
 
 
 @lru_cache(maxsize=tamano_cache)
-def vector_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    lap_telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+def vector_data(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    telemetry = facade.telemetry(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    return vector_calcs(telemetry)
+
+
+def vector_calcs(lap_telemetry):
     lap_telemetry['diferencia_tiempo'] = (lap_telemetry['Time'].diff().apply(lambda x: x.total_seconds())).fillna(0)
     lap_telemetry['velocidad_x'] = (lap_telemetry['X'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
     lap_telemetry['velocidad_y'] = (lap_telemetry['Y'].diff() / lap_telemetry['diferencia_tiempo']).fillna(0)
@@ -339,7 +425,8 @@ def vector_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: 
             (lap_telemetry['r_dot'].shift(-1) - lap_telemetry['r_dot']) / lap_telemetry['diferencia_tiempo']).fillna(
         0).replace([np.inf, -np.inf], 0)
     lap_telemetry['theta_double_dot'] = (
-            (lap_telemetry['theta_dot'].shift(-1) - lap_telemetry['theta_dot']) / lap_telemetry['diferencia_tiempo']).fillna(
+            (lap_telemetry['theta_dot'].shift(-1) - lap_telemetry['theta_dot']) / lap_telemetry[
+        'diferencia_tiempo']).fillna(
         0).replace([np.inf, -np.inf], 0)
 
     # Si la aceleración normal es negativa, invertimos el versor normal y la aceleración normal
