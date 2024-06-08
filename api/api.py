@@ -9,7 +9,6 @@ import pandas as pd
 import numpy as np
 from placeholders import dynamicsPlaceholder
 
-
 app = fastapi.FastAPI()
 facade = FastF1Facade()
 
@@ -22,6 +21,7 @@ wheelbase = 3.6
 tire_width = 0.305
 steering_angle_radians = math.radians(30)
 radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
+max_radio_curva = 500
 
 app.add_middleware(
     CORSMiddleware,
@@ -150,7 +150,7 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
 
     return aceleraciones
 
-  
+
 @app.get("/drifts")
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
@@ -186,18 +186,44 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
         axis=1
     )
 
-    # Calculando velMaxima usando maxAceleracion y el radio
-    datos_aceleraciones["velMaxima"] = datos_aceleraciones.apply(
-        lambda row: math.sqrt(maxAceleracion * row["radio"]) if row["radio"] != float('inf') else 0,
+    # Calculo si hay maxima velocidad
+    datos_aceleraciones["hasMaxSpeed"] = datos_aceleraciones.apply(
+        lambda row: row["radio"] <= max_radio_curva if row["radio"] != float('inf') else False,
         axis=1
     )
+
+    # Calculando velMaxima usando maxAceleracion y el radio
+    datos_aceleraciones["velMaxima"] = datos_aceleraciones.apply(
+        lambda row: math.sqrt(maxAceleracion * row["radio"]) if row["radio"] != float('inf') and datos_aceleraciones["hasMaxSpeed"] else 0,
+        axis=1
+    )
+
     dynamic = pd.DataFrame()
-    dynamic["X"] = datos_aceleraciones["X"]
-    dynamic["Y"] = datos_aceleraciones["Y"]
-    dynamic["maxAceleracion"] = maxAceleracion
-    dynamic["velActual"] = datos_aceleraciones["modulo_velocidad_xy"]
-    dynamic["velMaxima"] = datos_aceleraciones["velMaxima"]
-    dynamic["radio"] = datos_aceleraciones["radio"]
+    dynamic["coefficient_friction"] = 0
+    dynamic["forces"] = {
+        "time": datos_aceleraciones["Time"],
+        "x": datos_aceleraciones["X"],
+        "y": datos_aceleraciones["Y"],
+        "friction": {
+            "frx": 0,
+            "fry": 0,
+            "module": 0,
+            "tangential": 0,
+            "normal": 0.0,
+            "hasMaxSpeed": datos_aceleraciones["hasMaxSpeed"],
+            "maxSpeed": datos_aceleraciones["velMaxima"],
+            "versors": {
+                "tangent": {
+                    "x": 0,
+                    "y": 0
+                },
+                "normal": {
+                    "x": 0,
+                    "y": 0
+                }
+            }
+        }
+    }
 
     result = dynamic.to_dict(orient='records')
     return {"data": result}
