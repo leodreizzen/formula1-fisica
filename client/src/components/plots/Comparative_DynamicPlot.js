@@ -30,10 +30,11 @@ export default function Comparative_DynamicPlot({ className, dynamicData, dynami
         console.log(dynamicData);
 
         const frictionsData = dynamicData.forces.map(getFrictionsType(selectedOption));
+        const frictionsSecondaryData = dynamicSecondaryData.forces.map(getFrictionsType(selectedOption));
 
         if (dynamicData && dynamicSecondaryData && dynamicData) {
             const primaryDriverData = {
-                x: Array.from({length: dynamicData.length}, (_, i) => i + 1),
+                x: dynamicData.forces.map((_, i) => i),
                 y: frictionsData,
                 type: 'scatter',
                 mode: 'lines',
@@ -47,8 +48,8 @@ export default function Comparative_DynamicPlot({ className, dynamicData, dynami
             };
 
             const secondaryDriverData = {
-                x: Array.from({length: dynamicSecondaryData.length}, (_, i) => i + 1),
-                y: frictionsData,
+                x: dynamicSecondaryData.forces.map((_, i) => i + 1),
+                y: frictionsSecondaryData,
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryDriverColor },
@@ -64,9 +65,11 @@ export default function Comparative_DynamicPlot({ className, dynamicData, dynami
                 ? [primaryDriverData, { ...primaryDriverData,y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false }]
                 : [primaryDriverData, secondaryDriverData,
                     { ...primaryDriverData, y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false },
-                    { ...secondaryDriverData, y: frictionsData, xaxis: 'x1', yaxis: 'y1', showlegend: false }];
+                    { ...secondaryDriverData, y: frictionsSecondaryData, xaxis: 'x1', yaxis: 'y1', showlegend: false }];
         }
     }, [dynamicData, dynamicSecondaryData, currentDriver, currentSecondaryDriver, visible, selectedOption]);
+
+    console.log(plotData);
 
     const getYAxisTitle = (selectedOption) => {
         switch (selectedOption) {
