@@ -5,7 +5,7 @@ import ComparativePlot from "../../../plots/ComparativePlots";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useLapContext} from "../../../../context/LapContext";
-import {useGetTrajectory, useGetLaps} from "../../../../api/hooks";
+import {useGetLaps, useGetKinematicsComparison} from "../../../../api/hooks";
 import AccelerationTypeSelector from "../../../inputs/AccelerationTypeSelector";
 import {OrbitProgress} from "react-loading-indicators";
 import LapSelector from "../../../inputs/LapSelector";
@@ -27,9 +27,9 @@ export default function ComparativePanel({className}) {
     const commonLaps = (mainLapCount !== null && secondaryLapCount !== null) ? Math.min(mainLapCount, secondaryLapCount) : null;
     const currentLap = (mainCurrentLap !== null && commonLaps !== null) ? Math.min(mainCurrentLap, commonLaps) : null;
 
-    const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap) || [];
-    const [trajectorySecondaryData,] = useGetTrajectory(year, round, session, currentSecondaryDriver?.driverNumber, currentLap) || [];
-
+    const [comparisonData] = useGetKinematicsComparison(year, round, session, currentDriver?.driverNumber, currentSecondaryDriver?.driverNumber, currentLap);
+    const firstDriverData = comparisonData ? comparisonData[0].data : null;
+    const secondDriverData = comparisonData ? comparisonData[1].data : null;
     useEffect(() => {
         if (currentLap !== null && currentLap !== mainCurrentLap) {
             setCurrentLap(currentLap);
@@ -52,11 +52,14 @@ export default function ComparativePanel({className}) {
                                 onDriverChange={handleSecondaryDriverChange} label="Conductor rival"/>
             </div>
             {currentSecondaryDriver !== null ?
-                (trajectoryData !== null && trajectorySecondaryData !== null && currentLap !== null) ? (
+                (firstDriverData !== null && secondDriverData !== null && currentLap !== null) ? (
                     <>
-                        <ComparativePlot className="flex grow pt-2" trajectoryData={trajectoryData}
-                                         trajectorySecondaryData={trajectorySecondaryData} currentDriver={currentDriver}
-                                         currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap}
+                        <ComparativePlot className="flex grow pt-2"
+                                         currentDriver={currentDriver}
+                                         currentSecondaryDriver={currentSecondaryDriver}
+                                         firstDriverData={firstDriverData}
+                                         secondDriverData={secondDriverData}
+                                         currentLap={currentLap}
                                          selectedOption={selectedOption}/>
                         <AccelerationTypeSelector onChange={handleOptionChange} value={selectedOption}/>
                         <LapSelector className="mb-3 p-1 pl-6 pr-6" lapCount={commonLaps} currentLap={currentLap}

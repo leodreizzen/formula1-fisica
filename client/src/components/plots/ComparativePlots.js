@@ -4,8 +4,7 @@ import BasePlot from "./BasePlot";
 import { OrbitProgress } from "react-loading-indicators";
 import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
 
-export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap, selectedOption}) {
-    const { vectors } = useKinematicVectorsContext();
+export default function ComparativePlots({ className, firstDriverData, secondDriverData, currentDriver, currentSecondaryDriver, selectedOption}) {
     const [visible, setVisible] = useState([true, true]);
 
     function handleUpdate(state) {
@@ -14,10 +13,10 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
     }
 
     const plotData = useMemo(() => {
-        if (trajectoryData && trajectorySecondaryData && vectors) {
+        if (firstDriverData && secondDriverData) {
             const primaryDriverData = {
-                x: trajectoryData.map(it => it.intrinsic.s / 10),
-                y: vectors.map(it => it.velocity.module / 10),
+                x: firstDriverData.map(it => it.s / 10),
+                y: firstDriverData.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: primaryDriverColor },
@@ -30,8 +29,8 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
             };
 
             const secondaryDriverData = {
-                x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
-                y: vectors.map(it => it.velocity.module / 10),
+                x: secondDriverData.map(it => it.s / 10),
+                y: secondDriverData.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryDriverColor },
@@ -58,15 +57,16 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 }
             };
 
-            const accelerationData = vectors.map(getAccelerationType(selectedOption));
+            const primaryAccelerationData = firstDriverData.map(getAccelerationType(selectedOption));
+            const secondaryAccelerationData = secondDriverData.map(getAccelerationType(selectedOption));
 
             return currentDriver === currentSecondaryDriver
-                ? [primaryDriverData, { ...primaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }]
+                ? [primaryDriverData, { ...primaryDriverData, y: primaryAccelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }]
                 : [primaryDriverData, secondaryDriverData,
-                    { ...primaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false },
-                    { ...secondaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }];
+                    { ...primaryDriverData, y: primaryAccelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false },
+                    { ...secondaryDriverData, y: secondaryAccelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }];
         }
-    }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible, selectedOption]);
+    }, [firstDriverData, secondDriverData, currentDriver, currentSecondaryDriver, visible, selectedOption]);
 
     const getYAxis2Title = (selectedOption) => {
         switch (selectedOption) {
@@ -116,7 +116,7 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
 
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
-            {vectors !== null ?
+            {firstDriverData !== null && secondDriverData !== null ?
                 <BasePlot
                     className={className + " flex justify-center w-full"}
                     data={plotData}

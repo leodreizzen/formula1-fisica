@@ -49,6 +49,17 @@ export function getKinematicVectors(year, roundNumber, sessionNumber, driverNumb
     }, options);
 }
 
+export function getKinematicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber, options){
+    return APIGetter("/kinematics_comparison", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber1: driverNumber1,
+        driverNumber2: driverNumber2,
+        lapNumber: lapNumber
+    }, options);
+}
+
 export function getDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
      return APIGetter("/drifts", {
          year: year,
