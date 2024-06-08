@@ -4,12 +4,13 @@ import {
     enforceSameScaleHorizontal,
     enforceSameScaleVertical, getTolerancesPreservingAspectRatio, getTrajectoryExtremes,
 } from "./plot-utils";
-import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
+import {speedArrow, frictionArrow, normalFrictionArrow, tangentialFrictionArrow} from "./arrows";
 import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
 
-export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
+
+export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frictionData, frictionInTime, vectorsInTime, hoveredPoint, setHoveredPoint}) {
     const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
     const LEGEND_ITEM_WIDTH = 30;
 
@@ -72,14 +73,12 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
     const arrows = useMemo(() => {
         if (vectors === null || trajectoryData === null || hoveredPoint === null)
             return null;
-        const time = trajectoryData[hoveredPoint].time;
         const x = trajectoryData[hoveredPoint].cartesian.x / 10;
         const y = trajectoryData[hoveredPoint].cartesian.y / 10;
-        const vectorsInTime = getKinematicVectorsFromTime(time);
-        if (vectorsInTime === undefined)
+        if (vectorsInTime === undefined || frictionInTime === undefined)
             return [];
-        return [speedArrow(vectorsInTime, x, y), accelerationArrow(vectorsInTime, x, y), tangentialAccelerationArrow(vectorsInTime, x, y), normalAccelerationArrow(vectorsInTime, x, y)]
-    }, [vectors, trajectoryData, hoveredPoint, getKinematicVectorsFromTime]);
+        return [speedArrow(vectorsInTime, x, y), frictionArrow(frictionInTime, x, y), normalFrictionArrow(frictionInTime, x, y), tangentialFrictionArrow(frictionInTime, x, y)]
+    }, [vectors, trajectoryData, hoveredPoint, getKinematicVectorsFromTime, frictionInTime, vectorsInTime]);
 
     function handleUnhover(data) {
         const index = getPointFromHoverData(data)
@@ -89,6 +88,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
 
     const plotData = useMemo(() => {
         const colorBarThickness = 7;
+        const frictionDataWithMaxSpeed = frictionData.forces.filter(it => it.friction.hasMaxSpeed)
 
         let data = [];
 
@@ -103,8 +103,50 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 showlegend: false
             })
         }
+
+        if (frictionDataWithMaxSpeed) {
+            data.push({
+                x: frictionDataWithMaxSpeed.map(it => it.x / 10).toFixed(2) ,
+                y: frictionDataWithMaxSpeed.map(it => it.y / 10).toFixed(2) ,
+                name: "v max / v",
+                type: "scatter",
+                mode: "markers",
+                text: frictionDataWithMaxSpeed.friction.map(it => it.module / 10).toFixed(2),
+                marker: {
+                    color: frictionDataWithMaxSpeed.map(it => it.friction.maxSpeed / it.speed),
+                    colorscale: [
+                        ['0.0', 'rgb(255,77,77)'],
+                        ['0.1', 'rgb(237, 94, 79)'],
+                        ['0.2', 'rgb(210, 111, 61)'],
+                        ['0.3', 'rgb(200, 128, 82)'],
+                        ['0.4', 'rgb(182, 145, 84)'],
+                        ['0.5', 'rgb(164, 163, 86)'],
+                        ['0.6', 'rgb(145, 180, 88)'],
+                        ['0.7', 'rgb(127, 197, 90)'],
+                        ['0.8', 'rgb(109, 214, 91)'],
+                        ['0.9', 'rgb(90, 231, 93)'],
+                        ['1.0', 'rgb(72, 248, 95)']
+                    ],
+                    hoverinfo: 'none',
+                    colorbar: {
+                        xref: "container",
+                        yref: "container",
+                        x: 1 - (MARGINS.r) / width / 2,
+                        y: 0.5,
+                        len: 0.8,
+                        yanchor: "middle",
+                        xanchor: "center",
+                        orientation: 'v',
+                        thickness: colorBarThickness,
+                        tickwidth: 0,
+                        textfont: {size: 1},
+                        tickmode: "auto",
+                    }
+                },
+            })
+        }
         return data;
-    }, [trajectoryData, MARGINS.r, width]);
+    }, [trajectoryData, frictionData, MARGINS.r, width]);
 
     const plotLayout = useMemo(() => {
         return {
@@ -134,7 +176,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
-            {trajectoryData === null ?
+            {trajectoryData === null || driftingData === null ?
                 <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large'
                                                                                                color="#EFE2E2"
                                                                                                variant='dotted'/></div>
