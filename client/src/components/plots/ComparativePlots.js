@@ -3,9 +3,13 @@ import { useKinematicVectorsContext } from "../../context/KinematicVectorsContex
 import BasePlot from "./BasePlot";
 import { OrbitProgress } from "react-loading-indicators";
 import { plotStyles, primaryDriverColor, secondaryDriverColor } from "../../styles";
+import {useGetKinematicVectors} from "../../api/hooks";
+import {useSessionDataContext} from "../../context/SessionDataContext";
 
-export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, currentLap, selectedOption}) {
-    const { vectors } = useKinematicVectorsContext();
+export default function ComparativePlots({ className, trajectoryData, trajectorySecondaryData, currentDriver, currentLap, currentSecondaryDriver, selectedOption}) {
+    const {vectors:firstDriverVectors} = useKinematicVectorsContext();
+    const {year, round, session} = useSessionDataContext()
+    const [secondDriverVectors] = useGetKinematicVectors(year,round,session,currentSecondaryDriver.driverNumber, currentLap)
     const [visible, setVisible] = useState([true, true]);
 
     function handleUpdate(state) {
@@ -14,10 +18,10 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
     }
 
     const plotData = useMemo(() => {
-        if (trajectoryData && trajectorySecondaryData && vectors) {
+        if (trajectoryData && trajectorySecondaryData && firstDriverVectors && secondDriverVectors){
             const primaryDriverData = {
                 x: trajectoryData.map(it => it.intrinsic.s / 10),
-                y: vectors.map(it => it.velocity.module / 10),
+                y: firstDriverVectors.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: primaryDriverColor },
@@ -31,7 +35,7 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
 
             const secondaryDriverData = {
                 x: trajectorySecondaryData.map(it => it.intrinsic.s / 10),
-                y: vectors.map(it => it.velocity.module / 10),
+                y: secondDriverVectors.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryDriverColor },
@@ -58,15 +62,16 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
                 }
             };
 
-            const accelerationData = vectors.map(getAccelerationType(selectedOption));
+            const firstAccelerationData = firstDriverVectors?.map(getAccelerationType(selectedOption));
+            const secondAccelerationData = secondDriverVectors?.map(getAccelerationType(selectedOption));
 
             return currentDriver === currentSecondaryDriver
-                ? [primaryDriverData, { ...primaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }]
+                ? [primaryDriverData, { ...primaryDriverData, y: firstAccelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }]
                 : [primaryDriverData, secondaryDriverData,
-                    { ...primaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false },
-                    { ...secondaryDriverData, y: accelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }];
+                    { ...primaryDriverData, y: firstAccelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false },
+                    { ...secondaryDriverData, y: secondAccelerationData, xaxis: 'x2', yaxis: 'y2', showlegend: false }];
         }
-    }, [trajectoryData, trajectorySecondaryData, vectors, currentDriver, currentSecondaryDriver, visible, selectedOption]);
+    }, [trajectoryData, trajectorySecondaryData, currentDriver, currentSecondaryDriver, visible, selectedOption, firstDriverVectors, secondDriverVectors]);
 
     const getYAxis2Title = (selectedOption) => {
         switch (selectedOption) {
@@ -116,7 +121,7 @@ export default function ComparativePlots({ className, trajectoryData, trajectory
 
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
-            {vectors !== null ?
+            {firstDriverVectors !== null  && secondDriverVectors !== null?
                 <BasePlot
                     className={className + " flex justify-center w-full"}
                     data={plotData}
