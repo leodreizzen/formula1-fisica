@@ -7,7 +7,6 @@ from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import pandas as pd
 import numpy as np
-from placeholders import dynamicsPlaceholder
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
@@ -22,6 +21,7 @@ tire_width = 0.305
 steering_angle_radians = math.radians(30)
 radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
 max_radio_curva = 500
+mass_car = 950
 
 app.add_middleware(
     CORSMiddleware,
@@ -194,39 +194,56 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
 
     # Calculando velMaxima usando maxAceleracion y el radio
     datos_aceleraciones["velMaxima"] = datos_aceleraciones.apply(
-        lambda row: math.sqrt(maxAceleracion * row["radio"]) if row["radio"] != float('inf') and datos_aceleraciones["hasMaxSpeed"] else 0,
+        lambda row: math.sqrt(maxAceleracion * row["radio"]) if row["radio"] != float('inf') and row["hasMaxSpeed"] else 0,
         axis=1
     )
 
-    dynamic = pd.DataFrame()
-    dynamic["coefficient_friction"] = 0
-    dynamic["forces"] = {
-        "time": datos_aceleraciones["Time"],
-        "x": datos_aceleraciones["X"],
-        "y": datos_aceleraciones["Y"],
-        "friction": {
-            "frx": 0,
-            "fry": 0,
-            "module": 0,
-            "tangential": 0,
-            "normal": 0.0,
-            "hasMaxSpeed": datos_aceleraciones["hasMaxSpeed"],
-            "maxSpeed": datos_aceleraciones["velMaxima"],
-            "versors": {
-                "tangent": {
-                    "x": 0,
-                    "y": 0
-                },
-                "normal": {
-                    "x": 0,
-                    "y": 0
+    # Cota inferior del coeficiente de rozamiento estático máximo.
+    datos_aceleraciones["friction_coefficient"] = datos_aceleraciones.apply(
+        lambda row: row["a_normal"] / 9.82 if row["a_normal"] != 0 else 0,
+        axis=1
+    )
+
+    datos_aceleraciones["friction_x"] = (datos_aceleraciones["aceleracion_x"] * mass_car)
+    datos_aceleraciones["friction_y"] = (datos_aceleraciones["aceleracion_y"] * mass_car)
+    datos_aceleraciones["friction_module"] = datos_aceleraciones["modulo_velocidad"] * mass_car
+    datos_aceleraciones["friction_tangential"] = datos_aceleraciones["aTangential"] * mass_car
+    datos_aceleraciones["friction_normal"] = datos_aceleraciones["a_normal"] * mass_car
+
+    forces_array = []
+
+    for index, row in datos_aceleraciones.iterrows():
+        forces_array.append({
+            "time": timedelta_to_string(row["Time"]),
+            "x": row["X"],
+            "y": row["Y"],
+            "friction": {
+                "frx": row["friction_x"],
+                "fry": row["friction_y"],
+                "module": row["friction_module"],
+                "tangential": row["friction_tangential"],
+                "normal": row["friction_normal"],
+                "hasMaxSpeed": row["hasMaxSpeed"],
+                "maxSpeed": row["velMaxima"],
+                "versors": {
+                    "tangent": {
+                        "x": row["versor_tangente"][0],
+                        "y": row["versor_tangente"][1]
+                    },
+                    "normal": {
+                        "x": row["versor_normal_x"],
+                        "y": row["versor_normal_y"]
+                    }
                 }
             }
-        }
+        })
+
+    dynamics_json = {
+        "coefficient_friction": datos_aceleraciones["friction_coefficient"].max(),
+        "forces": forces_array
     }
 
-    result = dynamic.to_dict(orient='records')
-    return {"data": result}
+    return dynamics_json
 
 
 @lru_cache(maxsize=tamano_cache)
