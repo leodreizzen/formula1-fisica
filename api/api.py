@@ -199,16 +199,19 @@ def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: i
     #Fuerzas G = Aceleración/Gravedad
     #Tomamos (módulo de aceleración xy) + (Fuerzas G) = Newton que debe aplicar el cuello
     masa = 7
-    fuerzas_cuello = []
+    gravedad = 9.81
+
+    lap_telemetry['fuerza_g_horizontal'] = lap_telemetry['aTangential'] / gravedad
+    lap_telemetry['fuerza_g_lateral'] = lap_telemetry['a_normal'] / gravedad
+    lap_telemetry['fuerza_cuello_lateral'] = masa * lap_telemetry['a_normal'] + lap_telemetry['fuerza_g_lateral']
+    lap_telemetry['fuerza_cuello_horizontal'] = masa * lap_telemetry['aTangential'] + lap_telemetry['fuerza_g_horizontal']
+
     for index, row in lap_telemetry.iterrows():
-        fuerzaG = row["modulo_aceleracion_xy"] / gravedad
-        fuerza_cuello = row["a_normal"] + fuerzaG
-        fuerzas_cuello.append({
-                    "x": row["X"],
-                    "y": row["Y"],
-                    "z": row["Z"],
-                    "fuerza_cuello": fuerza_cuello #En NM
-        })
+        fuerzaGLateral = row["fuerza_g_lateral"]
+        fuerzaGHorizontal = row["fuerza_g_horizontal"]
+        fuerzaCuelloLateral = row["fuerza_cuello_lateral"]
+        fuerzaCuelloHorizontal = row["fuerza_cuello_horizontal"]
+
 
     return fuerzas_cuello
 
