@@ -12,7 +12,6 @@ import numpy as np
 from placeholders import dynamicsPlaceholder
 from numpy import cos, arctan2
 
-
 app = fastapi.FastAPI()
 facade = FastF1Facade()
 
@@ -88,7 +87,7 @@ def trajectory(year: int, roundNumber: int, sessionNumber: int, driverNumber: in
     polar_origin_X = lap_telemetry["X"].iloc[0]
     polar_origin_Y = lap_telemetry["Y"].iloc[0]
 
-    lap_telemetry = calcular_coordenadas_polares(lap_telemetry,polar_origin_X,polar_origin_Y)
+    lap_telemetry = calcular_coordenadas_polares(lap_telemetry, polar_origin_X, polar_origin_Y)
     lap_telemetry['module'] = np.sqrt(lap_telemetry["X"].diff() ** 2 + lap_telemetry["Y"].diff() ** 2).fillna(0)
 
     arreglo_modulos = lap_telemetry["module"].to_numpy()
@@ -161,7 +160,7 @@ def kinematics_vectors(year: int, roundNumber: int, sessionNumber: int, driverNu
 
     return aceleraciones
 
-  
+
 @app.get("/drifts")
 def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     datos_aceleraciones = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
@@ -192,6 +191,7 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
 
     return dynamic
 
+
 @app.get("/neck_forces")
 def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
@@ -201,17 +201,25 @@ def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: i
     masa = 7
     gravedad = 9.81
 
+    lap_telemetry['aTangential'] = lap_telemetry['aTangential'] / 10 #pasaje de dm a m
+    lap_telemetry['a_normal'] = lap_telemetry['a_normal'] / 10 #pasaje de dm a m
     lap_telemetry['fuerza_g_horizontal'] = lap_telemetry['aTangential'] / gravedad
     lap_telemetry['fuerza_g_lateral'] = lap_telemetry['a_normal'] / gravedad
     lap_telemetry['fuerza_cuello_lateral'] = masa * lap_telemetry['a_normal'] + lap_telemetry['fuerza_g_lateral']
-    lap_telemetry['fuerza_cuello_horizontal'] = masa * lap_telemetry['aTangential'] + lap_telemetry['fuerza_g_horizontal']
+    lap_telemetry['fuerza_cuello_horizontal'] = masa * lap_telemetry['aTangential'] + lap_telemetry[
+        'fuerza_g_horizontal']
 
-    for index, row in lap_telemetry.iterrows():
-        fuerzaGLateral = row["fuerza_g_lateral"]
-        fuerzaGHorizontal = row["fuerza_g_horizontal"]
-        fuerzaCuelloLateral = row["fuerza_cuello_lateral"]
-        fuerzaCuelloHorizontal = row["fuerza_cuello_horizontal"]
-
+    fuerzas_cuello = []
+    for index, row in lap_telemetry.iterrows(): #todas las fuerzas son devueltas en Newton
+        fuerzas_cuello.append({
+            "time": timedelta_to_string(row["Time"]),
+            "fuerza_cuello_horizontal": row["fuerza_cuello_horizontal"],
+            "fuerza_cuello_lateral": row["fuerza_cuello_lateral"],
+            "fuerza_g_horizontal": row["fuerza_g_horizontal"],
+            "fuerza_g_lateral": row["fuerza_g_lateral"],
+            "aceleracion_normal": row["a_normal"],
+            "aceleracion_tangencial": row["aTangential"]
+        })
 
     return fuerzas_cuello
 
@@ -271,7 +279,8 @@ def vector_calcs(year: int, roundNumber: int, sessionNumber: int, driverNumber: 
             (lap_telemetry['r_dot'].shift(-1) - lap_telemetry['r_dot']) / lap_telemetry['diferencia_tiempo']).fillna(
         0).replace([np.inf, -np.inf], 0)
     lap_telemetry['theta_double_dot'] = (
-            (lap_telemetry['theta_dot'].shift(-1) - lap_telemetry['theta_dot']) / lap_telemetry['diferencia_tiempo']).fillna(
+            (lap_telemetry['theta_dot'].shift(-1) - lap_telemetry['theta_dot']) / lap_telemetry[
+        'diferencia_tiempo']).fillna(
         0).replace([np.inf, -np.inf], 0)
 
     # Si la aceleración normal es negativa, invertimos el versor normal y la aceleración normal
