@@ -25,6 +25,8 @@ export function PositionsPlot({className, timeUnit}) {
         setCoordinateSystem(event.target.value);
     };
 
+    const availableSystems = ["cartesian", "polar", "intrinsic"];
+
     let plots;
     switch (coordinateSystem) {
         case "cartesian":
@@ -46,7 +48,7 @@ export function PositionsPlot({className, timeUnit}) {
         <div className={className + " items-center flex justify-center w-full h-full overflow-clip"}>
             {trajectoryData !== null ?
                 <>
-                    <CoordinateSystemSelector coordinateSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} />
+                    <CoordinateSystemSelector coordinateSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} availableSystems={availableSystems} />
                     {plots}
                 </>
                 :

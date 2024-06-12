@@ -15,6 +15,8 @@ export default function VelocitiesPanel({ className }) {
         setCoordinateSystem(event.target.value);
     };
 
+    const availableSystems = ["cartesian", "polar"];
+
     let plots;
     switch (coordinateSystem) {
         case "cartesian":
@@ -22,9 +24,6 @@ export default function VelocitiesPanel({ className }) {
             break;
         case "polar":
             plots = <PolarSpeedPlot className="w-7/12 h-full ml-4" timeUnit={"s"}  vectors={vectors}/>;
-            break;
-        case "intrinsic":
-            //plots = <IntrinsicSpeedsPlot className="w-1/2 h-full" timeUnit={"s"}  vectors={vectors}/>;
             break;
         default:
             plots = null;
@@ -37,7 +36,7 @@ export default function VelocitiesPanel({ className }) {
             <div className="items-center flex justify-center w-full h-full overflow-clip">
                 {vectors !== null ?
                     <>
-                        <CoordinateSystemSelector coordinateSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} />
+                        <CoordinateSystemSelector coordinateSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} availableSystems={availableSystems} />
                         {plots}
                     </>
                     :
