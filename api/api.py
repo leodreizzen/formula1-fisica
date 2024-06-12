@@ -217,6 +217,7 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
             "time": timedelta_to_string(row["Time"]),
             "x": row["X"],
             "y": row["Y"],
+            "modulo_velocidad_xy": row["modulo_velocidad_xy"],
             "friction": {
                 "frx": row["friction_x"],
                 "fry": row["friction_y"],
