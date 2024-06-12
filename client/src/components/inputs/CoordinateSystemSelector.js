@@ -1,7 +1,7 @@
 export function CoordinateSystemSelector({ className, coordinateSystem, onCoordinateSystemChange }) {
     return (
         <div className={className + " flex flex-col items-start"}>
-            <div className="mt-6 w-full flex justify-center">
+            <div className="mt-4 w-full flex justify-center">
                 <input
                     type="radio"
                     id="cartesian"
@@ -20,7 +20,7 @@ export function CoordinateSystemSelector({ className, coordinateSystem, onCoordi
                     Cartesianas
                 </label>
             </div>
-            <div className="mt-6 w-full flex justify-center">
+            <div className="mt-4 w-full flex justify-center">
                 <input
                     type="radio"
                     id="polar"
@@ -39,7 +39,7 @@ export function CoordinateSystemSelector({ className, coordinateSystem, onCoordi
                     Polares
                 </label>
             </div>
-            <div className="mt-6 w-full flex justify-center">
+            <div className="mt-4 w-full flex justify-center">
                 <input
                     type="radio"
                     id="intrinsic"

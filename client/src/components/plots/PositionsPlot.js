@@ -28,13 +28,13 @@ export function PositionsPlot({className, timeUnit}) {
     let plots;
     switch (coordinateSystem) {
         case "cartesian":
-            plots =  (<CartesianPositionPlot className="w-1/2 h-full" timeUnit={timeUnit} trajectoryData={trajectoryData} />);
+            plots =  (<CartesianPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit} trajectoryData={trajectoryData} />);
             break;
         case "intrinsic":
-            plots =  <IntrinsicPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            plots =  <IntrinsicPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
             break;
         case "polar":
-            plots =  <PolarPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            plots =  <PolarPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
             break;
         default:
             plots =  null;
