@@ -49,6 +49,9 @@ class F1IntrinsicsHelper:
         # Split the first driver data in two parts. Consider the first point of the second driver as the reference point for intrinsic coordinates calculations
         left_side_filtered, right_side_filtered = self.__split_and_filter_to_align(first_driver, second_driver)
 
+        # Both sides share the center point, so we can remove the first point of the right side
+        right_side_filtered = right_side_filtered.iloc[1:]
+
         s_izq = -np.flip(calculate_intrinsic_s(left_side_filtered.iloc[::-1]))
         s_der = calculate_intrinsic_s(right_side_filtered)
 
@@ -57,7 +60,6 @@ class F1IntrinsicsHelper:
 
         second_driver_full_data = filter_telemetry(telemetry_interpolation(second_driver))
         second_driver_full_data["s"] = calculate_intrinsic_s(second_driver_full_data)
-
         return first_driver_full_data, second_driver_full_data
 
     def __split_and_filter_to_align(self, driver_data_to_split, reference_driver_data):
