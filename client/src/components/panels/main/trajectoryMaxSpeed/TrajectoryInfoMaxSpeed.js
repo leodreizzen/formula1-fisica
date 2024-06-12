@@ -23,7 +23,8 @@ export default function TrajectoryInfoMaxSpeed({className=""}) {
     const {getKinematicVectorsFromTime} = useKinematicVectorsContext();
     const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
     const vectorsInTime = getKinematicVectorsFromTime(time);
-    const hoveredPointDynamics = hoveredPoint !== null ? frictionData.forces.find(it => it.time === time): null
+
+    const hoveredPointDynamics = hoveredPoint !== null && frictionData !== null ? frictionData.forces.find(it => it.time === time): null
     const frictionInTime = hoveredPointDynamics?.friction
 
     return (

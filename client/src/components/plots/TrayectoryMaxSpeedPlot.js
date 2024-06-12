@@ -5,7 +5,6 @@ import {
     enforceSameScaleVertical, getTolerancesPreservingAspectRatio, getTrajectoryExtremes,
 } from "./plot-utils";
 import {speedArrow, frictionArrow, normalFrictionArrow, tangentialFrictionArrow} from "./arrows";
-import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
 
@@ -14,7 +13,6 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
     const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
     const LEGEND_ITEM_WIDTH = 30;
 
-    const {vectors, getKinematicVectorsFromTime} = useKinematicVectorsContext();
     const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
 
@@ -71,14 +69,14 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
 
 
     const arrows = useMemo(() => {
-        if (vectors === null || trajectoryData === null || hoveredPoint === null)
+        if (trajectoryData === null || hoveredPoint === null)
             return null;
         const x = trajectoryData[hoveredPoint].cartesian.x / 10;
         const y = trajectoryData[hoveredPoint].cartesian.y / 10;
         if (vectorsInTime === undefined || frictionInTime === undefined)
             return [];
         return [speedArrow(vectorsInTime, x, y), frictionArrow(frictionInTime, x, y), normalFrictionArrow(frictionInTime, x, y), tangentialFrictionArrow(frictionInTime, x, y)]
-    }, [vectors, trajectoryData, hoveredPoint, getKinematicVectorsFromTime, frictionInTime, vectorsInTime]);
+    }, [trajectoryData, hoveredPoint, frictionInTime, vectorsInTime]);
 
     function handleUnhover(data) {
         const index = getPointFromHoverData(data)
@@ -88,7 +86,6 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
 
     const plotData = useMemo(() => {
         const colorBarThickness = 7;
-        const frictionDataWithMaxSpeed = frictionData.forces.filter(it => it.friction.hasMaxSpeed)
 
         let data = [];
 
@@ -104,16 +101,19 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
             })
         }
 
-        if (frictionDataWithMaxSpeed) {
-            data.push({
-                x: frictionDataWithMaxSpeed.map(it => it.x / 10).toFixed(2) ,
-                y: frictionDataWithMaxSpeed.map(it => it.y / 10).toFixed(2) ,
+        if (frictionData) {
+
+            const frictionDataWithMaxSpeed = frictionData.forces.filter(it => it.friction.hasMaxSpeed)
+            if(frictionDataWithMaxSpeed){
+                data.push({
+                x: frictionDataWithMaxSpeed.map(it => (it.x / 10)),
+                y: frictionDataWithMaxSpeed.map(it => (it.y / 10)),
                 name: "v max / v",
                 type: "scatter",
                 mode: "markers",
-                text: frictionDataWithMaxSpeed.friction.map(it => it.module / 10).toFixed(2),
+                    text: frictionDataWithMaxSpeed.map(it => (it.friction.maxSpeed / it.module_velocity_xy).toFixed(4)),
                 marker: {
-                    color: frictionDataWithMaxSpeed.map(it => it.friction.maxSpeed / it.speed),
+                    color: frictionDataWithMaxSpeed.map(it => it.friction.maxSpeed / it.module_velocity_xy),
                     colorscale: [
                         ['0.0', 'rgb(255,77,77)'],
                         ['0.1', 'rgb(237, 94, 79)'],
@@ -144,6 +144,7 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
                     }
                 },
             })
+            }
         }
         return data;
     }, [trajectoryData, frictionData, MARGINS.r, width]);
@@ -176,7 +177,7 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
-            {trajectoryData === null || driftingData === null ?
+            {trajectoryData === null || frictionData === null ?
                 <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large'
                                                                                                color="#EFE2E2"
                                                                                                variant='dotted'/></div>

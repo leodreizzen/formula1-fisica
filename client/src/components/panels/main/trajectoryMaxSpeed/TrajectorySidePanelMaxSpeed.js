@@ -8,7 +8,7 @@ export default function TrajectorySidePanelMaxSpeed({className, trajectoryData, 
             {hoveredPoint !== null ? (
                 <>
                     <HoveredPointDataMaxSpeed className=" w-full" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint} frictionInTime={frictionInTime} vectorsInTime={vectorsInTime}/>
-                    <MiniPlotFriction className=" w-full grow mt-4" trajectoryData={trajectoryData} frictionData={frictionData}  hoveredPoint={hoveredPoint}/>
+                    <MiniPlotFriction className=" w-full grow mt-4" trajectoryData={trajectoryData} frictionInTime={frictionInTime} vectorsInTime={vectorsInTime} hoveredPoint={hoveredPoint}/>
                 </>
             ) : null}
         </div>

@@ -29,7 +29,7 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces}) 
                 {...moduleTrace, xaxis: 'x1', yaxis: 'y1', name: "Módulo", visible: visible[0]},
                 {...tangentialTrace, xaxis: 'x1', yaxis: 'y1', name: "Tangencial", visible: visible[1]},
                 {...normalTrace, xaxis: 'x1', yaxis: 'y1', name: "Normal", visible: visible[2]},
-                {...staticCoefficientTrace, xaxis: 'x1', yaxis: 'y1', name: "Estatico", visible: visible[3]},
+                {...staticCoefficientTrace, xaxis: 'x1', yaxis: 'y1', name: "Coef. Estatico", visible: visible[3]},
             ]}
             layout={plotLayout}
             config={{responsive: true, scrollZoom: true, displayModeBar: false}}

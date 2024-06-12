@@ -39,7 +39,7 @@ export default function SplitFrictionsPlot({className, timeUnit, traces}) {
             },
 
             yaxis1: {
-                title: '|rozamiento| [N]',
+                title: '|Frd| [N]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
 

@@ -29,7 +29,7 @@ export default function FrictionsPlots({className, timeUnit}) {
                 mode: 'lines',
                 marker: {color: 'red'},
             }
-        }, [frictionData, timeUnit]);
+        }, [timeTraces, frictionData]);
 
     const tangentialTrace = useMemo(()=>{
         return {
@@ -39,7 +39,7 @@ export default function FrictionsPlots({className, timeUnit}) {
             mode: 'lines',
             marker: {color: 'orange'},
         }
-    }, [frictionData, timeUnit]);
+    }, [frictionData, timeTraces]);
     const normalTrace = useMemo(()=>{
         return {
 
@@ -49,17 +49,17 @@ export default function FrictionsPlots({className, timeUnit}) {
             mode: 'lines',
             marker: {color: 'blue'},
         }
-    }, [frictionData, timeUnit]);
+    }, [timeTraces, frictionData]);
 
      const staticCoefficientTrace = useMemo(()=>{
         return {
             x: timeTraces,
-            y: frictionData?.map(it => (it.coefficient_friction / 10).toFixed(2)),
+            y: (frictionData?.coefficient_friction / 10).toFixed(2),
             type: 'scatter',
             mode: 'lines',
             marker: {color: 'purple'},
         }
-    }, [frictionData, timeUnit]);
+    }, [timeTraces, frictionData]);
 
     const splitTraces = {moduleTrace, tangentialTrace, normalTrace};
     const overlappingTraces = {moduleTrace, tangentialTrace, normalTrace, staticCoefficientTrace};

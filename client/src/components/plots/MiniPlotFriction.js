@@ -1,13 +1,11 @@
 import Plot from "react-plotly.js";
-import {useDriverContext} from "../../context/DriverContext";
 import {plotStyles, trajectoryColor} from "../../styles";
 import {useMemo} from "react";
 import {useResizeDetector} from "react-resize-detector";
 import {frictionArrow, normalFrictionArrow, tangentialFrictionArrow, speedArrow} from "./arrows";
-import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import {getTolerancesPreservingAspectRatio, getTrajectoryExtremes} from "./plot-utils";
 
-export function MiniPlotFriction({className, trajectoryData, frictionData, hoveredPoint}) {
+export function MiniPlotFriction({className, trajectoryData, frictionInTime, vectorsInTime, hoveredPoint}) {
     const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const radius = 0.05;
 
@@ -15,25 +13,19 @@ export function MiniPlotFriction({className, trajectoryData, frictionData, hover
     const ySize = useMemo(() => maxY - minY, [maxY, minY]);
 
     const {width, height, ref} = useResizeDetector();
-    const {vectors, getKinematicVectorsFromTime} = useKinematicVectorsContext();
 
     const hoveredPointData = trajectoryData[hoveredPoint];
 
-    const hoveredPointDynamics = hoveredPoint !== null ? frictionData.forces.find(it => it.time === hoveredPointData.time): null
-    const frictionInTime = hoveredPointDynamics?.friction
-
     const arrows = useMemo(() => {
-        if (vectors === null || trajectoryData === null || hoveredPoint === null || frictionData === null) {
+        if (trajectoryData === null || hoveredPoint === null) {
             return null;
         }
-        const time = hoveredPointData.time;
         const x = hoveredPointData.cartesian.x / 10;
         const y = hoveredPointData.cartesian.y / 10;
-        const vectorsInTime = getKinematicVectorsFromTime(time);
-        if(vectorsInTime === undefined)
+        if(vectorsInTime === undefined || frictionInTime === undefined)
             return [];
         return [speedArrow(vectorsInTime, x, y), frictionArrow(frictionInTime, x, y), normalFrictionArrow(frictionInTime, x, y), tangentialFrictionArrow(frictionInTime, x, y)]
-    }, [vectors, trajectoryData, hoveredPoint, getKinematicVectorsFromTime]);
+    }, [frictionInTime, hoveredPointData.cartesian.x, hoveredPointData.cartesian.y, hoveredPointData.time.vectors, trajectoryData, hoveredPoint]);
 
 
     let range = {
