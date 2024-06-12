@@ -48,7 +48,7 @@ export function PositionsPlot({className, timeUnit}) {
         <div className={className + " items-center flex justify-center w-full h-full overflow-clip"}>
             {trajectoryData !== null ?
                 <>
-                    <CoordinateSystemSelector coordinateSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} orderedSystems={orderedSystems} />
+                    <CoordinateSystemSelector currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} orderedSystems={orderedSystems} />
                     {plots}
                 </>
                 :

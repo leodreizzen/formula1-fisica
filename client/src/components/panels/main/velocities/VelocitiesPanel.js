@@ -36,7 +36,7 @@ export default function VelocitiesPanel({ className }) {
             <div className="items-center flex justify-center w-full h-full overflow-clip">
                 {vectors !== null ?
                     <>
-                        <CoordinateSystemSelector coordinateSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} orderedSystems={orderedSystems} />
+                        <CoordinateSystemSelector currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} orderedSystems={orderedSystems} />
                         {plots}
                     </>
                     :

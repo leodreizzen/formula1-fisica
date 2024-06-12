@@ -1,4 +1,4 @@
-export function CoordinateSystemSelector({ className, coordinateSystem, onCoordinateSystemChange, orderedSystems }) {
+export function CoordinateSystemSelector({ className, currentSystem, onCoordinateSystemChange, orderedSystems }) {
     const systemLabels = {
         cartesian: "Cartesianas",
         polar: "Polares",
@@ -12,16 +12,16 @@ export function CoordinateSystemSelector({ className, coordinateSystem, onCoordi
                     <input
                         type="radio"
                         id={system}
-                        name="coordinateSystem"
+                        name="coordinateSystemSelector"
                         value={system}
                         className="hidden"
-                        checked={coordinateSystem === system}
+                        checked={currentSystem === system}
                         onChange={onCoordinateSystemChange}
                     />
                     <label
                         htmlFor={system}
                         className={`no-select flex items-center justify-center p-2 border border-white rounded-full cursor-pointer w-28 ${
-                            coordinateSystem === system ? "bg-blue-600 text-white" : "bg-white text-black"
+                            currentSystem === system ? "bg-blue-600 text-white" : "bg-white text-black"
                         }`}
                     >
                         {systemLabels[system]}
