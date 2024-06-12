@@ -204,6 +204,7 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
         "time": datos_aceleraciones["Time"],
         "x": datos_aceleraciones["X"],
         "y": datos_aceleraciones["Y"],
+        "modulo_velocidad_xy": datos_aceleraciones["modulo_velocidad_xy"],
         "friction": {
             "frx": 0,
             "fry": 0,
