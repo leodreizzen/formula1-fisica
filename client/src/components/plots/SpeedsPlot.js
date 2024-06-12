@@ -1,4 +1,3 @@
-import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import {useMemo, useState} from "react";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import {OrbitProgress} from "react-loading-indicators";
