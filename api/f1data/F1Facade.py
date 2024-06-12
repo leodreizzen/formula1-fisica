@@ -21,5 +21,5 @@ class F1Facade(ABC):
         raise NotImplementedError("Method not implemented")
 
     @abstractmethod
-    def telemetry(self,year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int):
+    def telemetry(self,year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int, interpolated=True):
         raise NotImplementedError("Method not implemented")
