@@ -3,15 +3,16 @@ import { useMemo } from 'react';
 import { timeDeltaToTimeUnit } from '../../client-util';
 import BasePlot from "./BasePlot";
 
-const thetaWithDot = '\u03B8\u0307';
+const rWithDoubleDot = 'r\u0308'; 
+const thetaWithDot = '\u03B8\u0308';
 
-export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
+export default function PolarAccelerationPlot({ className, timeUnit, vectors }) {
     const plotData = useMemo(() => {
         let data = [];
         if (vectors) {
             data.push({
                 x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: vectors.map(it => it.velocity.r_dot / 10),
+                y: vectors.map(it => it.acceleration.r_double_dot / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'red' },
@@ -19,7 +20,7 @@ export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
             })
             data.push({
                 x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: vectors.map(it => it.velocity.theta_dot / 10),
+                y: vectors.map(it => it.acceleration.theta_double_dot / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'orange' },
@@ -57,7 +58,7 @@ export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
             },
 
             yaxis1: {
-                title: 'ṙ(m)',
+                title: rWithDoubleDot + ' (m)',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
