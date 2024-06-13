@@ -163,6 +163,46 @@ paths:
            description: Alguno de los parámetros es inválido  
 
 
+
+
+  /neck_forces:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+    get:
+      description: Obtener las fuerzas en el cuello de un conductor en una vuelta
+      responses:
+        '200':
+          description: Fuerzas en el cuello del conductor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  time:
+                    $ref: '#/components/parameters/relativeTimestamp'
+                  frontal_neck_force:
+                    type: number
+                    description: Fuerza frontal en el cuello
+                  lateral_neck_force:
+                    type: number
+                    description: Fuerza lateral en el cuello
+                  frontal_g_force:
+                    type: number
+                    description: Fuerza G frontal
+                  lateral_g_force:
+                    type: number
+                    description: Fuerza G lateral
+
+
+        '400':
+          description: Alguno de los parámetros es inválido
+
+
+
   /kinematics_vectors:
     parameters:
       - $ref: "#/components/parameters/roundYear"
@@ -381,3 +421,4 @@ components:
               type: number
             y:
               type: number
+

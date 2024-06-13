@@ -226,12 +226,10 @@ def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: i
     for index, row in lap_telemetry.iterrows():  #todas las fuerzas son devueltas en Newton pero en dm, hay que dividir por 10 para pasar a m
         fuerzas_cuello.append({
             "time": timedelta_to_string(row["Time"]),
-            "fuerza_cuello_frontal": row["fuerza_cuello_frontal"],
-            "fuerza_cuello_lateral": row["fuerza_cuello_lateral"],
-            "fuerza_g_horizontal": row["fuerza_g_horizontal"],
-            "fuerza_g_lateral": row["fuerza_g_lateral"],
-            "aceleracion_normal": row["a_normal"],
-            "aceleracion_tangencial": row["aTangential"]
+            "frontal_neck_force": row["fuerza_cuello_frontal"],
+            "lateral_neck_force": row["fuerza_cuello_lateral"],
+            "frontal_g_force": row["fuerza_g_horizontal"],
+            "lateral_g_force": row["fuerza_g_lateral"]
         })
 
     return fuerzas_cuello
