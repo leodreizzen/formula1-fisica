@@ -1,17 +1,15 @@
-import { plotStyles } from '../../styles';
-import { useMemo } from 'react';
-import { timeDeltaToTimeUnit } from '../../client-util';
+import {plotStyles} from "../../styles";
+import {useMemo} from "react";
+import {timeDeltaToTimeUnit} from "../../client-util";
 import BasePlot from "./BasePlot";
 
-const thetaWithDot = '\u03B8\u0307';
-
-export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
+export default function CartesianSpeedPlot({ className, timeUnit, vectors }) {
     const plotData = useMemo(() => {
         let data = [];
         if (vectors) {
             data.push({
                 x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: vectors.map(it => it.velocity.r_dot / 10),
+                y: vectors.map(it => it.velocity.vX / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'red' },
@@ -19,11 +17,19 @@ export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
             })
             data.push({
                 x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: vectors.map(it => it.velocity.theta_dot / 10),
+                y: vectors.map(it => it.velocity.vY / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: 'orange' },
                 xaxis: 'x2', yaxis: 'y2', showlegend: false, name: ""
+            })
+            data.push({
+                x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
+                y: vectors.map(it => it.velocity.vZ / 10),
+                type: 'scatter',
+                mode: 'lines',
+                marker: {color: 'blue'},
+                xaxis: 'x3', yaxis: 'y3', showlegend: false, name:""
             })
         }
         return data;
@@ -55,21 +61,32 @@ export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
                 titlefont: xAxisFont,
                 tolerance: 0.1
             },
-
+            xaxis3: {
+                anchor: 'x',
+                matches: 'x',
+                title: 'Tiempo [' + timeUnit + "]",
+                titlefont: xAxisFont,
+                tolerance: 0.1
+            },
             yaxis1: {
-                title: 'ṙ [m/s]',
+                title: 'Vx [m/s]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
             yaxis2: {
-                title: thetaWithDot + ' [rad/s]',
+                title: 'Vy [m/s]',
                 titlefont: yAxisFont,
                 tolerance: 0.1,
                 tickfont: yAxisFont,
                 rangemode: 'tozero',
             },
+            yaxis3: {
+                title: 'Vz [m/s]',
+                titlefont: yAxisFont,
+                tolerance: 0.1
+            },
             margin: { t: 20 },
-            grid: { rows: 2, columns: 1, pattern: 'independent' },
+            grid: { rows: 3, columns: 1, pattern: 'independent' },
             dragmode: "pan"
         };
     }, [timeUnit]);

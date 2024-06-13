@@ -5,12 +5,13 @@ import { CoordinateSystemSelector } from "../../../inputs/CoordinateSystemSelect
 import { useKinematicVectorsContext } from "../../../../context/KinematicVectorsContext";
 import PolarAccelerationPlot from "../../../plots/PolarAccelerationPlot";
 import { useState } from "react";
+import CartesianAccelerationPlot from "../../../plots/CartesianAccelerationPlot";
 
 export default function AccelerationsPanel({className}){
     const [coordinateSystem, setCoordinateSystem] = useState("intrinsic");
 
     const {vectors} = useKinematicVectorsContext();
-    const orderedSystems = ["intrinsic", "polar"];
+    const orderedSystems = ["intrinsic", "polar", "cartesian"];
 
     const handleCoordinateSystemChange = (event) => {
         setCoordinateSystem(event.target.value);
@@ -23,6 +24,9 @@ export default function AccelerationsPanel({className}){
             break;
         case "polar":
             plots = <PolarAccelerationPlot className="grow pt-2 h-2/3" timeUnit={"s"}  vectors={vectors}/>;
+            break;
+        case "cartesian":
+            plots = <CartesianAccelerationPlot className="grow pt-2 h-2/3" timeUnit={"s"}  vectors={vectors}/>;
             break;
         default:
             plots = null;

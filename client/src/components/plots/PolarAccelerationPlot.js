@@ -58,12 +58,12 @@ export default function PolarAccelerationPlot({ className, timeUnit, vectors }) 
             },
 
             yaxis1: {
-                title: rWithDoubleDot + ' (m)',
+                title: rWithDoubleDot + ' [m/s²]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
             yaxis2: {
-                title: thetaWithDot + ' (rad)',
+                title: thetaWithDot + ' [rad/s²]',
                 titlefont: yAxisFont,
                 tolerance: 0.1,
                 tickfont: yAxisFont,
