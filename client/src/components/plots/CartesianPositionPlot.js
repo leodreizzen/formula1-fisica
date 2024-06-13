@@ -1,4 +1,4 @@
-import {plotStyles} from "../../styles";
+import {plotStyles, primaryGraphColor, secondaryGraphColor, thirdGraphColor} from "../../styles";
 import {useMemo} from "react";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import BasePlot from "./BasePlot";
@@ -13,7 +13,7 @@ function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
                 y: trajectoryData.map(it => it.cartesian.x / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'red'},
+                marker: {color: primaryGraphColor},
                 xaxis: 'x1', yaxis: 'y1', showlegend: false, name:""
             })
             data.push({
@@ -21,7 +21,7 @@ function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
                 y: trajectoryData.map(it => it.cartesian.y / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'orange'},
+                marker: {color: secondaryGraphColor},
                 xaxis: 'x2', yaxis: 'y2', showlegend: false, name:""
             })
             data.push({
@@ -29,7 +29,7 @@ function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
                 y: trajectoryData.map(it => it.cartesian.z / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'blue'},
+                marker: {color: thirdGraphColor},
                 xaxis: 'x3', yaxis: 'y3', showlegend: false, name:""
             })
         }
@@ -70,18 +70,18 @@ function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
             },
 
             yaxis1: {
-                title: 'X(m)',
+                title: 'X [m]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
 
             },
             yaxis2: {
-                title: 'Y(m)',
+                title: 'Y [m]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
             yaxis3: {
-                title: 'Z(m)',
+                title: 'Z [m]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },

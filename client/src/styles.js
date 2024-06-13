@@ -17,5 +17,9 @@ export const normalAccelerationColor = "orange"
 export const tangentialAccelerationColor = "pink"
 export const speedColor = "pink"
 
+export const primaryGraphColor = "orange"
+export const secondaryGraphColor = "DA0037"
+export const thirdGraphColor = "03C988"
+
 export const primaryDriverColor = "red"
 export const secondaryDriverColor = "yellow"

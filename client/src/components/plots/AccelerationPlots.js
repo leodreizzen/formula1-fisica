@@ -4,6 +4,7 @@ import {timeDeltaToTimeUnit} from "../../client-util";
 import {OrbitProgress} from "react-loading-indicators";
 import {useMemo} from "react";
 import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
+import {primaryGraphColor, secondaryGraphColor, thirdGraphColor} from "../../styles";
 
 export default function AccelerationPlots({className, timeUnit}) {
     const {vectors} = useKinematicVectorsContext();
@@ -13,7 +14,7 @@ export default function AccelerationPlots({className, timeUnit}) {
                 y: vectors?.map(it => it.acceleration.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'red'},
+                marker: {color: primaryGraphColor},
             }
         }, [vectors, timeUnit]);
 
@@ -23,7 +24,7 @@ export default function AccelerationPlots({className, timeUnit}) {
             y: vectors?.map(it => it.acceleration.aTangential / 10),
             type: 'scatter',
             mode: 'lines',
-            marker: {color: 'orange'},
+            marker: {color: secondaryGraphColor},
         }
     }, [vectors, timeUnit]);
     const normalTrace = useMemo(()=>{
@@ -33,7 +34,7 @@ export default function AccelerationPlots({className, timeUnit}) {
             y: vectors?.map(it => it.acceleration.aNormal / 10),
             type: 'scatter',
             mode: 'lines',
-            marker: {color: 'blue'},
+            marker: {color: thirdGraphColor},
         }
     }, [vectors, timeUnit]);
 

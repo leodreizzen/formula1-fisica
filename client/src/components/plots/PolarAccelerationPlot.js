@@ -1,4 +1,4 @@
-import { plotStyles } from '../../styles';
+import { plotStyles, primaryGraphColor, secondaryGraphColor} from '../../styles';
 import { useMemo } from 'react';
 import { timeDeltaToTimeUnit } from '../../client-util';
 import BasePlot from "./BasePlot";
@@ -15,7 +15,7 @@ export default function PolarAccelerationPlot({ className, timeUnit, vectors }) 
                 y: vectors.map(it => it.acceleration.r_double_dot / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'red' },
+                marker: { color: primaryGraphColor },
                 xaxis: 'x1', yaxis: 'y1', showlegend: false, name: ""
             })
             data.push({
@@ -23,7 +23,7 @@ export default function PolarAccelerationPlot({ className, timeUnit, vectors }) 
                 y: vectors.map(it => it.acceleration.theta_double_dot / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'orange' },
+                marker: { color: secondaryGraphColor },
                 xaxis: 'x2', yaxis: 'y2', showlegend: false, name: ""
             })
         }

@@ -1,4 +1,4 @@
-import {plotStyles} from "../../styles";
+import {plotStyles, primaryGraphColor, secondaryGraphColor, thirdGraphColor} from "../../styles";
 import {useMemo} from "react";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import BasePlot from "./BasePlot";
@@ -12,7 +12,7 @@ export default function CartesianAccelerationPlot({ className, timeUnit, vectors
                 y: vectors.map(it => it.acceleration.aX / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'red' },
+                marker: { color: primaryGraphColor },
                 xaxis: 'x1', yaxis: 'y1', showlegend: false, name: ""
             })
             data.push({
@@ -20,7 +20,7 @@ export default function CartesianAccelerationPlot({ className, timeUnit, vectors
                 y: vectors.map(it => it.acceleration.aY / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: { color: 'orange' },
+                marker: { color: secondaryGraphColor },
                 xaxis: 'x2', yaxis: 'y2', showlegend: false, name: ""
             })
             data.push({
@@ -28,7 +28,7 @@ export default function CartesianAccelerationPlot({ className, timeUnit, vectors
                 y: vectors.map(it => it.acceleration.aZ / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'blue'},
+                marker: {color: thirdGraphColor},
                 xaxis: 'x3', yaxis: 'y3', showlegend: false, name:""
             })
         }

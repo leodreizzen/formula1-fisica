@@ -1,6 +1,7 @@
 import {useMemo, useState} from "react";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import {OrbitProgress} from "react-loading-indicators";
+import {primaryGraphColor, secondaryGraphColor} from "../../styles";
 import BasePlot from "./BasePlot";
 
 export default function SpeedsPlot({className, timeUnit, vectors})  {
@@ -17,7 +18,7 @@ export default function SpeedsPlot({className, timeUnit, vectors})  {
                 y: vectors?.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'red'},
+                marker: {color: secondaryGraphColor},
             }
         }, [vectors, timeUnit]);
 
@@ -27,7 +28,7 @@ export default function SpeedsPlot({className, timeUnit, vectors})  {
             y: vectors?.map(it => it.velocity.speedometer / 10),
             type: 'scatter',
             mode: 'lines',
-            marker: {color: 'orange'},
+            marker: {color: primaryGraphColor},
         }
     }, [vectors, timeUnit]);
 
