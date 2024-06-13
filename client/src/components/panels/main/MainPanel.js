@@ -33,7 +33,7 @@ export default function MainPanel({className}) {
                                             <Tab disabled={driverData.drivers === null ? true : null}>Velocidades</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Aceleraciones</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Comparativas</Tab>
-                                            <Tab disabled={driverData.drivers === null ? true : null}>Velocidad en trayectoria</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento y velocidad máxima</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento</Tab>
                                         </TabList>
 

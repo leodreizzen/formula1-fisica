@@ -9,21 +9,30 @@ import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
 
 
-export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frictionData, frictionInTime, vectorsInTime, hoveredPoint, setHoveredPoint}) {
+export default function TrajectoryMaxSpeedPlot({
+                                                   className,
+                                                   trajectoryData,
+                                                   frictionData,
+                                                   frictionInTime,
+                                                   vectorsInTime,
+                                                   hoveredPoint,
+                                                   setHoveredPoint
+                                               }) {
     const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
     const LEGEND_ITEM_WIDTH = 30;
 
-    const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
+    const {minX, minY, maxX, maxY} = useMemo(() => getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
 
-    function getPaperWidth(width){
+    function getPaperWidth(width) {
         return width - MARGINS.l - MARGINS.r;
     }
-    function getPaperHeight(height){
+
+    function getPaperHeight(height) {
         return height - MARGINS.t - MARGINS.b;
     }
 
-    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, getPaperWidth(width), getPaperHeight(height) , 0.05, 0.05)
+    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, getPaperWidth(width), getPaperHeight(height), 0.05, 0.05)
 
 
     function handleSizeChange(newSize, previousSize, ranges) {
@@ -31,7 +40,10 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
         const yRangeInput = ranges.yRanges.get("yaxis")
         let previousRange = {x0: xRangeInput[0], x1: xRangeInput[1], y0: yRangeInput[0], y1: yRangeInput[1]}
 
-        const previousPaperSize = {width: getPaperWidth(previousSize.width), height: getPaperHeight(previousSize.height)}
+        const previousPaperSize = {
+            width: getPaperWidth(previousSize.width),
+            height: getPaperHeight(previousSize.height)
+        }
         const newPaperSize = {width: getPaperWidth(newSize.width), height: getPaperHeight(newSize.height)}
 
         if (newPaperSize.width !== previousPaperSize.width) {
@@ -51,19 +63,18 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
         setHoveredPoint(point)
     }
 
-    function getPointFromHoverData(data){
+    function getPointFromHoverData(data) {
         const point = data.points[0]
         const index = data.points[0].pointIndex;
         if (point.curveNumber === 0)
             return index;
-        else if (point.curveNumber === 1){
+        else if (point.curveNumber === 1) {
             const trajectoryPoint = trajectoryData.findIndex(it => it.cartesian.x / 10 === point.x && it.cartesian.y / 10 === point.y)
             if (trajectoryPoint !== undefined)
                 return trajectoryPoint;
             else
                 console.log("Point not found")
-        }
-        else
+        } else
             throw new Error("Unknown curve");
     }
 
@@ -102,31 +113,32 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
         }
 
         if (frictionData) {
-
-            const frictionDataWithMaxSpeed = frictionData.forces.filter(it => it.friction.hasMaxSpeed)
-            if(frictionDataWithMaxSpeed){
-                data.push({
-                x: frictionDataWithMaxSpeed.map(it => (it.x / 10)),
-                y: frictionDataWithMaxSpeed.map(it => (it.y / 10)),
+            data.push({
+                x: frictionData.forces.map(it => (it.x / 10)),
+                y: frictionData.forces.map(it => (it.y / 10)),
                 name: "v max / v",
                 type: "scatter",
                 mode: "markers",
-                    text: frictionDataWithMaxSpeed.map(it => (it.friction.maxSpeed / it.module_velocity_xy).toFixed(4)),
+                showlegend: false,
+                text: frictionData.forces.map(it => it.friction.hasMaxSpeed ? ((it.module_velocity_xy / it.friction.maxSpeed).toFixed(4)) : ""),
                 marker: {
-                    color: frictionDataWithMaxSpeed.map(it => it.friction.maxSpeed / it.module_velocity_xy),
+                    color: frictionData.forces.map(it => (it.friction.hasMaxSpeed) ? (it.module_velocity_xy / it.friction.maxSpeed) : -1),
                     colorscale: [
-                        ['0.0', 'rgb(255,77,77)'],
-                        ['0.1', 'rgb(237, 94, 79)'],
-                        ['0.2', 'rgb(210, 111, 61)'],
-                        ['0.3', 'rgb(200, 128, 82)'],
-                        ['0.4', 'rgb(182, 145, 84)'],
+                        ['0', 'rgba(0,0,0,0)'],
+                        ['0.00001', 'rgb(72, 248, 95)'],
+                        ['0.1', 'rgb(90, 231, 93)'],
+                        ['0.2', 'rgb(109, 214, 91)'],
+                        ['0.3', 'rgb(127, 197, 90)'],
+                        ['0.4', 'rgb(145, 180, 88)'],
                         ['0.5', 'rgb(164, 163, 86)'],
-                        ['0.6', 'rgb(145, 180, 88)'],
-                        ['0.7', 'rgb(127, 197, 90)'],
-                        ['0.8', 'rgb(109, 214, 91)'],
-                        ['0.9', 'rgb(90, 231, 93)'],
-                        ['1.0', 'rgb(72, 248, 95)']
+                        ['0.6', 'rgb(182, 145, 84)'],
+                        ['0.7', 'rgb(200, 128, 82)'],
+                        ['0.8', 'rgb(210, 111, 61)'],
+                        ['0.9', 'rgb(237, 94, 79)'],
+                        ['1.0', 'rgb(255,77,77)'],
                     ],
+                    cmin: 0,
+                    cmax: 1,
                     hoverinfo: 'none',
                     colorbar: {
                         xref: "container",
@@ -139,12 +151,10 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
                         orientation: 'v',
                         thickness: colorBarThickness,
                         tickwidth: 0,
-                        textfont: {size: 1},
-                        tickmode: "auto",
+                        textfont: {size: 1}
                     }
                 },
             })
-            }
         }
         return data;
     }, [trajectoryData, frictionData, MARGINS.r, width]);
@@ -163,7 +173,7 @@ export default function TrajectoryMaxSpeedPlot({className, trajectoryData, frict
                 tolerance: yTolerance / (maxY - minY)
             },
             annotations: arrows,
-            legend:{
+            legend: {
                 xref: "container",
                 x: 1 - MARGINS.r / width / 2,
                 valign: "middle",

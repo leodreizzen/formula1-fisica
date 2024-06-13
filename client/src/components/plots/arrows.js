@@ -102,15 +102,15 @@ export function accelerationArrow(vectors, x, y) {
     }
 }
 
+const vectorscale = 0.01;
 export function frictionArrow(friction, x, y){
     const frictionX = friction.frx / 10;
     const frictionY = friction.fry / 10;
-
      return {
         ax: x,
         ay: y,
-        x: x + frictionX,
-        y: y + frictionY,
+        x: x + frictionX * vectorscale,
+        y: y + frictionY * vectorscale,
         xref: 'x',
         yref: 'y',
         axref: 'x',
@@ -134,8 +134,8 @@ export function normalFrictionArrow(friction, x, y){
     return {
         ax: x,
         ay: y,
-        x: x + arrowX,
-        y: y + arrowY,
+        x: x + arrowX * vectorscale,
+        y: y + arrowY * vectorscale,
         xref: 'x',
         yref: 'y',
         axref: 'x',
@@ -159,8 +159,8 @@ export function tangentialFrictionArrow(friction, x, y){
     return {
         ax: x,
         ay: y,
-        x: x + arrowX,
-        y: y + arrowY,
+        x: x + arrowX * vectorscale,
+        y: y + arrowY * vectorscale,
         xref: 'x',
         yref: 'y',
         axref: 'x',

@@ -1,6 +1,6 @@
 import {frictionColor, normalFrictionColor, trajectoryColor, speedColor, tangentialFrictionColor, maxSpeedColor, speedometerColor} from "../../../../styles";
 
-export default function HoveredPointDataMaxSpeed({trajectoryData, hoveredPoint, frictionInTime, vectorsInTime}){
+export default function HoveredPointDataMaxSpeed({trajectoryData, frictionData, hoveredPoint, frictionInTime, vectorsInTime}){
 
     return(
         <div className="flex flex-col text-xs/4 lg:text-xs/5 xl:text-base 2xl:text-xl no-select">
@@ -29,9 +29,9 @@ export default function HoveredPointDataMaxSpeed({trajectoryData, hoveredPoint, 
                 </tr>
                 <tr style={{color: frictionColor}}>
                     <th>rozamiento</th>
-                    <td>{frictionInTime === undefined ? "-" :  (frictionInTime.module / 10).toFixed(2) + "N"}</td>
-                    <td>{frictionInTime === undefined ? "-" : (frictionInTime.tangential / 10).toFixed(2) + "N"}</td>
-                    <td>{frictionInTime === undefined ? "-" : (frictionInTime.normal / 10).toFixed(2) + "N"}</td>
+                    <td>{frictionInTime === undefined ? "-" : (frictionData.forces.x / 10).toFixed(2) + "N"}</td>
+                    <td>{frictionInTime === undefined ? "-" : (frictionData.forces.y / 10).toFixed(2) + "N"}</td>
+                    <td>{frictionInTime === undefined ? "-" : "- N"}</td>
                 </tr>
                 </tbody>
             </table>

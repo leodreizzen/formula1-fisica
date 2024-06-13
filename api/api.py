@@ -200,7 +200,7 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
 
     # Cota inferior del coeficiente de rozamiento estático máximo.
     datos_aceleraciones["friction_coefficient"] = datos_aceleraciones.apply(
-        lambda row: row["a_normal"] / 9.82 if row["a_normal"] != 0 else 0,
+        lambda row: row["a_normal"] / 9.81 if row["a_normal"] != 0 else 0,
         axis=1
     )
 
@@ -209,6 +209,7 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
     datos_aceleraciones["friction_module"] = datos_aceleraciones["modulo_velocidad"] * mass_car
     datos_aceleraciones["friction_tangential"] = datos_aceleraciones["aTangential"] * mass_car
     datos_aceleraciones["friction_normal"] = datos_aceleraciones["a_normal"] * mass_car
+
 
     forces_array = []
 
@@ -239,8 +240,11 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
             }
         })
 
+    friction_coefficient = datos_aceleraciones["friction_coefficient"].max()
+    max_friction = mass_car * 9.81
     dynamics_json = {
-        "coefficient_friction": datos_aceleraciones["friction_coefficient"].max(),
+        "coefficient_friction": friction_coefficient,
+        "max_friction": max_friction,
         "forces": forces_array
     }
 

@@ -31,7 +31,7 @@ export default function TrajectoryInfoMaxSpeed({className=""}) {
         <div className={"flex flex-col items-center sm:flex-row overflow-clip " + className}>
             <TrajectoryMaxSpeedPlot className="h-full w-6/12 lg:w-7/12 2xl:w-8/12" trajectoryData={trajectoryData} frictionData={frictionData} hoveredPoint={hoveredPoint} setHoveredPoint={setHoveredPoint} frictionInTime={frictionInTime} vectorsInTime={vectorsInTime}/>
             <div className="h-4/5 lg:h-5/6 2xl:h-4/6 w-6/12 lg:w-5/12 2xl:w-4/12 flex items-center">
-                <TrajectorySidePanelMaxSpeed className="h-full w-4/5 mx-auto" trajectoryData={trajectoryData} hoveredPoint={hoveredPoint} frictionInTime={frictionInTime} vectorsInTime={vectorsInTime}/>
+                <TrajectorySidePanelMaxSpeed className="h-full w-4/5 mx-auto" trajectoryData={trajectoryData} frictionData={frictionData}  hoveredPoint={hoveredPoint} frictionInTime={frictionInTime} vectorsInTime={vectorsInTime}/>
             </div>
         </div>
     )

@@ -42,7 +42,6 @@ export default function FrictionsPlots({className, timeUnit}) {
     }, [frictionData, timeTraces]);
     const normalTrace = useMemo(()=>{
         return {
-
             x: timeTraces,
             y: frictionData?.forces.map(it => it.friction.normal / 10),
             type: 'scatter',
@@ -51,25 +50,15 @@ export default function FrictionsPlots({className, timeUnit}) {
         }
     }, [timeTraces, frictionData]);
 
-     const staticCoefficientTrace = useMemo(()=>{
-        return {
-            x: timeTraces,
-            y: (frictionData?.coefficient_friction / 10).toFixed(2),
-            type: 'scatter',
-            mode: 'lines',
-            marker: {color: 'purple'},
-        }
-    }, [timeTraces, frictionData]);
-
-    const splitTraces = {moduleTrace, tangentialTrace, normalTrace};
-    const overlappingTraces = {moduleTrace, tangentialTrace, normalTrace, staticCoefficientTrace};
+    const traces = {moduleTrace, tangentialTrace, normalTrace};
 
     return (
         <div className={className + " flex justify-center w-full overflow-clip"}>
             {frictionData !== null ?
                 <>
-                    <OverlappingFrictionsPlot className="w-1/2 h-full" timeUnit={timeUnit} traces={overlappingTraces}/>
-                    <SplitFrictionsPlot className="w-1/2 h-full" timeUnit={timeUnit} traces={splitTraces}/>
+                    <OverlappingFrictionsPlot className="w-1/2 h-full" timeUnit={timeUnit} traces={traces}
+                    maxFrictionValue = {frictionData?.max_friction} coefficientValue = {frictionData?.coefficient_friction}/>
+                    <SplitFrictionsPlot className="w-1/2 h-full" timeUnit={timeUnit} traces={traces}/>
                 </>
                 :
                 <>
