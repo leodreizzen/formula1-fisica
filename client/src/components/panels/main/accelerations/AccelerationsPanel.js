@@ -8,10 +8,9 @@ import { useState } from "react";
 import CartesianAccelerationPlot from "../../../plots/CartesianAccelerationPlot";
 
 export default function AccelerationsPanel({className}){
-    const [coordinateSystem, setCoordinateSystem] = useState("intrinsic");
+    const [coordinateSystem, setCoordinateSystem] = useState("cartesian");
 
     const {vectors} = useKinematicVectorsContext();
-    const orderedSystems = ["intrinsic", "polar", "cartesian"];
 
     const handleCoordinateSystemChange = (event) => {
         setCoordinateSystem(event.target.value);
@@ -19,14 +18,14 @@ export default function AccelerationsPanel({className}){
 
     let plots;
     switch (coordinateSystem) {
-        case "intrinsic":
-            plots = <AccelerationPlots className="grow pt-2 h-2/3"  timeUnit={"s"}/>;
+        case "cartesian":
+            plots = <CartesianAccelerationPlot className="grow pt-2 h-2/3" timeUnit={"s"}  vectors={vectors}/>;
             break;
         case "polar":
             plots = <PolarAccelerationPlot className="grow pt-2 h-2/3" timeUnit={"s"}  vectors={vectors}/>;
             break;
-        case "cartesian":
-            plots = <CartesianAccelerationPlot className="grow pt-2 h-2/3" timeUnit={"s"}  vectors={vectors}/>;
+        case "intrinsic":
+            plots = <AccelerationPlots className="grow pt-2 h-2/3"  timeUnit={"s"}/>;
             break;
         default:
             plots = null;
@@ -37,7 +36,7 @@ export default function AccelerationsPanel({className}){
     <div className={className + " flex flex-col items-center overflow-clip h-full"}>
         <MainDriverSelector/>
         {plots}
-        <CoordinateSystemSelector className={"flex"} currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} orderedSystems={orderedSystems}/>
+        <CoordinateSystemSelector className={"flex"} currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange}/>
         <MainLapSelector className="mb-3 p-1 pl-6 pr-6"/>
     </div>);
 }

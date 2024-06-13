@@ -1,14 +1,16 @@
-export function CoordinateSystemSelector({ className, currentSystem, onCoordinateSystemChange, orderedSystems }) {
+export function CoordinateSystemSelector({ className, currentSystem, onCoordinateSystemChange }) {
     const systemLabels = {
         cartesian: "Cartesianas",
         polar: "Polares",
         intrinsic: "Intrínsecas"
-    };
+    }
+
+    const coordinateSystems = ["cartesian", "polar", "intrinsic"];
 
     return (
         <div className={`${className}`}>
-            {orderedSystems.map(system => (
-                <div key={system} className="mt-4 mr-2 ml-2 w-full flex justify-center">
+            {coordinateSystems.map(system => (
+                <div key={system} className="mt-4 mx-2 w-full flex justify-center">
                     <input
                         type="radio"
                         id={system}

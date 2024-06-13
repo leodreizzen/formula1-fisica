@@ -9,25 +9,23 @@ import { OrbitProgress } from "react-loading-indicators";
 import CartesianSpeedPlot from "../../../plots/CartesianSpeedPlot";
 
 export default function VelocitiesPanel({ className }) {
-    const [coordinateSystem, setCoordinateSystem] = useState("intrinsic");
+    const [coordinateSystem, setCoordinateSystem] = useState("cartesian");
     const {vectors} = useKinematicVectorsContext();
 
     const handleCoordinateSystemChange = (event) => {
         setCoordinateSystem(event.target.value);
     };
 
-    const orderedSystems = ["intrinsic", "polar", "cartesian"];
-
     let plots;
     switch (coordinateSystem) {
-        case "intrinsic":
-            plots = <SpeedsPlot className="w-7/12 h-full ml-4" timeUnit={"s"} vectors={vectors} />;
+        case "cartesian":
+            plots = <CartesianSpeedPlot className="w-7/12 h-full ml-4" timeUnit={"s"}  vectors={vectors}/>;
             break;
         case "polar":
             plots = <PolarSpeedPlot className="w-7/12 h-full ml-4" timeUnit={"s"}  vectors={vectors}/>;
             break;
-        case "cartesian":
-            plots = <CartesianSpeedPlot className="w-7/12 h-full ml-4" timeUnit={"s"}  vectors={vectors}/>;
+        case "intrinsic":
+            plots = <SpeedsPlot className="w-7/12 h-full ml-4" timeUnit={"s"} vectors={vectors} />;
             break;
         default:
             plots = null;
@@ -40,7 +38,7 @@ export default function VelocitiesPanel({ className }) {
             <div className="items-center flex justify-center w-full h-full overflow-clip">
                 {vectors !== null ?
                     <>
-                        <CoordinateSystemSelector currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} orderedSystems={orderedSystems} />
+                        <CoordinateSystemSelector currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} />
                         {plots}
                     </>
                     :

@@ -25,18 +25,16 @@ export function PositionsPlot({className, timeUnit}) {
         setCoordinateSystem(event.target.value);
     };
 
-    const orderedSystems = ["cartesian", "polar", "intrinsic"];
-
     let plots;
     switch (coordinateSystem) {
         case "cartesian":
             plots =  (<CartesianPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit} trajectoryData={trajectoryData} />);
             break;
-        case "intrinsic":
-            plots =  <IntrinsicPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
-            break;
         case "polar":
             plots =  <PolarPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            break;
+        case "intrinsic":
+            plots =  <IntrinsicPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
             break;
         default:
             plots =  null;
@@ -48,7 +46,7 @@ export function PositionsPlot({className, timeUnit}) {
         <div className={className + " items-center flex justify-center w-full h-full overflow-clip"}>
             {trajectoryData !== null ?
                 <>
-                    <CoordinateSystemSelector currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange} orderedSystems={orderedSystems} />
+                    <CoordinateSystemSelector currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange}/>
                     {plots}
                 </>
                 :
