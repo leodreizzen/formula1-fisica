@@ -135,7 +135,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/RelativeTimestamp'
+                  type: object
+                  properties:
+                    time:
+                      $ref: '#/components/schemas/RelativeTimestamp'
+                    x:
+                      type: number
+                      description: Coordenada x de posición
+                    y:
+                      type: number
+                      description: Coordenada y de posición
+                    z:
+                      type: number
+                      description: Coordenada z de posición
+                    drifting:
+                      type: number
+                      description: Grado de derrape entre 0 (leve) y 1 (fuerte)
+
+
         '400':
            description: Alguno de los parámetros es inválido  
 

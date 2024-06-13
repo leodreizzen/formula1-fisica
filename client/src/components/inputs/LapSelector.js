@@ -4,8 +4,7 @@ import { TbExchange } from "react-icons/tb";
 import {useLapContext} from "../../context/LapContext";
 import {OrbitProgress} from "react-loading-indicators";
 
-export default function LapSelector({className}) {
-    const {lapCount, currentLap, setCurrentLap} = useLapContext();
+export default function LapSelector({className, lapCount, currentLap, onCurrentLapChange}) {
     const [currentLapInput, setCurrentLapInput] = useState(currentLap);
 
     useEffect(() => {
@@ -14,16 +13,16 @@ export default function LapSelector({className}) {
     }, [currentLap]);
 
     function buttonClick(){
-        setCurrentLap(currentLapInput);
+        onCurrentLapChange(currentLapInput);
     }
     function onPaginationChange(event, value){
-        setCurrentLap(value);
+        onCurrentLapChange(value);
         setCurrentLapInput(value);
     }
 
     function onLapInputChange(event) {
         let value = Number(event.target.value);
-            setCurrentLapInput(Math.min(value, lapCount));
+        setCurrentLapInput(Math.min(value, lapCount));
     }
 
     const handleKeyDown = e => {
@@ -46,10 +45,10 @@ export default function LapSelector({className}) {
                     <button onClick={buttonClick} className={"border border-black my-4 text-white mr-1"}><TbExchange/>
                     </button>
                     {currentLap !== null && <Pagination variant="outlined" count={lapCount} page={currentLap} onChange={onPaginationChange}
-                                className="grow"/>}
+                                                        className="grow"/>}
                 </>
             </div>
-                : <div className="py-2"><OrbitProgress/></div>
+            : <div className="py-2"><OrbitProgress/></div>
 
     )
 }

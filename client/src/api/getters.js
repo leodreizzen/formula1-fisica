@@ -39,12 +39,32 @@ export function getTrajectory(year, roundNumber, sessionNumber, driverNumber, la
     }, options);
 }
 
-export function getVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
-     return APIGetter("/vectors", {
+export function getKinematicVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
+     return APIGetter("/kinematics_vectors", {
         year: year,
         roundNumber: roundNumber,
         sessionNumber: sessionNumber,
         driverNumber: driverNumber,
         lapNumber: lapNumber
     }, options);
+}
+
+export function getDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
+     return APIGetter("/drifts", {
+         year: year,
+         roundNumber: roundNumber,
+         sessionNumber: sessionNumber,
+         driverNumber: driverNumber,
+         lapNumber: lapNumber
+     }, options);
+}
+
+export function getDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
+     return APIGetter("/dynamics", {
+         year: year,
+         roundNumber: roundNumber,
+         sessionNumber: sessionNumber,
+         driverNumber: driverNumber,
+         lapNumber: lapNumber
+     }, options);
 }

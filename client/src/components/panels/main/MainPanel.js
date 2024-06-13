@@ -6,8 +6,10 @@ import 'react-tabs/style/react-tabs.css';
 import {useSessionDataContext} from "../../../context/SessionDataContext";
 import {DriverContextConsumer, DriverContextProvider} from "../../../context/DriverContext";
 import {LapContextConsumer, LapContextProvider} from "../../../context/LapContext";
-import {VectorsProvider} from "../../../context/VectorsContext";
+import {KinematicVectorsProvider} from "../../../context/KinematicVectorsContext";
+import ComparativePanel from "./comparative/ComparativePanel.js";
 import PositionsPanel from "./positions/PositionsPanel";
+import Comparative_DynamicPanel from "./dynamic_comparative/Comparative_DynamicPanel";
 
 export default function MainPanel({className}) {
     const {year, round, session} = useSessionDataContext();
@@ -20,7 +22,7 @@ export default function MainPanel({className}) {
                                         selectedDriver={driverData.currentDriver ? driverData.currentDriver.driverNumber : null}>
                         <LapContextConsumer>
                             {lapData =>
-                                <VectorsProvider currentDriver={driverData.currentDriver} session={session} round={round} year={year} currentLap={lapData.currentLap}>
+                                <KinematicVectorsProvider currentDriver={driverData.currentDriver} session={session} round={round} year={year} currentLap={lapData.currentLap}>
                                     <Tabs className=" h-full flex flex-col"
                                             selectedTabPanelClassName="react-tabs__tab-panel--selected grow"
                                             selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl">
@@ -29,6 +31,8 @@ export default function MainPanel({className}) {
                                             <Tab disabled={driverData.drivers === null ? true : null}>Posiciones</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Velocidades</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Aceleraciones</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Comparativas</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Comparativas Dinamica</Tab>
                                         </TabList>
 
                                         <TabPanel className="overflow-clip">
@@ -44,9 +48,14 @@ export default function MainPanel({className}) {
                                         <TabPanel className="overflow-clip">
                                             <AccelerationsPanel className="h-full"/>
                                         </TabPanel>
-
+                                        <TabPanel className="overflow-clip">
+                                            <ComparativePanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
+                                            <Comparative_DynamicPanel className="h-full"/>
+                                        </TabPanel>
                                     </Tabs>
-                                </VectorsProvider>
+                                </KinematicVectorsProvider>
                             }
                         </LapContextConsumer>
                     </LapContextProvider>
