@@ -113,48 +113,50 @@ export default function TrajectoryMaxSpeedPlot({
         }
 
         if (frictionData) {
-            data.push({
-                x: frictionData.forces.map(it => (it.x / 10)),
-                y: frictionData.forces.map(it => (it.y / 10)),
-                name: "v max / v",
-                type: "scatter",
-                mode: "markers",
-                showlegend: false,
-                text: frictionData.forces.map(it => it.friction.hasMaxSpeed ? ((it.module_velocity_xy / it.friction.maxSpeed).toFixed(4)) : ""),
-                marker: {
-                    color: frictionData.forces.map(it => (it.friction.hasMaxSpeed) ? (it.module_velocity_xy / it.friction.maxSpeed) : -1),
-                    colorscale: [
-                        ['0', 'rgba(0,0,0,0)'],
-                        ['0.00001', 'rgb(72, 248, 95)'],
-                        ['0.1', 'rgb(90, 231, 93)'],
-                        ['0.2', 'rgb(109, 214, 91)'],
-                        ['0.3', 'rgb(127, 197, 90)'],
-                        ['0.4', 'rgb(145, 180, 88)'],
-                        ['0.5', 'rgb(164, 163, 86)'],
-                        ['0.6', 'rgb(182, 145, 84)'],
-                        ['0.7', 'rgb(200, 128, 82)'],
-                        ['0.8', 'rgb(210, 111, 61)'],
-                        ['0.9', 'rgb(237, 94, 79)'],
-                        ['1.0', 'rgb(255,77,77)'],
-                    ],
-                    cmin: 0,
-                    cmax: 1,
-                    hoverinfo: 'none',
-                    colorbar: {
-                        xref: "container",
-                        yref: "container",
-                        x: 1 - (MARGINS.r) / width / 2,
-                        y: 0.5,
-                        len: 0.8,
-                        yanchor: "middle",
-                        xanchor: "center",
-                        orientation: 'v',
-                        thickness: colorBarThickness,
-                        tickwidth: 0,
-                        textfont: {size: 1}
-                    }
-                },
-            })
+            const frictionDataWithMaxSpeed = frictionData.forces.filter(it => it.friction.hasMaxSpeed)
+            if(frictionDataWithMaxSpeed) {
+                data.push({
+                    x: frictionDataWithMaxSpeed.map(it => (it.x / 10)),
+                    y: frictionDataWithMaxSpeed.map(it => (it.y / 10)),
+                    name: "v max / v",
+                    type: "scatter",
+                    mode: "markers",
+                    showlegend: false,
+                    text: frictionDataWithMaxSpeed.map(it => (it.module_velocity_xy / it.friction.maxSpeed).toFixed(4)),
+                    marker: {
+                        color: frictionDataWithMaxSpeed.map(it => it.module_velocity_xy / it.friction.maxSpeed),
+                        colorscale: [
+                            ['0.0', 'rgb(72, 248, 95)'],
+                            ['0.1', 'rgb(90, 231, 93)'],
+                            ['0.2', 'rgb(109, 214, 91)'],
+                            ['0.3', 'rgb(127, 197, 90)'],
+                            ['0.4', 'rgb(145, 180, 88)'],
+                            ['0.5', 'rgb(164, 163, 86)'],
+                            ['0.6', 'rgb(182, 145, 84)'],
+                            ['0.7', 'rgb(200, 128, 82)'],
+                            ['0.8', 'rgb(210, 111, 61)'],
+                            ['0.9', 'rgb(237, 94, 79)'],
+                            ['1.0', 'rgb(255,77,77)'],
+                        ],
+                        cmin: 0,
+                        cmax: 1,
+                        hoverinfo: 'none',
+                        colorbar: {
+                            xref: "container",
+                            yref: "container",
+                            x: 1 - (MARGINS.r) / width / 2,
+                            y: 0.5,
+                            len: 0.8,
+                            yanchor: "middle",
+                            xanchor: "center",
+                            orientation: 'v',
+                            thickness: colorBarThickness,
+                            tickwidth: 0,
+                            textfont: {size: 1}
+                        }
+                    },
+                })
+            }
         }
         return data;
     }, [trajectoryData, frictionData, MARGINS.r, width]);
