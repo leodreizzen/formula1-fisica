@@ -57,7 +57,7 @@ export default function FrictionsPlots({className, timeUnit}) {
             {frictionData !== null ?
                 <>
                     <OverlappingFrictionsPlot className="w-1/2 h-full" timeUnit={timeUnit} traces={traces}
-                    maxFrictionValue = {frictionData?.max_friction} coefficientValue = {frictionData?.coefficient_friction}/>
+                    maxFrictionValue = {frictionData?.max_friction} coefficientValue = {frictionData?.coefficient_friction} avgFrictionValue={frictionData?.avg_friction}/>
                     <SplitFrictionsPlot className="w-1/2 h-full" timeUnit={timeUnit} traces={traces}/>
                 </>
                 :

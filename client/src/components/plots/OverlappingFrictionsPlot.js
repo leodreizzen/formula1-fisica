@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import BasePlot from "./BasePlot";
 
-export default function OverlappingFrictionsPlot({className, timeUnit, traces, maxFrictionValue, coefficientValue}) {
+export default function OverlappingFrictionsPlot({className, timeUnit, traces, avgFrictionValue, maxFrictionValue, coefficientValue}) {
     const {moduleTrace, tangentialTrace, normalTrace} = traces;
     const [visible, setVisible] = useState([true, true, true]);
 
@@ -22,11 +22,11 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, m
             shapes: [
                 {
                     type: 'line',
-                    xref: 'paper',
-                    x0: 0,
-                    y0: maxFrictionValue,
-                    x1: 1,
-                    y1: maxFrictionValue,
+                    xref: 'x',
+                    x0: -10,
+                    y0: avgFrictionValue/10,
+                    x1: traces.moduleTrace.x[traces.moduleTrace.x.length -1] + 10,
+                    y1: avgFrictionValue/10,
                     line: {
                         color: 'lightblue',
                         width: 2,
@@ -42,7 +42,7 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, m
                     y: 1.02,
                     xanchor: 'center',
                     yanchor: 'top',
-                    text: 'Rozamiento máximo: ' + maxFrictionValue + " N",
+                    text: 'Rozamiento promedio: ' + (avgFrictionValue/10).toFixed(2) + " N",
                     textposition: "top",
                     showarrow: false,
                     font: {
@@ -70,6 +70,8 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, m
             ],
         }
     }, [timeUnit]);
+    console.log(traces)
+    console.log(plotLayout)
 
     return (
         <BasePlot

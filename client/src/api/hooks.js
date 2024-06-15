@@ -7,7 +7,7 @@ import {
     getTrajectory,
     getKinematicVectors,
     getDrifts,
-    getKinematicsComparison
+    getKinematicsComparison, getDynamics
 } from "./getters";
 import {useStateWithDeps} from "use-state-with-deps";
 

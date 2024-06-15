@@ -187,7 +187,7 @@ def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, l
 
 @app.get("/dynamics")
 def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    datos_aceleraciones = accelerations_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    datos_aceleraciones = vector_data(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     maxAceleracion = datos_aceleraciones["a_normal"].max()
 
     # Calculando el radio para cada fila
@@ -210,13 +210,13 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
 
     # Cota inferior del coeficiente de rozamiento estático máximo.
     datos_aceleraciones["friction_coefficient"] = datos_aceleraciones.apply(
-        lambda row: row["a_normal"] / 9.81 if row["a_normal"] != 0 else 0,
+        lambda row: row["modulo_aceleracion_xy"] / 10 / 9.81 if row["a_normal"] != 0 else 0,
         axis=1
     )
 
     datos_aceleraciones["friction_x"] = (datos_aceleraciones["aceleracion_x"] * mass_car)
     datos_aceleraciones["friction_y"] = (datos_aceleraciones["aceleracion_y"] * mass_car)
-    datos_aceleraciones["friction_module"] = datos_aceleraciones["modulo_velocidad"] * mass_car
+    datos_aceleraciones["friction_module"] = datos_aceleraciones["modulo_aceleracion_xy"] * mass_car
     datos_aceleraciones["friction_tangential"] = datos_aceleraciones["aTangential"] * mass_car
     datos_aceleraciones["friction_normal"] = datos_aceleraciones["a_normal"] * mass_car
 
@@ -251,10 +251,12 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
         })
 
     friction_coefficient = datos_aceleraciones["friction_coefficient"].max()
-    max_friction = mass_car * 9.81
+    max_friction = datos_aceleraciones["friction_module"].max()
+    avg_friction = datos_aceleraciones["friction_module"].mean()
     dynamics_json = {
         "coefficient_friction": friction_coefficient,
         "max_friction": max_friction,
+        "avg_friction": avg_friction,
         "forces": forces_array
     }
 
