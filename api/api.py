@@ -20,7 +20,7 @@ wheelbase = 3.6
 tire_width = 0.305
 steering_angle_radians = math.radians(30)
 radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
-max_radio_curva = 500
+max_radio_curva = 1500
 mass_car = 950
 
 app.add_middleware(

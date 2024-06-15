@@ -51,7 +51,7 @@ export default function HoveredPointDataMaxSpeed({trajectoryData, frictionData, 
                     style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.module / 10).toFixed(2) + "m/s"}</span>
                     <span style={{color: speedometerColor}} className="mr-4 lg:mr-2">velocímetro: </span> <span
                     style={{color: speedometerColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.speedometer / 10).toFixed(2) + "m/s"}</span>
-                    <span style={{color: maxSpeedColor}} className="mr-4 lg:mr-2">max speed: </span> <span
+                    <span style={{color: maxSpeedColor}} className="mr-4 lg:mr-2">vel. máx: </span> <span
                     style={{color: maxSpeedColor}}>{frictionInTime === undefined || !frictionInTime.hasMaxSpeed ? "-" : (frictionInTime.maxSpeed / 10).toFixed(2) + "m/s"}</span>
                 </div>
             </div>

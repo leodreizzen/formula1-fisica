@@ -121,7 +121,7 @@ export default function TrajectoryMaxSpeedPlot({
                     name: "v max / v",
                     type: "scatter",
                     mode: "markers",
-                    showlegend: false,
+                    showlegend: true,
                     text: frictionDataWithMaxSpeed.map(it => (it.module_velocity_xy / it.friction.maxSpeed).toFixed(4)),
                     marker: {
                         color: frictionDataWithMaxSpeed.map(it => it.module_velocity_xy / it.friction.maxSpeed),
