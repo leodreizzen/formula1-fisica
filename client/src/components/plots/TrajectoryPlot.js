@@ -1,50 +1,50 @@
-import {OrbitProgress} from "react-loading-indicators";
-import {useMemo} from "react";
+import { OrbitProgress } from "react-loading-indicators";
+import { useMemo } from "react";
 import {
     enforceSameScaleHorizontal,
     enforceSameScaleVertical, getTolerancesPreservingAspectRatio, getTrajectoryExtremes,
 } from "./plot-utils";
-import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow} from "./arrows";
-import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
+import { accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccelerationArrow } from "./arrows";
+import { useKinematicVectorsContext } from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
-import {useResizeDetector} from "react-resize-detector";
-import {useGetDrifts} from "../../api/hooks";
-import {useSessionDataContext} from "../../context/SessionDataContext";
-import {useLapContext} from "../../context/LapContext";
-import {useDriverContext} from "../../context/DriverContext";
+import { useResizeDetector } from "react-resize-detector";
+import { useGetDrifts } from "../../api/hooks";
+import { useSessionDataContext } from "../../context/SessionDataContext";
+import { useLapContext } from "../../context/LapContext";
+import { useDriverContext } from "../../context/DriverContext";
 
-export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
-    const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
+export default function TrajectoryPlot({ className, trajectoryData, hoveredPoint, setHoveredPoint }) {
+    const MARGINS = { r: 150, t: 0, b: 0, l: 0 }; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
     const LEGEND_ITEM_WIDTH = 30;
 
-    const {vectors, getKinematicVectorsFromTime} = useKinematicVectorsContext();
-    const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
-    const {width, height, ref} = useResizeDetector();
+    const { vectors, getKinematicVectorsFromTime } = useKinematicVectorsContext();
+    const { minX, minY, maxX, maxY } = useMemo(() => getTrajectoryExtremes(trajectoryData), [trajectoryData]);
+    const { width, height, ref } = useResizeDetector();
     const sessionData = useSessionDataContext()
     const year = sessionData?.year;
     const round = sessionData?.round;
     const session = sessionData?.session;
-    const {currentDriver} = useDriverContext();
-    const {currentLap} = useLapContext();
+    const { currentDriver } = useDriverContext();
+    const { currentLap } = useLapContext();
 
     const [driftingData,] = useGetDrifts(year, round, session, currentDriver?.driverNumber, currentLap);
-    function getPaperWidth(width){
+    function getPaperWidth(width) {
         return width - MARGINS.l - MARGINS.r;
     }
-    function getPaperHeight(height){
+    function getPaperHeight(height) {
         return height - MARGINS.t - MARGINS.b;
     }
 
-    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, getPaperWidth(width), getPaperHeight(height) , 0.05, 0.05)
+    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, getPaperWidth(width), getPaperHeight(height), 0.05, 0.05)
 
 
     function handleSizeChange(newSize, previousSize, ranges) {
         const xRangeInput = ranges.xRanges.get("xaxis")
         const yRangeInput = ranges.yRanges.get("yaxis")
-        let previousRange = {x0: xRangeInput[0], x1: xRangeInput[1], y0: yRangeInput[0], y1: yRangeInput[1]}
+        let previousRange = { x0: xRangeInput[0], x1: xRangeInput[1], y0: yRangeInput[0], y1: yRangeInput[1] }
 
-        const previousPaperSize = {width: getPaperWidth(previousSize.width), height: getPaperHeight(previousSize.height)}
-        const newPaperSize = {width: getPaperWidth(newSize.width), height: getPaperHeight(newSize.height)}
+        const previousPaperSize = { width: getPaperWidth(previousSize.width), height: getPaperHeight(previousSize.height) }
+        const newPaperSize = { width: getPaperWidth(newSize.width), height: getPaperHeight(newSize.height) }
 
         if (newPaperSize.width !== previousPaperSize.width) {
             const newRange = enforceSameScaleHorizontal(newPaperSize.width, newPaperSize.height, previousRange, minX, minY, maxX, maxY, xTolerance, yTolerance)
@@ -63,12 +63,12 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         setHoveredPoint(point)
     }
 
-    function getPointFromHoverData(data){
+    function getPointFromHoverData(data) {
         const point = data.points[0]
         const index = data.points[0].pointIndex;
         if (point.curveNumber === 0)
             return index;
-        else if (point.curveNumber === 1){
+        else if (point.curveNumber === 1) {
             const trajectoryPoint = trajectoryData.findIndex(it => it.cartesian.x / 10 === point.x && it.cartesian.y / 10 === point.y)
             if (trajectoryPoint !== undefined)
                 return trajectoryPoint;
@@ -110,7 +110,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 name: "Trayectoria",
                 type: "scatter",
                 mode: "lines",
-                marker: {color: trajectoryData, hoverinfo: 'none'},
+                marker: { color: trajectoryData, hoverinfo: 'none' },
                 showlegend: false
             })
         }
@@ -139,7 +139,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                         orientation: 'v',
                         thickness: colorBarThickness,
                         tickwidth: 0,
-                        textfont: {size: 1},
+                        textfont: { size: 1 },
                         tickmode: "auto",
                     }
                 },
@@ -162,7 +162,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 tolerance: yTolerance / (maxY - minY)
             },
             annotations: arrows,
-            legend:{
+            legend: {
                 xref: "container",
                 x: 1 - MARGINS.r / width / 2,
                 valign: "middle",
@@ -178,15 +178,17 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         <div className={className + " overflow-clip"} ref={ref}>
             {trajectoryData === null || driftingData === null ?
                 <div className="h-full w-full flex items-center justify-center"><OrbitProgress size='large'
-                                                                                               color="#EFE2E2"
-                                                                                               variant='dotted'/></div>
-                : <BasePlot className="w-full h-full p-0 m-0"
-                            data={plotData}
-                            layout={plotLayout}
-                            config={{doubleClick: false}}
-                            onHover={handleHover}
-                            onUnhover={handleUnhover}
-                            onSizeChangeRangeFilter={handleSizeChange}
+                    color="#EFE2E2"
+                    variant='dotted' />
+                </div>
+                : <BasePlot
+                    className="w-full h-full p-0 m-0"
+                    data={plotData}
+                    layout={plotLayout}
+                    config={{ doubleClick: false }}
+                    onHover={handleHover}
+                    onUnhover={handleUnhover}
+                    onSizeChangeRangeFilter={handleSizeChange}
                 />
             }
         </div>

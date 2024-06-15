@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {getDrivers, getLaps, getRounds, getTrajectory, getKinematicVectors, getDrifts, getDynamics} from "./getters";
-import {useStateWithDeps} from "use-state-with-deps";
+import { getDrivers, getLaps, getRounds, getTrajectory, getKinematicVectors, getNeckForces, getDrifts, getDynamics } from "./getters";
+import { useStateWithDeps } from "use-state-with-deps";
 
 function useGetFromAPI(getter, dependencies, validParams) {
     const [res, setRes] = useStateWithDeps(null, dependencies)
@@ -10,7 +10,7 @@ function useGetFromAPI(getter, dependencies, validParams) {
         const abortController = new AbortController()
         if (validParams) {
             setIsLoading(true);
-            getter({signal: abortController.signal})
+            getter({ signal: abortController.signal })
                 .then((res) => {
                     setRes(res);
                     setIsLoading(false);
@@ -65,17 +65,22 @@ export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber,
     return [trajectory, isLoading]
 }
 
-export function useGetKinematicVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+export function useGetNeckForces(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
+    const [neckForces, isLoading] = useAPIHook(getNeckForces, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
+    return [neckForces, isLoading]
+}
+
+export function useGetKinematicVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
     const [vectors, isLoading] = useAPIHook(getKinematicVectors, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [vectors, isLoading]
 }
 
-export function useGetDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+export function useGetDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
     const [drifting, isLoading] = useAPIHook(getDrifts, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [drifting, isLoading]
 }
 
-export function useGetDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+export function useGetDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
     const [dynamic, isLoading] = useAPIHook(getDynamics, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [dynamic, isLoading]
 }

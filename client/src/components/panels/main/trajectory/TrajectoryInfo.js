@@ -17,6 +17,7 @@ export default function TrajectoryInfo({className=""}) {
     const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap);
 
     const [hoveredPoint, setHoveredPoint] = useState(null);
+    
 
     return (
         <div className={"flex flex-col items-center sm:flex-row overflow-clip " + className}>

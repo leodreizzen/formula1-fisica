@@ -1,17 +1,17 @@
-import {useMemo} from "react";
+import { useMemo } from "react";
 
 export function getTrajectoryExtremes(trajectoryData) {
     const minX = trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.x / 10))) : null;
     const minY = trajectoryData ? Math.min(...(trajectoryData.map(it => it.cartesian.y / 10))) : null;
     const maxX = trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.x / 10))) : null;
     const maxY = trajectoryData ? Math.max(...(trajectoryData.map(it => it.cartesian.y / 10))) : null;
-    return {minX, minY, maxX, maxY};
+    return { minX, minY, maxX, maxY };
 }
 
-export function enforcePlotRange(oldRange, newRange, minX, minY, maxX, maxY){
+export function enforcePlotRange(oldRange, newRange, minX, minY, maxX, maxY) {
     const xRange = enforcePlotSingleAxisRange([oldRange.x0, oldRange.x1], [newRange.x0, newRange.x1], minX, maxX);
     const yRange = enforcePlotSingleAxisRange([oldRange.y0, oldRange.y1], [newRange.y0, newRange.y1], minY, maxY);
-    return{
+    return {
         x0: xRange[0],
         x1: xRange[1],
         y0: yRange[0],
@@ -24,23 +24,23 @@ export function enforcePlotSingleAxisRange(oldRange, newRange, min, max) {
     const newSize = newRange[1] - newRange[0];
 
     let x0, x1;
-    if(newSize.toFixed(5) === previousSize.toFixed(5)){
+    if (newSize.toFixed(5) === previousSize.toFixed(5)) {
         // pan
-        if(newRange[0] < oldRange[0]){
+        if (newRange[0] < oldRange[0]) {
             x0 = Math.max(min, newRange[0]);
             x1 = x0 + previousSize;
         }
-        else{
+        else {
             x1 = Math.min(max, newRange[1]);
             x0 = x1 - previousSize;
         }
-    } else{
+    } else {
         // zoom
         x0 = Math.max(min, newRange[0]);
         x1 = Math.min(max, newRange[1]);
     }
 
-    if(isNaN(x0) || isNaN(x1))
+    if (isNaN(x0) || isNaN(x1))
         throw new Error("Invalid range") // throw to avoid infinite loop
     return [x0, x1];
 }
@@ -99,8 +99,8 @@ export function enforceSameScaleVertical(width, height, range, minX, minY, maxX,
     };
 }
 
-export function getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, width, height, xToleranceFraction, yToleranceFraction){
-    let xTolerance = (maxX - minX) * xToleranceFraction ;
+export function getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, width, height, xToleranceFraction, yToleranceFraction) {
+    let xTolerance = (maxX - minX) * xToleranceFraction;
     /*
     set yTolerance to keep the same aspect ratio
     (sizeX + 2tx)/(sizeY + 2*tY) = width/height
@@ -108,11 +108,11 @@ export function getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, width
     (sizeX + 2tx) / (width/height) - sizeY = 2*ty
     [(sizeX + 2tx) / (width/height) - sizeY)]/2= ty
     */
-    let yTolerance = ((maxX - minX + 2*xTolerance) / (width / height) - (maxY - minY))/2;
-    if(yTolerance < 0) {
+    let yTolerance = ((maxX - minX + 2 * xTolerance) / (width / height) - (maxY - minY)) / 2;
+    if (yTolerance < 0) {
         // Same, but for xTolerance
         yTolerance = (maxY - minY) * yToleranceFraction;
-        xTolerance = ((maxY - minY + 2*yTolerance) / (height/width) - (maxX - minX))/2;
+        xTolerance = ((maxY - minY + 2 * yTolerance) / (height / width) - (maxX - minX)) / 2;
     }
     return [xTolerance, yTolerance];
 }
