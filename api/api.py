@@ -5,10 +5,8 @@ import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 
 from f1data.F1IntrinsicsHelper import F1IntrinsicsHelper
-from f1data.utilData import telemetry_interpolation, filter_telemetry, vector_calcs
-
-from utilFisica import calcular_coordenadas_polares
-from util import timedelta_to_string, timestamp_to_string, string_to_timedelta
+from utilFisica import calcular_coordenadas_polares,vector_calcs, dynamics_calcs, getKinematicVectorsWithAlignedIntrinsics
+from util import timedelta_to_string, timestamp_to_string
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import numpy as np
 
@@ -24,8 +22,7 @@ wheelbase = 3.6
 tire_width = 0.305
 steering_angle_radians = math.radians(30)
 radio_giro_minimo = (wheelbase / math.sin(steering_angle_radians)) + (tire_width / 2)
-max_radio_curva = 1500
-mass_car = 950
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -188,42 +185,9 @@ def drifts(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, l
 @app.get("/dynamics")
 def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     datos_aceleraciones = vector_data(year, roundNumber, sessionNumber, driverNumber, lapNumber)
-    maxAceleracion = datos_aceleraciones["a_normal"].max()
-
-    # Calculando el radio para cada fila
-    datos_aceleraciones["radio"] = datos_aceleraciones.apply(
-        lambda row: (row["modulo_velocidad_xy"] ** 2) / row["a_normal"] if row["a_normal"] != 0 else float('inf'),
-        axis=1
-    )
-
-    # Calculo si hay maxima velocidad
-    datos_aceleraciones["hasMaxSpeed"] = datos_aceleraciones.apply(
-        lambda row: row["radio"] <= max_radio_curva if row["radio"] != float('inf') else False,
-        axis=1
-    )
-
-    # Calculando velMaxima usando maxAceleracion y el radio
-    datos_aceleraciones["velMaxima"] = datos_aceleraciones.apply(
-        lambda row: math.sqrt(maxAceleracion * row["radio"]) if row["radio"] != float('inf') and row["hasMaxSpeed"] else 0,
-        axis=1
-    )
-
-    # Cota inferior del coeficiente de rozamiento estático máximo.
-    datos_aceleraciones["friction_coefficient"] = datos_aceleraciones.apply(
-        lambda row: row["modulo_aceleracion_xy"] / 10 / 9.81 if row["a_normal"] != 0 else 0,
-        axis=1
-    )
-
-    datos_aceleraciones["friction_x"] = (datos_aceleraciones["aceleracion_x"] * mass_car)
-    datos_aceleraciones["friction_y"] = (datos_aceleraciones["aceleracion_y"] * mass_car)
-    datos_aceleraciones["friction_module"] = datos_aceleraciones["modulo_aceleracion_xy"] * mass_car
-    datos_aceleraciones["friction_tangential"] = datos_aceleraciones["aTangential"] * mass_car
-    datos_aceleraciones["friction_normal"] = datos_aceleraciones["a_normal"] * mass_car
-
-
+    datos_dinamica, friction_coefficient, max_friction, avg_friction = dynamics_calcs(datos_aceleraciones)
     forces_array = []
-
-    for index, row in datos_aceleraciones.iterrows():
+    for index, row in datos_dinamica.iterrows():
         forces_array.append({
             "time": timedelta_to_string(row["Time"]),
             "x": row["X"],
@@ -250,9 +214,6 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
             }
         })
 
-    friction_coefficient = datos_aceleraciones["friction_coefficient"].max()
-    max_friction = datos_aceleraciones["friction_module"].max()
-    avg_friction = datos_aceleraciones["friction_module"].mean()
     dynamics_json = {
         "coefficient_friction": friction_coefficient,
         "max_friction": max_friction,
@@ -263,23 +224,69 @@ def dynamics(year: int, roundNumber: int, sessionNumber: int, driverNumber: int,
     return dynamics_json
 
 
+@app.get("/dynamics_comparison")
+def dynamics_comparison(year: int, roundNumber: int, sessionNumber: int, driverNumber1: int, driverNumber2: int,
+                          lapNumber: int):
+    driver1_kinematics, driver2_kinematics = getKinematicVectorsWithAlignedIntrinsics(facade,driverNumber1, driverNumber2, lapNumber,
+                                                                        roundNumber, sessionNumber, year)
+    res = [dynamics_calcs(driver1_kinematics), dynamics_calcs(driver2_kinematics)]
+    driver_numbers = [driverNumber1, driverNumber2]
+    response = []
+
+    for i, driver_res in enumerate(res):
+        datos_dinamica, friction_coefficient, max_friction, avg_friction = driver_res
+        forces_array = []
+        for index, row in datos_dinamica.iterrows():
+            forces_array.append({
+                "time": timedelta_to_string(row["Time"]),
+                "s": row["s"],
+                "x": row["X"],
+                "y": row["Y"],
+                "module_velocity_xy": row["modulo_velocidad_xy"],
+                "friction": {
+                    "frx": row["friction_x"],
+                    "fry": row["friction_y"],
+                    "module": row["friction_module"],
+                    "tangential": row["friction_tangential"],
+                    "normal": row["friction_normal"],
+                    "hasMaxSpeed": row["hasMaxSpeed"],
+                    "maxSpeed": row["velMaxima"],
+                    "versors": {
+                        "tangent": {
+                            "x": row["versor_tangente"][0],
+                            "y": row["versor_tangente"][1]
+                        },
+                        "normal": {
+                            "x": row["versor_normal_x"],
+                            "y": row["versor_normal_y"]
+                        }
+                    }
+                }
+            })
+        driver_response = {
+            "coefficient_friction": friction_coefficient,
+            "max_friction": max_friction,
+            "avg_friction": avg_friction,
+            "forces": forces_array
+        }
+        response.append({
+            "driverNumber": driver_numbers[i],
+            "data": driver_response
+        })
+    return response
+
 @app.get("/kinematics_comparison")
 def kinematics_comparison(year: int, roundNumber: int, sessionNumber: int, driverNumber1: int, driverNumber2: int,
                           lapNumber: int):
-    driver1_telemetry, driver2_telemetry = F1IntrinsicsHelper(facade).get_telemetry_with_aligned_intrinsics(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber)
-    driver1_res = vector_calcs(driver1_telemetry)
-    driver2_res = vector_calcs(driver2_telemetry)
-
-    # Fix intrinsics after vector_calcs removes points
-    max_s0 = max(driver1_res["s"][0], driver2_res["s"][0])
-    driver1_res["s"] = driver1_res["s"] - max_s0
-    driver2_res["s"] = driver2_res["s"] - max_s0
-
+    driver1_res, driver2_res = getKinematicVectorsWithAlignedIntrinsics(facade,driverNumber1, driverNumber2, lapNumber,
+                                                                        roundNumber, sessionNumber, year)
 
     res = [driver1_res, driver2_res]
     driver_numbers = [driverNumber1, driverNumber2]
     response = []
+
     for i, driver_res in enumerate(res):
+
         driver_response = []
         for index, row in driver_res.iterrows():
             driver_response.append(
@@ -324,6 +331,9 @@ def kinematics_comparison(year: int, roundNumber: int, sessionNumber: int, drive
             "data": driver_response
         })
     return response
+
+
+
 
 
 @lru_cache(maxsize=tamano_cache)
