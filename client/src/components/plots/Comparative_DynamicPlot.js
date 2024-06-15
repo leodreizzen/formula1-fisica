@@ -74,11 +74,11 @@ export default function Comparative_DynamicPlot({ className, dynamicData, dynami
     const getYAxisTitle = (selectedOption) => {
         switch (selectedOption) {
             case 'tangential':
-                return 'a tangencial [m/s²]';
+                return 'fr tangencial [N]';
             case 'normal':
-                return 'a normal [m/s²]';
+                return 'fr normal [N]';
             default:
-                return '|a| [m/s²]';
+                return '|fr| [N]';
         }
     };
 
