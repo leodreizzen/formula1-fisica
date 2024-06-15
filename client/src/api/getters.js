@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_URL } from "../settings";
+import {API_BASE_URL} from "../settings";
 
 function APIGetter(endpoint, params, options) {
     return axios.get(API_BASE_URL + endpoint, {
@@ -9,7 +9,7 @@ function APIGetter(endpoint, params, options) {
 }
 
 export function getRounds(year, options) {
-    return APIGetter("/rounds", { year: year }, options);
+    return APIGetter("/rounds", {year: year}, options);
 }
 
 export function getDrivers(year, roundNumber, sessionNumber, options) {
@@ -59,7 +59,26 @@ export function getKinematicVectors(year, roundNumber, sessionNumber, driverNumb
     }, options);
 }
 
-
+export function getKinematicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber, options){
+    return APIGetter("/kinematics_comparison", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber1: driverNumber1,
+        driverNumber2: driverNumber2,
+        lapNumber: lapNumber
+    }, options);
+}
+export function getDynamicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber, options){
+    return APIGetter("/dynamics_comparison", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber1: driverNumber1,
+        driverNumber2: driverNumber2,
+        lapNumber: lapNumber
+    }, options);
+}
 export function getDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
      return APIGetter("/drifts", {
          year: year,

@@ -4,7 +4,7 @@ import DriverSelector from "../../../inputs/DriverSelector";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useLapContext} from "../../../../context/LapContext";
-import {useGetLaps, useGetDynamics} from "../../../../api/hooks";
+import {useGetLaps, useGetDynamics, useGetDynamicsComparison} from "../../../../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
 import LapSelector from "../../../inputs/LapSelector";
 import Comparative_DynamicPlot from "../../../plots/Comparative_DynamicPlot";
@@ -27,9 +27,11 @@ export default function Comparative_DynamicPanel({className}) {
     const commonLaps = (mainLapCount !== null && secondaryLapCount !== null) ? Math.min(mainLapCount, secondaryLapCount) : null;
     const currentLap = (mainCurrentLap !== null && commonLaps !== null) ? Math.min(mainCurrentLap, commonLaps) : null;
 
-    const [dynamicData,]  = useGetDynamics(year, round, session, currentDriver?.driverNumber, currentLap) || [];
-    const [dynamicSecondaryData,] = useGetDynamics(year, round, session, currentSecondaryDriver?.driverNumber, currentLap) || [];
-
+    const [comparisonData]  = useGetDynamicsComparison(year, round, session, currentDriver?.driverNumber, currentSecondaryDriver?.driverNumber, currentLap) || [];
+    const firstDriverRes = comparisonData? comparisonData[0]: null;
+    const secondDriverRes = comparisonData? comparisonData[1] : null;
+    const firstDriverData = firstDriverRes?.data ?? null;
+    const secondDriverData = secondDriverRes?.data ?? null;
     useEffect(() => {
         if (currentLap !== null && currentLap !== mainCurrentLap) {
             setCurrentLap(currentLap);
@@ -43,7 +45,6 @@ export default function Comparative_DynamicPanel({className}) {
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
     };
-
     return (
         <div className={`${className} flex flex-col items-center overflow-clip h-full`}>
             <div className="flex flex-row w-full justify-evenly">
@@ -52,10 +53,10 @@ export default function Comparative_DynamicPanel({className}) {
                                 onDriverChange={handleSecondaryDriverChange} label="Conductor rival"/>
             </div>
             {currentSecondaryDriver !== null ?
-                (dynamicData !== null && dynamicSecondaryData !== null && currentLap !== null) ? (
+                (firstDriverData !== null && secondDriverData !== null && currentLap !== null) ? (
                     <>
-                        <Comparative_DynamicPlot className="flex grow pt-2" dynamicData={dynamicData}
-                                                 dynamicSecondaryData={dynamicSecondaryData} currentDriver={currentDriver}
+                        <Comparative_DynamicPlot className="flex grow pt-2" firstDriverData={firstDriverData}
+                                                 secondDriverData={secondDriverData} currentDriver={currentDriver}
                                          currentSecondaryDriver={currentSecondaryDriver} currentLap={currentLap}
                                          selectedOption={selectedOption}/>
                         <AccelerationTypeSelector onChange={handleOptionChange} value={selectedOption}/>

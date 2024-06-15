@@ -1,18 +1,19 @@
 import TrajectoryPanel from "./trajectory/TrajectoryPanel.js";
 import VelocitiesPanel from "./velocities/VelocitiesPanel.js";
 import AccelerationsPanel from "./accelerations/AccelerationsPanel.js";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import TrayectoryMaxSpeedPanel from "./trajectoryMaxSpeed/TrajectoryPanelMaxSpeed";
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {useSessionDataContext} from "../../../context/SessionDataContext";
 import {DriverContextConsumer, DriverContextProvider} from "../../../context/DriverContext";
 import {LapContextConsumer, LapContextProvider} from "../../../context/LapContext";
 import PositionsPanel from "./positions/PositionsPanel";
-import {KinematicVectorsProvider} from "../../../context/KinematicVectorsContext";
 import NeckForcesPanel from "./neckForces/NeckForcesPanel";
-import ComparativePanel from "./comparative/ComparativePanel";
+import FrictionsPanel from "./frictions/FrictionsPanel";
 import Comparative_DynamicPanel from "./dynamic_comparative/Comparative_DynamicPanel";
-export default function MainPanel({ className }) {
-    const { year, round, session } = useSessionDataContext();
+
+export default function MainPanel({className}) {
+    const {year, round, session} = useSessionDataContext();
 
     return <div className={"w-full text-white h-screen bg-[hsl(218,80,5)] overflow-clip " + className}>
         <DriverContextProvider year={year} round={round} session={session}>
@@ -34,20 +35,21 @@ export default function MainPanel({ className }) {
                                             <Tab disabled={driverData.drivers === null ? true : null}>Fuerzas del cuello</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Comparativas</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Comparativas Dinamica</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento y velocidad máxima</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento</Tab>
                                         </TabList>
 
                                         <TabPanel className="overflow-clip">
-                                            <TrajectoryPanel
-                                                className="grow" />
+                                            <TrajectoryPanel className="grow"/>
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
-                                            <PositionsPanel className="h-full" />
+                                            <PositionsPanel className="h-full"/>
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
-                                            <VelocitiesPanel className="h-full" />
+                                            <VelocitiesPanel className="h-full"/>
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
-                                            <AccelerationsPanel className="h-full" />
+                                            <AccelerationsPanel className="h-full"/>
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
                                             <NeckForcesPanel className="h-full" />
@@ -58,6 +60,12 @@ export default function MainPanel({ className }) {
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
                                             <Comparative_DynamicPanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
+                                             <TrayectoryMaxSpeedPanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
+                                             <FrictionsPanel className="h-full"/>
                                         </TabPanel>
                                     </Tabs>
                                 </KinematicVectorsProvider>
