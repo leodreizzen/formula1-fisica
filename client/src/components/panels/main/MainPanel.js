@@ -1,6 +1,7 @@
 import TrajectoryPanel from "./trajectory/TrajectoryPanel.js";
 import VelocitiesPanel from "./velocities/VelocitiesPanel.js";
 import AccelerationsPanel from "./accelerations/AccelerationsPanel.js";
+import TrayectoryMaxSpeedPanel from "./trajectoryMaxSpeed/TrajectoryPanelMaxSpeed";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {useSessionDataContext} from "../../../context/SessionDataContext";
@@ -9,6 +10,7 @@ import {LapContextConsumer, LapContextProvider} from "../../../context/LapContex
 import {KinematicVectorsProvider} from "../../../context/KinematicVectorsContext";
 import ComparativePanel from "./comparative/ComparativePanel.js";
 import PositionsPanel from "./positions/PositionsPanel";
+import FrictionsPanel from "./frictions/FrictionsPanel";
 
 export default function MainPanel({className}) {
     const {year, round, session} = useSessionDataContext();
@@ -31,11 +33,12 @@ export default function MainPanel({className}) {
                                             <Tab disabled={driverData.drivers === null ? true : null}>Velocidades</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Aceleraciones</Tab>
                                             <Tab disabled={driverData.drivers === null ? true : null}>Comparativas</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento y velocidad máxima</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento</Tab>
                                         </TabList>
 
                                         <TabPanel className="overflow-clip">
-                                            <TrajectoryPanel
-                                                className="grow"/>
+                                            <TrajectoryPanel className="grow"/>
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
                                             <PositionsPanel className="h-full"/>
@@ -48,6 +51,12 @@ export default function MainPanel({className}) {
                                         </TabPanel>
                                         <TabPanel className="overflow-clip">
                                             <ComparativePanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
+                                             <TrayectoryMaxSpeedPanel className="h-full"/>
+                                        </TabPanel>
+                                        <TabPanel className="overflow-clip">
+                                             <FrictionsPanel className="h-full"/>
                                         </TabPanel>
                                     </Tabs>
                                 </KinematicVectorsProvider>

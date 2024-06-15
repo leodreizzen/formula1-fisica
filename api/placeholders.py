@@ -8539,22 +8539,37 @@ driftingPlaceholder = [
     {'x': -62, 'y': 5060, "drifting": 1.8}
 ]
 
-dynamicsPlaceholder = [
-    {
+dynamicsPlaceholder = {
+    "coefficient_friction": 0.94743031347183,
         "forces":  [
             {
                 "time": "0000-00-00T00:01:24.156",
+                "x": 100,
+                "y": 400,
+                "speed": 0.8,
                 "friction": {
+                    "frx": 100,
+                    "fry": 400,
                    "module": 0.0,
                    "tangential": 0.0,
                    "normal": 0.0,
+                    "hasMaxSpeed": True,
+                    "maxSpeed":1.9,
+                    "versors": {
+                        "tangent": {
+                            'x': 0.707,
+                            'y': 0.707
+                        },
+                        "normal": {
+                            'x': 0.707,
+                            'y': 0.707
+                    }
                 },
                 "neck": {
                    "tangential": 0.0,
                    "normal": 0.0,
                    "z": 0.0
                 },
-                "coefficient_friction": 0.0,
             },
             {
                 "time": "0000-00-00T00:01:24.348",
@@ -8568,7 +8583,6 @@ dynamicsPlaceholder = [
                     "normal": 0.0,
                     "z": 0.0
                 },
-                "coefficient_friction": 0.0,
             },
             {
                 "time": "0000-00-00T00:01:24.400",
@@ -9398,5 +9412,4 @@ dynamicsPlaceholder = [
             }
         ]
     }
-]
 

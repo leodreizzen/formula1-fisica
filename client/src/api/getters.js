@@ -69,3 +69,13 @@ export function getDrifts(year, roundNumber, sessionNumber, driverNumber, lapNum
          lapNumber: lapNumber
      }, options);
 }
+
+export function getDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
+    return APIGetter("/dynamics", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber: driverNumber,
+        lapNumber: lapNumber
+    }, options)
+}

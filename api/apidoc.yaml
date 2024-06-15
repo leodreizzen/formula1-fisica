@@ -179,16 +179,94 @@ paths:
           content:
             application/json:
               schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      $ref: '#/components/parameters/relativeTimestamp'
+                    velocity:
+                        $ref: '#/components/schemas/Velocity'
+                    acceleration:
+                        $ref: '#/components/schemas/Acceleration'
+                    versors:
+                        $ref: "#/components/schemas/Versors"
+
+        '400':
+          description: Alguno de los parámetros es inválido
+
+  /dynamics:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+
+    get:
+      description: Obtener fuerzas de rozamiento y velocidad máxima a lo largo del tiempo, además de una cota superior del coeficiente de rozamiento, para un conductor en una vuelta.
+      responses:
+        '200':
+          description: Velocidad y aceleración del conductor
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                  time:
-                    $ref: '#/components/parameters/relativeTimestamp'
-                  velocity:
-                      $ref: '#/components/schemas/Velocity'
-                  acceleration:
-                      $ref: '#/components/schemas/Acceleration'
-                  versors:
-                      $ref: "#/components/schemas/Versors"
+                  coefficient_friction:
+                    type: number
+                    description: Cota superior del coeficiente de rozamiento
+                  max_friction:
+                    type: number
+                    description: Fuerza de rozamiento máxima
+                  avg_friction:
+                    type: number
+                    description: Fuerza de rozamiento promedio
+                  forces:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          $ref: '#/components/parameters/relativeTimestamp'
+                        x:
+                          type: number
+                          description: Coordenada x de posición
+                        y:
+                          type: number
+                          description: Coordenada y de posición
+                        z:
+                          type: number
+                          description: Coordenada z de posición
+                        module_velocity_xy:
+                          type: number
+                          description: Módulo de la velocidad en el plano xy
+                        friction:
+                          type: object
+                          properties:
+                            frx:
+                              type: number
+                              description: Fuerza de rozamiento en x
+                            fry:
+                              type: number
+                              description: Fuerza de rozamiento en y
+                            module:
+                              type: number
+                              description: Módulo de la fuerza de rozamiento
+                            tangential:
+                              type: number
+                              description: Fuerza de rozamiento tangencial
+                            normal:
+                              type: number
+                              description: Fuerza de rozamiento normal
+                            hasMaxSpeed:
+                              type: number
+                              description: Indica si se tienen datos de velocidad máxima
+                            maxSpeed:
+                              type: number
+                              description: Velocidad máxima
+                            versors:
+                                $ref: "#/components/schemas/Versors"
 
         '400':
           description: Alguno de los parámetros es inválido
