@@ -107,6 +107,12 @@ paths:
                         z:
                           type: number
                           description: Coordenada z de posición
+                        origin_x:
+                          type: number
+                          description: Polo coordenada x
+                        origin_y:
+                          type: number
+                          description: Polo coordenada y
                     intrinsic:
                         type: object
                         properties:
@@ -157,7 +163,7 @@ paths:
            description: Alguno de los parámetros es inválido  
 
 
-  /vectors:
+  /kinematics_vectors:
     parameters:
       - $ref: "#/components/parameters/roundYear"
       - $ref: "#/components/parameters/roundNumber"
@@ -183,6 +189,55 @@ paths:
                       $ref: '#/components/schemas/Acceleration'
                   versors:
                       $ref: "#/components/schemas/Versors"
+
+        '400':
+          description: Alguno de los parámetros es inválido
+
+  /kinematics_comparison:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - name: driverNumber1
+        in: query
+        description: Número del primer conductor
+        schema:
+          $ref: "#/components/schemas/DriverNumber"
+      - name: driverNumber2
+        in: query
+        description: Número del segundo conductor
+        schema:
+          $ref: "#/components/schemas/DriverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+
+    get:
+      description: Comparar la velocidad y aceleración de dos conductores en una vuelta, a lo largo del tiempo
+      responses:
+        '200':
+          description: Velocidad y aceleración de los conductores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    driverNumber:
+                      $ref: '#/components/schemas/DriverNumber'
+                    data:
+                      type: object
+                      properties:
+                        time:
+                          $ref: '#/components/parameters/relativeTimestamp'
+                        s:
+                          type: number
+                          description: Coordenada s de posición (longitud de arco)
+                        versors:
+                          $ref: "#/components/schemas/Versors"
+                        velocity:
+                          $ref: '#/components/schemas/Velocity'
+                        acceleration:
+                          $ref: '#/components/schemas/Acceleration'
 
         '400':
           description: Alguno de los parámetros es inválido
@@ -314,6 +369,14 @@ components:
           type: number
         moduleXY:
           type: number
+        v_eR:
+          type: number
+        v_eT:
+          type: number
+        r_dot:
+          type: number
+        theta_dot:
+          type: number
         speedometer:
           type: number
     Acceleration:  
@@ -334,6 +397,14 @@ components:
           type: number
         aNormal:
           type: number
+        a_eR:
+          type: number
+        a_eT:
+          type: number
+        r_double_dot:
+            type: number
+        theta_double_dot:
+            type: number
     Versors:
         type: object
         description: "Versores"
