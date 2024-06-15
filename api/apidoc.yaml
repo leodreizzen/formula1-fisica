@@ -235,9 +235,6 @@ paths:
                         y:
                           type: number
                           description: Coordenada y de posición
-                        z:
-                          type: number
-                          description: Coordenada z de posición
                         module_velocity_xy:
                           type: number
                           description: Módulo de la velocidad en el plano xy
@@ -317,6 +314,96 @@ paths:
                         acceleration:
                           $ref: '#/components/schemas/Acceleration'
 
+        '400':
+          description: Alguno de los parámetros es inválido
+  /dynamics_comparison:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - name: driverNumber1
+        in: query
+        description: Número del primer conductor
+        schema:
+          $ref: "#/components/schemas/DriverNumber"
+      - name: driverNumber2
+        in: query
+        description: Número del segundo conductor
+        schema:
+          $ref: "#/components/schemas/DriverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+
+    get:
+      description: Comparar datos de dinámica de dos conductores en una vuelta, a lo largo del tiempo
+      responses:
+        '200':
+          description: Velocidad y aceleración de los conductores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    driverNumber:
+                      $ref: '#/components/schemas/DriverNumber'
+                    data:
+                      type: object
+                      properties:
+                        coefficient_friction:
+                          type: number
+                          description: Cota superior del coeficiente de rozamiento
+                        max_friction:
+                          type: number
+                          description: Fuerza de rozamiento máxima
+                        avg_friction:
+                          type: number
+                          description: Fuerza de rozamiento promedio
+                        forces:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              time:
+                                $ref: '#/components/parameters/relativeTimestamp'
+                              x:
+                                type: number
+                                description: Coordenada x de posición
+                              y:
+                                type: number
+                                description: Coordenada y de posición
+                              s:
+                                type: number
+                                description: Coordenada s de posición (longitud de arco)
+                              module_velocity_xy:
+                                type: number
+                                description: Módulo de la velocidad en el plano xy
+                              friction:
+                                type: object
+                                properties:
+                                  frx:
+                                    type: number
+                                    description: Fuerza de rozamiento en x
+                                  fry:
+                                    type: number
+                                    description: Fuerza de rozamiento en y
+                                  module:
+                                    type: number
+                                    description: Módulo de la fuerza de rozamiento
+                                  tangential:
+                                    type: number
+                                    description: Fuerza de rozamiento tangencial
+                                  normal:
+                                    type: number
+                                    description: Fuerza de rozamiento normal
+                                  hasMaxSpeed:
+                                    type: number
+                                    description: Indica si se tienen datos de velocidad máxima
+                                  maxSpeed:
+                                    type: number
+                                    description: Velocidad máxima
+                                  versors:
+                                    $ref: "#/components/schemas/Versors"
         '400':
           description: Alguno de los parámetros es inválido
 
