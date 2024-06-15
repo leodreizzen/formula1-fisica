@@ -70,9 +70,6 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, a
             ],
         }
     }, [timeUnit]);
-    console.log(traces)
-    console.log(plotLayout)
-
     return (
         <BasePlot
             className={className + " flex p-0"}

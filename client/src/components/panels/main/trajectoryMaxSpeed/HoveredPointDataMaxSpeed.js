@@ -1,7 +1,6 @@
 import {frictionColor, normalFrictionColor, trajectoryColor, speedColor, tangentialFrictionColor, maxSpeedColor, speedometerColor} from "../../../../styles";
 
 export default function HoveredPointDataMaxSpeed({trajectoryData, frictionData, hoveredPoint, frictionInTime, vectorsInTime}){
-    console.log(frictionInTime)
     return(
         <div className="flex flex-col text-xs/4 lg:text-xs/5 xl:text-base 2xl:text-xl no-select">
             <p>Tiempo: {trajectoryData[hoveredPoint].time.match(/(\d{2}):(\d{2})\.(\d{3})/)[0]}</p>
