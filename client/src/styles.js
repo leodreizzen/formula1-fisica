@@ -14,8 +14,14 @@ export const plotStyles= {
 export const accelerationColor = "red"
 export const trajectoryColor = "lightgreen"
 export const normalAccelerationColor = "orange"
-export const tangentialAccelerationColor = "pink"
+export const tangentialAccelerationColor = "gold"
 export const speedColor = "pink"
+export const speedometerColor = "lightblue"
 
 export const primaryDriverColor = "red"
 export const secondaryDriverColor = "yellow"
+
+export const frictionColor = "DodgerBlue"
+export const normalFrictionColor = "cornflowerblue"
+export const tangentialFrictionColor = "aquamarine"
+export const maxSpeedColor = "red"

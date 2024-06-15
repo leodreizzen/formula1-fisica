@@ -64,12 +64,16 @@ class FastF1Facade(F1Facade):
         fatest_lap = session_event.laps.pick_driver(str(driverNumber)).pick_fastest()
         return int(fatest_lap.LapNumber)
 
-    def telemetry(self, year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int):
+    @lru_cache(maxsize=tamano_cache)
+    def telemetry(self, year: int, roundNumber: int, sessionNumber: int, driverId: int, lapNumber: int, interpolated=True):
         session_event = self.__get_session(year, roundNumber, sessionNumber)
         lap_telemetry = session_event.laps.pick_driver(str(driverId)).pick_lap(lapNumber).telemetry
         lap_telemetry = lap_telemetry[["X", "Y", "Z", "Time", "Speed", "nGear"]]
         lap_telemetry.reset_index(inplace=True)
-        lap_telemetry = telemetry_interpolation(lap_telemetry)
-        return filter_telemetry(lap_telemetry)
+        if interpolated:
+            lap_telemetry = telemetry_interpolation(lap_telemetry)
+            return filter_telemetry(lap_telemetry)
+        else:
+            return lap_telemetry
     
    
