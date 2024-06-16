@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { timeDeltaToTimeUnit } from '../../client-util';
 import BasePlot from "./BasePlot";
 
-const thetaWithDot = '\u03B8\u0307';
+const thetaWithDot = 'θ\u{0307}';
 
 export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
     const plotData = useMemo(() => {
@@ -57,7 +57,7 @@ export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
             },
 
             yaxis1: {
-                title: 'ṙ [m/s]',
+                title: 'r\u{0307} [m/s]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },

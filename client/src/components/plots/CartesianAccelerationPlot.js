@@ -69,19 +69,19 @@ export default function CartesianAccelerationPlot({ className, timeUnit, vectors
                 tolerance: 0.1
             },
             yaxis1: {
-                title: 'Ax [m/s²]',
+                title: 'ax [m/s²]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
             yaxis2: {
-                title: 'Ay [m/s²]',
+                title: 'ay [m/s²]',
                 titlefont: yAxisFont,
                 tolerance: 0.1,
                 tickfont: yAxisFont,
                 rangemode: 'tozero',
             },
             yaxis3: {
-                title: 'Az [m/s²]',
+                title: 'az [m/s²]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
