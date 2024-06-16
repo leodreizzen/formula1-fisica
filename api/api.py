@@ -4,12 +4,11 @@ from functools import lru_cache
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 
-from f1data.F1IntrinsicsHelper import F1IntrinsicsHelper
 from utilFisica import calcular_coordenadas_polares,vector_calcs, dynamics_calcs, getKinematicVectorsWithAlignedIntrinsics
 from util import timedelta_to_string, timestamp_to_string
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import numpy as np
-from numpy import cos, arctan2 , sin
+from numpy import cos, arctan2, sin
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
@@ -341,7 +340,7 @@ def kinematics_comparison(year: int, roundNumber: int, sessionNumber: int, drive
 
 @app.get("/neck_forces")
 def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
-    lap_telemetry = vector_calcs(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    lap_telemetry = vector_data(year, roundNumber, sessionNumber, driverNumber, lapNumber)
     #Peso de una cabeza + Peso casco ≈ 7kg
     #Fuerzas G = Aceleración/Gravedad
     #Tomamos (módulo de aceleración xy) + (Fuerzas G) = Newton que debe aplicar el cuello

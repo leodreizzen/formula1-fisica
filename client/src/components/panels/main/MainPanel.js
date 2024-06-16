@@ -11,6 +11,8 @@ import PositionsPanel from "./positions/PositionsPanel";
 import NeckForcesPanel from "./neckForces/NeckForcesPanel";
 import FrictionsPanel from "./frictions/FrictionsPanel";
 import Comparative_DynamicPanel from "./dynamic_comparative/Comparative_DynamicPanel";
+import {KinematicVectorsProvider} from "../../../context/KinematicVectorsContext";
+import ComparativePanel from "./comparative/ComparativePanel";
 
 export default function MainPanel({className}) {
     const {year, round, session} = useSessionDataContext();

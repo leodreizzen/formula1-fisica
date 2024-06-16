@@ -78,7 +78,6 @@ export function useGetNeckForces(year, roundNumber, sessionNumber, driverNumber,
     return [neckForces, isLoading]
 }
 
-export function useGetKinematicVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
 export function useGetKinematicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber) {
     const [kinematicsComparison, isLoading] = useAPIHook(getKinematicsComparison, [year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber])
     return [kinematicsComparison, isLoading]
