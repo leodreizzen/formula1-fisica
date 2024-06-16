@@ -7,7 +7,7 @@ import {
     getTrajectory,
     getKinematicVectors,
     getDrifts,
-    getKinematicsComparison
+    getKinematicsComparison, getDynamics, getDynamicsComparison,getNeckForces
 } from "./getters";
 import {useStateWithDeps} from "use-state-with-deps";
 
@@ -69,9 +69,13 @@ export function useGetLaps(year, roundNumber, sessionNumber, driverNumber) {
 }
 
 export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
-
     const [trajectory, isLoading] = useAPIHook(getTrajectory, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [trajectory, isLoading]
+}
+
+export function useGetNeckForces(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
+    const [neckForces, isLoading] = useAPIHook(getNeckForces, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
+    return [neckForces, isLoading]
 }
 
 export function useGetKinematicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber) {
@@ -84,7 +88,16 @@ export function useGetKinematicVectors(year, roundNumber, sessionNumber, driverN
     return [vectors, isLoading]
 }
 
+export function useGetDynamicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber){
+    const [vectors, isLoading] = useAPIHook(getDynamicsComparison, [year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber])
+    return [vectors, isLoading]
+}
 export function useGetDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber){
     const [drifting, isLoading] = useAPIHook(getDrifts, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [drifting, isLoading]
+}
+
+export  function useGetDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber){
+    const [dynamics, isLoading] = useAPIHook(getDynamics, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
+    return [dynamics, isLoading]
 }

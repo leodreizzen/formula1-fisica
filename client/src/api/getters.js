@@ -39,6 +39,16 @@ export function getTrajectory(year, roundNumber, sessionNumber, driverNumber, la
     }, options);
 }
 
+export function getNeckForces(year, roundNumber, sessionNumber, driverNumber, lapNumber, options) {
+    return APIGetter("/neck_forces", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber: driverNumber,
+        lapNumber: lapNumber
+    }, options);
+}
+
 export function getKinematicVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
      return APIGetter("/kinematics_vectors", {
         year: year,
@@ -59,9 +69,28 @@ export function getKinematicsComparison(year, roundNumber, sessionNumber, driver
         lapNumber: lapNumber
     }, options);
 }
-
+export function getDynamicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber, options){
+    return APIGetter("/dynamics_comparison", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber1: driverNumber1,
+        driverNumber2: driverNumber2,
+        lapNumber: lapNumber
+    }, options);
+}
 export function getDrifts(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
      return APIGetter("/drifts", {
+         year: year,
+         roundNumber: roundNumber,
+         sessionNumber: sessionNumber,
+         driverNumber: driverNumber,
+         lapNumber: lapNumber
+     }, options);
+}
+
+export function getDynamics(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
+     return APIGetter("/dynamics", {
          year: year,
          roundNumber: roundNumber,
          sessionNumber: sessionNumber,

@@ -1,11 +1,6 @@
-import {accelerationColor, normalAccelerationColor, trajectoryColor, speedColor, tangentialAccelerationColor, speedometerColor} from "../../../../styles";
-import {useKinematicVectorsContext} from "../../../../context/KinematicVectorsContext";
+import {frictionColor, normalFrictionColor, trajectoryColor, speedColor, tangentialFrictionColor, maxSpeedColor, speedometerColor} from "../../../../styles";
 
-export default function HoveredPointData({trajectoryData, hoveredPoint}){
-    const {getKinematicVectorsFromTime} = useKinematicVectorsContext();
-    const time = hoveredPoint !== null && trajectoryData !== null ? trajectoryData[hoveredPoint].time : null;
-    const vectorsInTime = getKinematicVectorsFromTime(time);
-
+export default function HoveredPointDataMaxSpeed({trajectoryData, frictionData, hoveredPoint, frictionInTime, vectorsInTime}){
     return(
         <div className="flex flex-col text-xs/4 lg:text-xs/5 xl:text-base 2xl:text-xl no-select">
             <p>Tiempo: {trajectoryData[hoveredPoint].time.match(/(\d{2}):(\d{2})\.(\d{3})/)[0]}</p>
@@ -31,23 +26,22 @@ export default function HoveredPointData({trajectoryData, hoveredPoint}){
                     <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.vY / 10).toFixed(2) + "m/s"}</td>
                     <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.vZ / 10).toFixed(2) + "m/s"}</td>
                 </tr>
-                <tr style={{color: accelerationColor}}>
-                    <th>a</th>
-                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aX / 10).toFixed(2) + "m/s²"}</td>
-                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aY / 10).toFixed(2) + "m/s²"}</td>
-                    <td>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aZ / 10).toFixed(2) + "m/s²"}</td>
+                <tr style={{color: frictionColor}}>
+                    <th>rozamiento</th>
+                    <td>{frictionInTime === undefined ? "-" : (frictionInTime.frx / 10).toFixed(2) + "N"}</td>
+                    <td>{frictionInTime === undefined ? "-" : (frictionInTime.fry / 10).toFixed(2) + "N"}</td>
                 </tr>
                 </tbody>
             </table>
             <div className="flex flex-col lg:flex-row mt-2 items-center lg:justify-center ">
                 <div className="flex flex-col text-left lg:mr-4">
                     <div className="grid grid-cols-2">
-                        <span style={{color: tangentialAccelerationColor}} className="mr-4 lg:mr-2">a tang.:</span> <span
-                        style={{color: tangentialAccelerationColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aTangential / 10).toFixed(2) + "m/s²"}</span>
-                        <span style={{color: normalAccelerationColor}} className="mr-4 lg:mr-2">a normal:</span> <span
-                        style={{color: normalAccelerationColor}} >{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.aNormal / 10).toFixed(2) + "m/s²"}</span>
-                        <span style={{color: accelerationColor}} className="mr-4 lg:mr-2">módulo a:</span> <span
-                        style={{color: accelerationColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.acceleration.module / 10).toFixed(2) + "m/s²"}</span>
+                        <span style={{color: tangentialFrictionColor}} className="mr-4 lg:mr-2">rozamiento tang.:</span> <span
+                        style={{color: tangentialFrictionColor}}>{frictionInTime === undefined ? "-" : (frictionInTime.tangential / 10).toFixed(2) + "N"}</span>
+                        <span style={{color: normalFrictionColor}} className="mr-4 lg:mr-2">rozamiento normal:</span> <span
+                        style={{color: normalFrictionColor}} >{frictionInTime === undefined ? "-" : (frictionInTime.normal / 10).toFixed(2) + "N"}</span>
+                        <span style={{color: frictionColor}} className="mr-4 lg:mr-2">módulo rozamiento:</span> <span
+                        style={{color: frictionColor}}>{frictionInTime === undefined ? "-" : (frictionInTime.module / 10).toFixed(2) + "N"}</span>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 text-left">
@@ -55,6 +49,8 @@ export default function HoveredPointData({trajectoryData, hoveredPoint}){
                     style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.module / 10).toFixed(2) + "m/s"}</span>
                     <span style={{color: speedometerColor}} className="mr-4 lg:mr-2">velocímetro: </span> <span
                     style={{color: speedometerColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.speedometer / 10).toFixed(2) + "m/s"}</span>
+                    <span style={{color: maxSpeedColor}} className="mr-4 lg:mr-2">vel. máx: </span> <span
+                    style={{color: maxSpeedColor}}>{frictionInTime === undefined || !frictionInTime.hasMaxSpeed ? "-" : (frictionInTime.maxSpeed / 10).toFixed(2) + "m/s"}</span>
                 </div>
             </div>
         </div>

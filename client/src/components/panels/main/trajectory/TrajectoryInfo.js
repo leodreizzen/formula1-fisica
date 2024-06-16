@@ -1,6 +1,6 @@
 import TrajectoryPlot from "../../../plots/TrajectoryPlot";
 import TrajectorySidePanel from "./TrajectorySidePanel";
-import {useGetTrajectory} from "../../../../api/hooks";
+import {useGetDynamics, useGetTrajectory} from "../../../../api/hooks";
 import {useSessionDataContext} from "../../../../context/SessionDataContext";
 import {useDriverContext} from "../../../../context/DriverContext";
 import {useLapContext} from "../../../../context/LapContext";
@@ -17,6 +17,7 @@ export default function TrajectoryInfo({className=""}) {
     const [trajectoryData,] = useGetTrajectory(year, round, session, currentDriver?.driverNumber, currentLap);
 
     const [hoveredPoint, setHoveredPoint] = useState(null);
+    
 
     return (
         <div className={"flex flex-col items-center sm:flex-row overflow-clip " + className}>

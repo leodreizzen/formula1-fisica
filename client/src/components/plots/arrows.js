@@ -1,4 +1,12 @@
-import {accelerationColor, normalAccelerationColor, speedColor, tangentialAccelerationColor} from "../../styles";
+import {
+    accelerationColor,
+    normalAccelerationColor,
+    speedColor,
+    tangentialAccelerationColor,
+    frictionColor,
+    normalFrictionColor,
+    tangentialFrictionColor
+} from "../../styles";
 
 export function speedArrow(vectors, x, y) {
     const speedX = vectors.velocity.vX / 10;
@@ -91,5 +99,76 @@ export function accelerationArrow(vectors, x, y) {
         arrowsize: 1,
         arrowwidth: 2,
         arrowcolor: accelerationColor,
+    }
+}
+
+const vectorscale = 0.01;
+export function frictionArrow(friction, x, y){
+    const frictionX = friction.frx / 10;
+    const frictionY = friction.fry / 10;
+     return {
+        ax: x,
+        ay: y,
+        x: x + frictionX * vectorscale,
+        y: y + frictionY * vectorscale,
+        xref: 'x',
+        yref: 'y',
+        axref: 'x',
+        ayref: 'y',
+        text: '',
+        arrowhead: 1,
+        arrowsize: 1,
+        arrowwidth: 2,
+        arrowcolor: frictionColor,
+    }
+}
+
+export function normalFrictionArrow(friction, x, y){
+    const versorX = friction.versors.normal.x;
+    const versorY = friction.versors.normal.y;
+    const frNormal = friction.normal / 10;
+
+    const arrowX = versorX * frNormal;
+    const arrowY = versorY * frNormal;
+
+    return {
+        ax: x,
+        ay: y,
+        x: x + arrowX * vectorscale,
+        y: y + arrowY * vectorscale,
+        xref: 'x',
+        yref: 'y',
+        axref: 'x',
+        ayref: 'y',
+        text: '',
+        arrowhead: 1,
+        arrowsize: 1,
+        arrowwidth: 2,
+        arrowcolor: normalFrictionColor
+    }
+}
+
+export function tangentialFrictionArrow(friction, x, y){
+    const versorX = friction.versors.tangent.x;
+    const versorY = friction.versors.tangent.y;
+    const frTangential = friction.tangential / 10;
+
+    const arrowX = versorX * frTangential;
+    const arrowY = versorY * frTangential;
+
+    return {
+        ax: x,
+        ay: y,
+        x: x + arrowX * vectorscale,
+        y: y + arrowY * vectorscale,
+        xref: 'x',
+        yref: 'y',
+        axref: 'x',
+        ayref: 'y',
+        text: '',
+        arrowhead: 1,
+        arrowsize: 1,
+        arrowwidth: 2,
+        arrowcolor: tangentialFrictionColor
     }
 }
