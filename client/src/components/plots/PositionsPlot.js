@@ -7,6 +7,7 @@ import {useDriverContext} from "../../context/DriverContext";
 import {useLapContext} from "../../context/LapContext";
 import {useGetTrajectory} from "../../api/hooks";
 import {OrbitProgress} from "react-loading-indicators";
+import { CoordinateSystemSelector } from '../inputs/CoordinateSystemSelector';
 
 export function PositionsPlot({className, timeUnit}) {
     const sessionData = useSessionDataContext();
@@ -27,13 +28,13 @@ export function PositionsPlot({className, timeUnit}) {
     let plots;
     switch (coordinateSystem) {
         case "cartesian":
-            plots =  (<CartesianPositionPlot className="w-1/2 h-full" timeUnit={timeUnit} trajectoryData={trajectoryData} />);
-            break;
-        case "intrinsic":
-            plots =  <IntrinsicPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            plots =  (<CartesianPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit} trajectoryData={trajectoryData} />);
             break;
         case "polar":
-            plots =  <PolarPositionPlot className="w-1/2 h-full" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            plots =  <PolarPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
+            break;
+        case "intrinsic":
+            plots =  <IntrinsicPositionPlot className="w-7/12 h-full ml-4" timeUnit={timeUnit}  trajectoryData={trajectoryData}/>;
             break;
         default:
             plots =  null;
@@ -45,28 +46,7 @@ export function PositionsPlot({className, timeUnit}) {
         <div className={className + " items-center flex justify-center w-full h-full overflow-clip"}>
             {trajectoryData !== null ?
                 <>
-                    <div className="flex flex-col items-start">
-                        <div className="mt-6">
-                            <input type="radio" id="cartesian" name="coordinateSystem" value="cartesian"
-                                   className="hidden"
-                                   checked={coordinateSystem === "cartesian"} onChange={handleCoordinateSystemChange}/>
-                            <label htmlFor="cartesian"
-                                   className={"no-select p-2 border border-white rounded-full cursor-pointer " + (coordinateSystem === "cartesian" ? "bg-blue-600 text-white " : "bg-white text-black ")}>Cartesianas</label>
-                        </div>
-                        <div className="mt-6">
-                            <input type="radio" id="polar" name="coordinateSystem" value="polar" className="hidden"
-                                   checked={coordinateSystem === "polar"} onChange={handleCoordinateSystemChange}/>
-                            <label htmlFor="polar"
-                                   className={"no-select p-2 border border-white rounded-full cursor-pointer " + (coordinateSystem === "polar" ? "bg-blue-600 text-white " : "bg-white text-black ")}>Polares</label>
-                        </div>
-                        <div className="mt-6">
-                            <input type="radio" id="intrinsic" name="coordinateSystem" value="intrinsic"
-                                   className="hidden"
-                                   checked={coordinateSystem === "intrinsic"} onChange={handleCoordinateSystemChange}/>
-                            <label htmlFor="intrinsic"
-                                   className={"no-select p-2 border border-white rounded-full cursor-pointer " + (coordinateSystem === "intrinsic" ? "bg-blue-600 text-white " : "bg-white text-black ")}>Intrínsecas</label>
-                        </div>
-                    </div>
+                    <CoordinateSystemSelector currentSystem={coordinateSystem} onCoordinateSystemChange={handleCoordinateSystemChange}/>
                     {plots}
                 </>
                 :
@@ -75,7 +55,6 @@ export function PositionsPlot({className, timeUnit}) {
                                                                                                   color="#EFE2E2"
                                                                                                   variant='dotted'/>
                     </div>
-
                 </>
             }
         </div>

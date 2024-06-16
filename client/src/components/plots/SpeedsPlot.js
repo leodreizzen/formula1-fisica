@@ -1,11 +1,10 @@
-import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import {useMemo, useState} from "react";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import {OrbitProgress} from "react-loading-indicators";
+import {primaryGraphColor, secondaryGraphColor} from "../../styles";
 import BasePlot from "./BasePlot";
 
-export default function SpeedsPlot({className, timeUnit})  {
-    const {vectors} = useKinematicVectorsContext();
+export default function SpeedsPlot({className, timeUnit, vectors})  {
     const [visible, setVisible] = useState([true, true]);
 
     function handleUpdate(state) {
@@ -19,7 +18,7 @@ export default function SpeedsPlot({className, timeUnit})  {
                 y: vectors?.map(it => it.velocity.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'red'},
+                marker: {color: secondaryGraphColor},
             }
         }, [vectors, timeUnit]);
 
@@ -29,7 +28,7 @@ export default function SpeedsPlot({className, timeUnit})  {
             y: vectors?.map(it => it.velocity.speedometer / 10),
             type: 'scatter',
             mode: 'lines',
-            marker: {color: 'orange'},
+            marker: {color: primaryGraphColor},
         }
     }, [vectors, timeUnit]);
 
@@ -49,11 +48,11 @@ export default function SpeedsPlot({className, timeUnit})  {
         }, [timeUnit]);
 
     return (
-        <div className={className + " flex justify-center w-full overflow-clip"}>
+        <div className={className + ""}>
             {vectors !== null ?
                 <>
                     <BasePlot
-                        className={className + " flex justify-center w-full"}
+                        className={"w-full h-full"}
                         data={[
                             {...calculatedSpeed, xaxis: 'x1', yaxis: 'y1', name: "Velocidad Calculada", visible: visible[0]},
                             {...speedometerTrace, xaxis: 'x1', yaxis: 'y1', name: "Velocímetro", visible: visible[1]},

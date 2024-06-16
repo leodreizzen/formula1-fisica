@@ -3,30 +3,29 @@ import {useMemo} from "react";
 import {timeDeltaToTimeUnit} from "../../client-util";
 import BasePlot from "./BasePlot";
 
-function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
-
+export default function CartesianAccelerationPlot({ className, timeUnit, vectors }) {
     const plotData = useMemo(() => {
         let data = [];
-        if(trajectoryData){
+        if (vectors) {
             data.push({
-                x: trajectoryData.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: trajectoryData.map(it => it.polar.r / 10),
+                x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
+                y: vectors.map(it => it.acceleration.aX / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: primaryGraphColor},
-                xaxis: 'x1', yaxis: 'y1', showlegend: false, name:""
+                marker: { color: primaryGraphColor },
+                xaxis: 'x1', yaxis: 'y1', showlegend: false, name: ""
             })
             data.push({
-                x: trajectoryData.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: trajectoryData.map(it => it.polar.theta / 10),
+                x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
+                y: vectors.map(it => it.acceleration.aY / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: secondaryGraphColor},
-                xaxis: 'x2', yaxis: 'y2', showlegend: false, name:""
+                marker: { color: secondaryGraphColor },
+                xaxis: 'x2', yaxis: 'y2', showlegend: false, name: ""
             })
             data.push({
-                x: trajectoryData.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: trajectoryData.map(it => it.polar.z / 10),
+                x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
+                y: vectors.map(it => it.acceleration.aZ / 10),
                 type: 'scatter',
                 mode: 'lines',
                 marker: {color: thirdGraphColor},
@@ -34,23 +33,24 @@ function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
             })
         }
         return data;
-    }, [trajectoryData, timeUnit]);
+    }, [vectors, timeUnit]);
 
     const plotLayout = useMemo(() => {
         const xAxisFont = {
             family: plotStyles.font.family,
-            size:18,
+            size: 18,
             color: plotStyles.font.color
-        }
+        };
 
         const yAxisFont = {
             family: plotStyles.font.family,
-            size:16,
+            size: 16,
             color: plotStyles.font.color
-        }
+        };
+
         return {
             xaxis: {
-                title: 'Tiempo [' + timeUnit + "]",
+                title: "",
                 titlefont: xAxisFont,
                 tolerance: 0.1
             },
@@ -68,36 +68,35 @@ function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
                 titlefont: xAxisFont,
                 tolerance: 0.1
             },
-
             yaxis1: {
-                title: 'r [m]',
+                title: 'ax [m/s²]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
-
             },
             yaxis2: {
-                title: 'θ [rad]',
+                title: 'ay [m/s²]',
                 titlefont: yAxisFont,
-                tolerance: 0.1
+                tolerance: 0.1,
+                tickfont: yAxisFont,
+                rangemode: 'tozero',
             },
             yaxis3: {
-                title: 'Z [m]',
+                title: 'az [m/s²]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
-            margin: {t: 20},
-            grid: {rows: 3, columns: 1, pattern: 'independent'},
+            margin: { t: 20 },
+            grid: { rows: 3, columns: 1, pattern: 'independent' },
             dragmode: "pan"
-        }
-    }, [timeUnit])
+        };
+    }, [timeUnit]);
 
     return (
         <BasePlot className={className}
-            data={plotData}
-            layout={plotLayout}
-            config={{responsive: true, scrollZoom: true, displayModeBar: false}}
+                    data={plotData}
+                    layout={plotLayout}
+                    config={{ responsive: true, scrollZoom: true, displayModeBar: false }}
         />
-    )
-}
+    );
 
-export default CartesianPositionPlot;
+}
