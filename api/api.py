@@ -334,10 +334,6 @@ def kinematics_comparison(year: int, roundNumber: int, sessionNumber: int, drive
         })
     return response
 
-
-
-
-
 @app.get("/neck_forces")
 def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
     lap_telemetry = vector_data(year, roundNumber, sessionNumber, driverNumber, lapNumber)
@@ -364,7 +360,7 @@ def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: i
     # si es negativa va a la izquierda
     lap_telemetry['fuerza_cuello_lateral'] = masa * lap_telemetry['a_normal'] * sin(lap_telemetry['angulo_entre_versores'])
 
-    lap_telemetry['fuerza_cuello_frontal'] = masa * lap_telemetry['aTangential']
+    lap_telemetry['fuerza_cuello_frontal'] = -masa * lap_telemetry['aTangential']
 
 
 
