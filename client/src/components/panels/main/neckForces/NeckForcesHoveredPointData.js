@@ -30,13 +30,13 @@ export default function NeckForcesHoveredPointData({hoveredNeckForcesData}) {
                 <tbody>
                 <tr style={{color: trajectoryColor}}>
                     <th>fuerzas del cuello</th>
-                    <td className="text-red-600">{(hoveredNeckForcesData.frontal_neck_force / 10).toFixed(2)}</td>
-                    <td className="text-blue-500">{(hoveredNeckForcesData.lateral_neck_force / 10).toFixed(2)}</td>
+                    <td className="text-red-600">{(hoveredNeckForcesData.frontal_neck_force / 10).toFixed(2)} N</td>
+                    <td className="text-blue-500">{(hoveredNeckForcesData.lateral_neck_force / 10).toFixed(2)} N</td>
                 </tr>
                 <tr style={{color: speedColor}}>
                     <th>"Fuerzas" G</th>
-                    <td>{(hoveredNeckForcesData.frontal_g_force / 10).toFixed(2)}</td>
-                    <td>{(hoveredNeckForcesData.lateral_g_force / 10).toFixed(2)}</td>
+                    <td>{(hoveredNeckForcesData.frontal_g_force / 10).toFixed(2)} G</td>
+                    <td>{(hoveredNeckForcesData.lateral_g_force / 10).toFixed(2)} G</td>
                 </tr>
                 </tbody>
             </table>
