@@ -39,6 +39,16 @@ export function getTrajectory(year, roundNumber, sessionNumber, driverNumber, la
     }, options);
 }
 
+export function getNeckForces(year, roundNumber, sessionNumber, driverNumber, lapNumber, options) {
+    return APIGetter("/neck_forces", {
+        year: year,
+        roundNumber: roundNumber,
+        sessionNumber: sessionNumber,
+        driverNumber: driverNumber,
+        lapNumber: lapNumber
+    }, options);
+}
+
 export function getKinematicVectors(year, roundNumber, sessionNumber, driverNumber, lapNumber, options){
      return APIGetter("/kinematics_vectors", {
         year: year,

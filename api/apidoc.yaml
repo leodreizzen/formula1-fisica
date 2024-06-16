@@ -1,9 +1,9 @@
-openapi: '3.0.0'
+openapi: "3.0.0"
 info:
-  version: '1.0.0'
-  title: 'API F1'
+  version: "1.0.0"
+  title: "API F1"
 servers:
-  - url: 'http://127.0.0.1:3002'
+  - url: "http://127.0.0.1:3002"
 
 paths:
   /rounds:
@@ -12,14 +12,14 @@ paths:
     get:
       summary: Obtener las rondas disponibles dado un año
       responses:
-        '200':
+        "200":
           description: Las rondas disponibles para el año solicitado
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Round'
+                  $ref: "#/components/schemas/Round"
   /drivers:
     parameters:
       - $ref: "#/components/parameters/roundYear"
@@ -28,15 +28,15 @@ paths:
     get:
       summary: Obtener los conductores en una sesión
       responses:
-        '200':
+        "200":
           description: "Conductores que participaron de la sesión"
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Driver'
-        '400':
+                  $ref: "#/components/schemas/Driver"
+        "400":
           description: Alguno de los parámetros es inválido
 
   /laps:
@@ -48,7 +48,7 @@ paths:
     get:
       summary: Obtener las vueltas que dio un conductor en una sesión
       responses:
-        '200': 
+        "200":
           description: Vueltas que dio el conductor
           content:
             application/json:
@@ -61,7 +61,7 @@ paths:
                   fastest_lap:
                     type: integer
                     description: Número de la vuelta que el conductor terminó más rápido (desde 0)
-        '400':
+        "400":
           description: Alguno de los parámetros es inválido
 
   /trajectory:
@@ -74,7 +74,7 @@ paths:
     get:
       summary: Obtener la trayectoria de un conductor en una vuelta de una sesión
       responses:
-        '200': 
+        "200":
           description: Trayectoria que siguió el conductor
           content:
             application/json:
@@ -114,14 +114,14 @@ paths:
                           type: number
                           description: Polo coordenada y
                     intrinsic:
-                        type: object
-                        properties:
-                            s:
-                              type: number
-                              description: Coordenada s de posición (longitud de arco)
+                      type: object
+                      properties:
+                        s:
+                          type: number
+                          description: Coordenada s de posición (longitud de arco)
                     time:
-                      $ref: '#/components/schemas/RelativeTimestamp'
-        '400':
+                      $ref: "#/components/schemas/RelativeTimestamp"
+        "400":
           description: Alguno de los parámetros es inválido
 
   /drifts:
@@ -134,7 +134,7 @@ paths:
     get:
       description: Obtener los derrapes para un conductor dado, en una vuelta
       responses:
-        '200':
+        "200":
           description: Derrapes
           content:
             application/json:
@@ -144,7 +144,7 @@ paths:
                   type: object
                   properties:
                     time:
-                      $ref: '#/components/schemas/RelativeTimestamp'
+                      $ref: "#/components/schemas/RelativeTimestamp"
                     x:
                       type: number
                       description: Coordenada x de posición
@@ -158,10 +158,45 @@ paths:
                       type: number
                       description: Grado de derrape entre 0 (leve) y 1 (fuerte)
 
+        "400":
+          description: Alguno de los parámetros es inválido
 
-        '400':
-           description: Alguno de los parámetros es inválido  
+  /neck_forces:
+    parameters:
+      - $ref: "#/components/parameters/roundYear"
+      - $ref: "#/components/parameters/roundNumber"
+      - $ref: "#/components/parameters/sessionNumber"
+      - $ref: "#/components/parameters/driverNumber"
+      - $ref: "#/components/parameters/lapNumber"
+    get:
+      description: Obtener las fuerzas en el cuello de un conductor en una vuelta
+      responses:
+        "200":
+          description: Fuerzas en el cuello del conductor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      $ref: "#/components/parameters/relativeTimestamp"
+                    frontal_neck_force:
+                      type: number
+                      description: Fuerza frontal en el cuello
+                    lateral_neck_force:
+                      type: number
+                      description: Fuerza lateral en el cuello
+                    frontal_g_force:
+                      type: number
+                      description: Fuerza G frontal
+                    lateral_g_force:
+                      type: number
+                      description: Fuerza G lateral
 
+        "400":
+          description: Alguno de los parámetros es inválido
 
   /kinematics_vectors:
     parameters:
@@ -174,7 +209,7 @@ paths:
     get:
       description: Obtener la velocidad y aceleración de un conductor en una vuelta, a lo largo del tiempo
       responses:
-        '200':
+        "200":
           description: Velocidad y aceleración del conductor
           content:
             application/json:
@@ -412,14 +447,14 @@ components:
     roundYear:
       name: year
       in: query
-      schema: 
-        $ref: '#/components/schemas/RoundYear'
+      schema:
+        $ref: "#/components/schemas/RoundYear"
       description: Año de la ronda
     roundNumber:
       name: roundNumber
       in: query
       description: Numero de ronda
-      schema: 
+      schema:
         $ref: "#/components/schemas/RoundNumber"
     sessionNumber:
       name: sessionNumber
@@ -451,7 +486,7 @@ components:
       type: object
       properties:
         roundNumber:
-          $ref: '#/components/schemas/RoundNumber'
+          $ref: "#/components/schemas/RoundNumber"
         country:
           type: string
           description: Pais donde se juega la ronda
@@ -474,12 +509,12 @@ components:
                 description: >
                   Nombre de la sesión. Ej: "Practice 1", "Qualifying", "Race"
               dateUTC:
-                $ref: '#/components/schemas/Timestamp'
+                $ref: "#/components/schemas/Timestamp"
     Driver:
       type: object
       properties:
         driverNumber:
-          $ref: '#/components/schemas/DriverNumber'
+          $ref: "#/components/schemas/DriverNumber"
         fullName:
           type: string
           description: Nombre completo del conductor
@@ -544,7 +579,7 @@ components:
           type: number
         speedometer:
           type: number
-    Acceleration:  
+    Acceleration:
       type: object
       description: "Aceleracion de un conductor"
       properties:
@@ -557,7 +592,7 @@ components:
         module:
           type: number
         moduleXY:
-            type: number
+          type: number
         aTangential:
           type: number
         aNormal:
@@ -567,31 +602,31 @@ components:
         a_eT:
           type: number
         r_double_dot:
-            type: number
+          type: number
         theta_double_dot:
-            type: number
+          type: number
     Versors:
-        type: object
-        description: "Versores"
-        properties:
-            tangent:
-              $ref: "#/components/schemas/TangentVersor"
-            normal:
-                $ref: "#/components/schemas/NormalVersor"
+      type: object
+      description: "Versores"
+      properties:
+        tangent:
+          $ref: "#/components/schemas/TangentVersor"
+        normal:
+          $ref: "#/components/schemas/NormalVersor"
 
     TangentVersor:
-        type: object
-        description: "Versor tangente"
-        properties:
-            x:
-              type: number
-            y:
-              type: number
+      type: object
+      description: "Versor tangente"
+      properties:
+        x:
+          type: number
+        y:
+          type: number
     NormalVersor:
-        type: object
-        description: "Versor normal"
-        properties:
-            x:
-              type: number
-            y:
-              type: number
+      type: object
+      description: "Versor normal"
+      properties:
+        x:
+          type: number
+        y:
+          type: number

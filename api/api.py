@@ -4,11 +4,11 @@ from functools import lru_cache
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 
-from f1data.F1IntrinsicsHelper import F1IntrinsicsHelper
 from utilFisica import calcular_coordenadas_polares,vector_calcs, dynamics_calcs, getKinematicVectorsWithAlignedIntrinsics
 from util import timedelta_to_string, timestamp_to_string
 from f1data.FastF1Facade import FastF1Facade as FastF1Facade
 import numpy as np
+from numpy import cos, arctan2, sin
 
 app = fastapi.FastAPI()
 facade = FastF1Facade()
@@ -16,6 +16,8 @@ facade = FastF1Facade()
 origins = ["*"]
 
 tamano_cache = 1
+
+gravedad = 9.81
 
 # radio de giro para umbral = 7.35metros
 wheelbase = 3.6
@@ -332,8 +334,47 @@ def kinematics_comparison(year: int, roundNumber: int, sessionNumber: int, drive
         })
     return response
 
+@app.get("/neck_forces")
+def neck_forces(year: int, roundNumber: int, sessionNumber: int, driverNumber: int, lapNumber: int):
+    lap_telemetry = vector_data(year, roundNumber, sessionNumber, driverNumber, lapNumber)
+    #Peso de una cabeza + Peso casco ≈ 7kg
+    #Fuerzas G = Aceleración/Gravedad
+    #Tomamos (módulo de aceleración xy) + (Fuerzas G) = Newton que debe aplicar el cuello
+    masa = 7
+    gravedad = 9.81
+
+    lap_telemetry['fuerza_g_horizontal'] = lap_telemetry['aTangential'] / gravedad
+    lap_telemetry['fuerza_g_lateral'] = lap_telemetry['a_normal'] / gravedad
 
 
+    #Para sacar el angulo usamos la siguiente formula angulo = arctan( || A x B || / A . B ) = arctan( producto_cruz / producto_punto)
+
+
+    lap_telemetry['producto_punto'] = lap_telemetry['versor_tangente'].apply(lambda x: x[0]) * lap_telemetry['versor_normal_x'] + lap_telemetry['versor_tangente'].apply(lambda x: x[1]) * lap_telemetry['versor_normal_y']
+
+    lap_telemetry['producto_cruz'] = lap_telemetry['versor_tangente'].apply(lambda x: x[0]) * lap_telemetry['versor_normal_y'] - lap_telemetry['versor_tangente'].apply(lambda x: x[1]) * lap_telemetry['versor_normal_x']
+
+    lap_telemetry['angulo_entre_versores'] = arctan2(lap_telemetry['producto_cruz'],lap_telemetry['producto_punto'])
+
+    # Con el seno del ángulo entre los versores obtenemos la direccion de la fuerza lateral, si es positiva va a la derecha,
+    # si es negativa va a la izquierda
+    lap_telemetry['fuerza_cuello_lateral'] = masa * lap_telemetry['a_normal'] * sin(lap_telemetry['angulo_entre_versores'])
+
+    lap_telemetry['fuerza_cuello_frontal'] = -masa * lap_telemetry['aTangential']
+
+
+
+    fuerzas_cuello = []
+    for index, row in lap_telemetry.iterrows():  #todas las fuerzas son devueltas en Newton pero en dm, hay que dividir por 10 para pasar a m
+        fuerzas_cuello.append({
+            "time": timedelta_to_string(row["Time"]),
+            "frontal_neck_force": row["fuerza_cuello_frontal"],
+            "lateral_neck_force": row["fuerza_cuello_lateral"],
+            "frontal_g_force": row["fuerza_g_horizontal"],
+            "lateral_g_force": row["fuerza_g_lateral"]
+        })
+
+    return fuerzas_cuello
 
 
 @lru_cache(maxsize=tamano_cache)

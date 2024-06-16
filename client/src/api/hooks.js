@@ -7,7 +7,7 @@ import {
     getTrajectory,
     getKinematicVectors,
     getDrifts,
-    getKinematicsComparison, getDynamics, getDynamicsComparison
+    getKinematicsComparison, getDynamics, getDynamicsComparison,getNeckForces
 } from "./getters";
 import {useStateWithDeps} from "use-state-with-deps";
 
@@ -71,6 +71,11 @@ export function useGetLaps(year, roundNumber, sessionNumber, driverNumber) {
 export function useGetTrajectory(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
     const [trajectory, isLoading] = useAPIHook(getTrajectory, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
     return [trajectory, isLoading]
+}
+
+export function useGetNeckForces(year, roundNumber, sessionNumber, driverNumber, lapNumber) {
+    const [neckForces, isLoading] = useAPIHook(getNeckForces, [year, roundNumber, sessionNumber, driverNumber, lapNumber])
+    return [neckForces, isLoading]
 }
 
 export function useGetKinematicsComparison(year, roundNumber, sessionNumber, driverNumber1, driverNumber2, lapNumber) {
