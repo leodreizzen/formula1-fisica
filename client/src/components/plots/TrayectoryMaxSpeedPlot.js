@@ -114,17 +114,21 @@ export default function TrajectoryMaxSpeedPlot({
 
         if (frictionData) {
             const frictionDataWithMaxSpeed = frictionData.forces.filter(it => it.friction.hasMaxSpeed)
-            if(frictionDataWithMaxSpeed) {
+            const v_div_vmax = frictionDataWithMaxSpeed.map(it => (it.module_velocity_xy / it.friction.maxSpeed).toFixed(4))
+            const minimum = Math.min(...v_div_vmax)
+            const maximum = Math.max(...v_div_vmax)
+            if (frictionDataWithMaxSpeed) {
                 data.push({
                     x: frictionDataWithMaxSpeed.map(it => (it.x / 10)),
                     y: frictionDataWithMaxSpeed.map(it => (it.y / 10)),
-                    name: "v max / v",
+                    name: "v / v max",
                     type: "scatter",
                     mode: "markers",
                     showlegend: true,
-                    text: frictionDataWithMaxSpeed.map(it => (it.module_velocity_xy / it.friction.maxSpeed).toFixed(4)),
+                    text: v_div_vmax,
                     marker: {
-                        color: frictionDataWithMaxSpeed.map(it => it.module_velocity_xy / it.friction.maxSpeed),
+                        size: 10,
+                        color: v_div_vmax,
                         colorscale: [
                             ['0.0', 'rgb(72, 248, 95)'],
                             ['0.1', 'rgb(90, 231, 93)'],
@@ -138,8 +142,8 @@ export default function TrajectoryMaxSpeedPlot({
                             ['0.9', 'rgb(237, 94, 79)'],
                             ['1.0', 'rgb(255,77,77)'],
                         ],
-                        cmin: 0,
-                        cmax: 1,
+                        cmin: minimum,
+                        cmax: maximum,
                         hoverinfo: 'none',
                         colorbar: {
                             xref: "container",
