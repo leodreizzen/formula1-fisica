@@ -39,7 +39,7 @@ function IntrinsicPositionPlot({className, timeUnit, trajectoryData}) {
                 tolerance: 0.1
             },
             yaxis: {
-                title: 'S [t]',
+                title: 's [m]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
 
