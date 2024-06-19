@@ -29,7 +29,7 @@ export default function NeckForcesHoveredPointData({hoveredNeckForcesData}) {
                 </thead>
                 <tbody>
                 <tr style={{color: trajectoryColor}}>
-                    <th>fuerzas del cuello</th>
+                    <th>Fuerzas de la cabeza</th>
                     <td className="text-red-600">{(hoveredNeckForcesData.frontal_neck_force / 10).toFixed(2)} N</td>
                     <td className="text-blue-500">{(hoveredNeckForcesData.lateral_neck_force / 10).toFixed(2)} N</td>
                 </tr>

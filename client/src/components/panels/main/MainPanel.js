@@ -50,16 +50,11 @@ function DynamicsTabs({driverData}) {
                  selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl">
         <TabList>
             <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento y velocidad máxima en trayectoria</Tab>
-            <Tab disabled={driverData.drivers === null ? true : null}>Fuerzas
-                del
-                cuello</Tab>
-            <Tab
-                disabled={driverData.drivers === null ? true : null}>Rozamiento respecto del tiempo</Tab>
-                        <Tab disabled={driverData.drivers === null ? true : null}>Comparativas</Tab>
-
+            <Tab disabled={driverData.drivers === null ? true : null}>Fuerzas de la cabeza</Tab>
+            <Tab disabled={driverData.drivers === null ? true : null}>Rozamiento respecto del tiempo</Tab>
+            <Tab disabled={driverData.drivers === null ? true : null}>Comparativas</Tab>
         </TabList>
-
-
+        
         <TabPanel className="overflow-clip">
             <TrayectoryMaxSpeedPanel className="h-full"/>
         </TabPanel>

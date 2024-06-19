@@ -11,6 +11,7 @@ export const plotStyles= {
     axisGridwidth: 1
 }
 
+export const poleColor = "red"
 export const accelerationColor = "red"
 export const trajectoryColor = "lightgreen"
 export const normalAccelerationColor = "orange"
