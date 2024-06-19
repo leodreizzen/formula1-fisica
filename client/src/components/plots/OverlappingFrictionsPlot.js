@@ -46,7 +46,7 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, a
                     textposition: "top",
                     showarrow: false,
                     font: {
-                        size: 16,
+                        size: 11,
                         color: 'lightblue',
                     }
 
@@ -62,7 +62,7 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, a
                     textposition: "top",
                     showarrow: false,
                     font: {
-                        size: 16,
+                        size: 11,
                         color: 'white',
                     }
 

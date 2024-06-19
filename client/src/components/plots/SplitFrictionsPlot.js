@@ -8,13 +8,13 @@ export default function SplitFrictionsPlot({className, timeUnit, traces}) {
     const plotLayout = useMemo(() => {
         const xAxisFont = {
             family: plotStyles.font.family,
-            size:18,
+            size:16,
             color: plotStyles.font.color
         }
 
         const yAxisFont = {
             family: plotStyles.font.family,
-            size:16,
+            size:14,
             color: plotStyles.font.color
         }
         return {
