@@ -8,6 +8,7 @@ import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccele
 import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
+import {poleColor} from "../../styles";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
     const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
@@ -101,6 +102,15 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 mode: "lines",
                 marker: {color: trajectoryData, hoverinfo: 'none'},
                 showlegend: false
+            })
+            data.push({
+                x: [trajectoryData[0].cartesian.x/10],
+                y: [trajectoryData[0].cartesian.y/10],
+                name: "Polo",
+                type: "markers",
+                mode: "markers",
+                marker: {color: poleColor, hoverinfo: 'none'},
+                showlegend: true
             })
         }
         return data;
