@@ -11,7 +11,7 @@ export default function DriverSelector({ className, currentDriver, onDriverChang
     }
 
     return (
-        <div className={"text-white " + className}>
+        <div className={"text-white flex xl:flex-col items-center " + className}>
             <label className="block pb-1">{label}</label>
             <DriverSelect
                 className={"block bg-[#010409] mx-auto w-max min-w-64 border border-gray-400 rounded-md ml-2"}
