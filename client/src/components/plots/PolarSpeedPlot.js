@@ -19,7 +19,7 @@ export default function PolarSpeedsPlot({ className, timeUnit, vectors }) {
             })
             data.push({
                 x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: vectors.map(it => it.velocity.theta_dot / 10),
+                y: vectors.map(it => it.velocity.theta_dot),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryGraphColor },
