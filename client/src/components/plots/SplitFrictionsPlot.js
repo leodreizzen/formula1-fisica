@@ -19,14 +19,14 @@ export default function SplitFrictionsPlot({className, timeUnit, traces}) {
         }
         return {
             xaxis: {
-                title: 'Tiempo [' + timeUnit + "]",
+                title: '',
                 titlefont: xAxisFont,
                 tolerance: 0.1
             },
             xaxis2: {
                 anchor: 'x',
                 matches: 'x',
-                title: 'Tiempo [' + timeUnit + "]",
+                title: '',
                 titlefont: xAxisFont,
                 tolerance: 0.1
             },

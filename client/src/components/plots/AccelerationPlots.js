@@ -29,7 +29,6 @@ export default function AccelerationPlots({className, timeUnit}) {
     }, [vectors, timeUnit]);
     const normalTrace = useMemo(()=>{
         return {
-
             x: vectors?.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
             y: vectors?.map(it => it.acceleration.aNormal / 10),
             type: 'scatter',

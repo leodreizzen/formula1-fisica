@@ -39,7 +39,7 @@ export default function AccelerationsPanel({className}) {
 
     return (
         <div className={className + " flex flex-col items-center overflow-clip h-full"}>
-            <MainDriverSelector/>
+            <MainDriverSelector className=""/>
             {plots}
             <CoordinateSystemSelector className={"flex"} currentSystem={coordinateSystem}
                                       onCoordinateSystemChange={handleCoordinateSystemChange}/>

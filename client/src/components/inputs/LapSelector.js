@@ -33,7 +33,7 @@ export default function LapSelector({ className, lapCount, currentLap, onCurrent
 
     return (lapCount !== null ?
 
-        <div className={"flex flex-col sm:flex-row items-center border-2 border-gray-400 rounded-md pl-2 mt-4 " + className}>
+        <div className={"flex flex-col sm:flex-row items-center border-2 border-gray-400 rounded-md pl-2 mt-4 max-xl:h-[9%] " + className}>
             <>
                 <p className="mr-2 text-white">Vuelta</p>
                 <input type="number" min={1}

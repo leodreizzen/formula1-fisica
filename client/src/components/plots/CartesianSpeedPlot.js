@@ -50,7 +50,7 @@ export default function CartesianSpeedPlot({ className, timeUnit, vectors }) {
 
         return {
             xaxis: {
-                title: "",
+                title: 'Tiempo [' + timeUnit + "]",
                 titlefont: xAxisFont,
                 tolerance: 0.1
             },

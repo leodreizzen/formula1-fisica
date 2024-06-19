@@ -17,7 +17,7 @@ import ComparativePanel from "./comparative/ComparativePanel";
 function KinematicsTabs({driverData}) {
     return <Tabs className="h-full overflow-clip flex flex-col"
                  selectedTabPanelClassName="react-tabs__tab-panel--selected grow overflow-clip"
-                 selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl">
+                 selectedTabClassName="bg-gray-500 rounded-t-xl rounded-tr-xl" >
         <TabList>
             <Tab>Trayectoria</Tab>
             <Tab disabled={driverData.drivers === null ? true : null}>Posiciones</Tab>
@@ -90,7 +90,7 @@ export default function MainPanel({className}) {
                                                           round={round} year={year} currentLap={lapData.currentLap}>
                                     <Tabs className="h-full flex flex-col overflow-clip"
                                           selectedTabPanelClassName="react-tabs__tab-panel--selected grow">
-                                        <TabList>
+                                        <TabList className="mb-1 border-b">
                                             <Tab>Cinemática</Tab>
                                             <Tab>Dinámica</Tab>
                                         </TabList>
