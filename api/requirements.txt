@@ -1,6 +1,6 @@
 fastapi==0.111.*
 fastf1==3.3.*
 uvicorn==0.29.*
-pyinstaller==6.6.*
+pyinstaller==6.8.0
 pandas==2.2.*
 scipy==1.13.*
