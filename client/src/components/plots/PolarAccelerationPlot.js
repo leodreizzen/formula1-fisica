@@ -20,7 +20,7 @@ export default function PolarAccelerationPlot({ className, timeUnit, vectors }) 
             })
             data.push({
                 x: vectors.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: vectors.map(it => it.acceleration.theta_double_dot / 10),
+                y: vectors.map(it => it.acceleration.theta_double_dot),
                 type: 'scatter',
                 mode: 'lines',
                 marker: { color: secondaryGraphColor },
