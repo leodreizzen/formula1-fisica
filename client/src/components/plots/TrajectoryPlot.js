@@ -8,23 +8,25 @@ import {accelerationArrow, normalAccelerationArrow, speedArrow, tangentialAccele
 import {useKinematicVectorsContext} from "../../context/KinematicVectorsContext";
 import BasePlot from "./BasePlot";
 import {useResizeDetector} from "react-resize-detector";
+import {polarOriginMarkerColor} from "../../styles";
 
 export default function TrajectoryPlot({className, trajectoryData, hoveredPoint, setHoveredPoint}) {
     const MARGINS = {r: 150, t: 0, b: 0, l: 0}; // IMPORTANTE: r debe ser mayor que el ancho del texto más largo de la leyenda
     const LEGEND_ITEM_WIDTH = 30;
-
+    const POLE_MARKER_RADIUS = 10;
     const {vectors, getKinematicVectorsFromTime} = useKinematicVectorsContext();
-    const {minX, minY, maxX, maxY} = useMemo(()=>getTrajectoryExtremes(trajectoryData), [trajectoryData]);
+    const {minX, minY, maxX, maxY} = useMemo(() => getTrajectoryExtremes(trajectoryData), [trajectoryData]);
     const {width, height, ref} = useResizeDetector();
 
-    function getPaperWidth(width){
+    function getPaperWidth(width) {
         return width - MARGINS.l - MARGINS.r;
     }
-    function getPaperHeight(height){
+
+    function getPaperHeight(height) {
         return height - MARGINS.t - MARGINS.b;
     }
 
-    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, getPaperWidth(width), getPaperHeight(height) , 0.05, 0.05)
+    const [xTolerance, yTolerance] = getTolerancesPreservingAspectRatio(minX, maxX, minY, maxY, getPaperWidth(width), getPaperHeight(height), 0.05, 0.05)
 
 
     function handleSizeChange(newSize, previousSize, ranges) {
@@ -32,7 +34,10 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         const yRangeInput = ranges.yRanges.get("yaxis")
         let previousRange = {x0: xRangeInput[0], x1: xRangeInput[1], y0: yRangeInput[0], y1: yRangeInput[1]}
 
-        const previousPaperSize = {width: getPaperWidth(previousSize.width), height: getPaperHeight(previousSize.height)}
+        const previousPaperSize = {
+            width: getPaperWidth(previousSize.width),
+            height: getPaperHeight(previousSize.height)
+        }
         const newPaperSize = {width: getPaperWidth(newSize.width), height: getPaperHeight(newSize.height)}
 
         if (newPaperSize.width !== previousPaperSize.width) {
@@ -52,19 +57,18 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
         setHoveredPoint(point)
     }
 
-    function getPointFromHoverData(data){
+    function getPointFromHoverData(data) {
         const point = data.points[0]
         const index = data.points[0].pointIndex;
         if (point.curveNumber === 0)
             return index;
-        else if (point.curveNumber === 1){
+        else if (point.curveNumber === 1) {
             const trajectoryPoint = trajectoryData.findIndex(it => it.cartesian.x / 10 === point.x && it.cartesian.y / 10 === point.y)
             if (trajectoryPoint !== undefined)
                 return trajectoryPoint;
             else
                 console.log("Point not found")
-        }
-        else
+        } else
             throw new Error("Unknown curve");
     }
 
@@ -120,7 +124,7 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 tolerance: yTolerance / (maxY - minY)
             },
             annotations: arrows,
-            legend:{
+            legend: {
                 xref: "container",
                 x: 1 - MARGINS.r / width / 2,
                 valign: "middle",
@@ -128,9 +132,26 @@ export default function TrajectoryPlot({className, trajectoryData, hoveredPoint,
                 y: 1,
                 itemwidth: LEGEND_ITEM_WIDTH,
                 entrywidth: MARGINS.r - LEGEND_ITEM_WIDTH - 15,
-            }
+            },
+            shapes: trajectoryData ? [
+                {
+                    type: "circle",
+                    xref: "x",
+                    yref: "y",
+                    x0: trajectoryData[0].cartesian.x /10 - POLE_MARKER_RADIUS,
+                    x1: trajectoryData[0].cartesian.x /10 + POLE_MARKER_RADIUS,
+                    y0: trajectoryData[0].cartesian.y /10 - POLE_MARKER_RADIUS,
+                    y1: trajectoryData[0].cartesian.y /10 + POLE_MARKER_RADIUS,
+                    fill: "toself",
+                    line: {
+                        color: "transparent"
+                    },
+                    fillcolor: polarOriginMarkerColor,
+                    // fillcolor: "red/"
+                }
+            ] : []
         }
-    }, [arrows, xTolerance, yTolerance, MARGINS, width, maxX, maxY, minX, minY]);
+    }, [arrows, xTolerance, yTolerance, MARGINS, width, maxX, maxY, minX, minY, POLE_MARKER_RADIUS, trajectoryData]);
 
     return (
         <div className={className + " overflow-clip"} ref={ref}>
