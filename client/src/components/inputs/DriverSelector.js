@@ -11,10 +11,10 @@ export default function DriverSelector({ className, currentDriver, onDriverChang
     }
 
     return (
-        <div className={"text-white " + className}>
+        <div className={"text-white flex xl:flex-col items-center justify-center gap-x-2 " + className}>
             <label className="block pb-1">{label}</label>
             <DriverSelect
-                className={"block bg-[#010409] mx-auto w-max min-w-64 mb-5 border border-gray-400 rounded-md"}
+                className={"block bg-[#010409] w-max min-w-64 border border-gray-400 rounded-md"}
                 drivers={drivers ?? []}
                 value={currentDriver ? currentDriver.driverNumber : ""}
                 disabled={drivers !== null ? null : true}

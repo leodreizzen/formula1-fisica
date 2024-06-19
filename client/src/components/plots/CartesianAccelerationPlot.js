@@ -57,7 +57,7 @@ export default function CartesianAccelerationPlot({ className, timeUnit, vectors
             xaxis2: {
                 anchor: 'x',
                 matches: 'x',
-                title: 'Tiempo [' + timeUnit + "]",
+                title: "",
                 titlefont: xAxisFont,
                 tolerance: 0.1
             },
