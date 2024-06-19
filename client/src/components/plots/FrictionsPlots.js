@@ -7,6 +7,7 @@ import {useLapContext} from "../../context/LapContext";
 import {useGetDynamics} from "../../api/hooks";
 import OverlappingFrictionsPlot from "./OverlappingFrictionsPlot";
 import SplitFrictionsPlot from "./SplitFrictionsPlot";
+import {primaryGraphColor, secondaryGraphColor, thirdGraphColor} from "../../styles";
 
 
 export default function FrictionsPlots({className, timeUnit}) {
@@ -27,7 +28,7 @@ export default function FrictionsPlots({className, timeUnit}) {
                 y: frictionData?.forces.map(it => it.friction.module / 10),
                 type: 'scatter',
                 mode: 'lines',
-                marker: {color: 'red'},
+                marker: {color: primaryGraphColor},
             }
         }, [timeTraces, frictionData]);
 
@@ -37,7 +38,7 @@ export default function FrictionsPlots({className, timeUnit}) {
             y: frictionData?.forces.map(it => it.friction.tangential / 10),
             type: 'scatter',
             mode: 'lines',
-            marker: {color: 'orange'},
+            marker: {color: secondaryGraphColor},
         }
     }, [frictionData, timeTraces]);
     const normalTrace = useMemo(()=>{
@@ -46,7 +47,7 @@ export default function FrictionsPlots({className, timeUnit}) {
             y: frictionData?.forces.map(it => it.friction.normal / 10),
             type: 'scatter',
             mode: 'lines',
-            marker: {color: 'blue'},
+            marker: {color: thirdGraphColor},
         }
     }, [timeTraces, frictionData]);
 

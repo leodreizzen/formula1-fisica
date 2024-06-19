@@ -36,16 +36,16 @@ export default function HoveredPointDataMaxSpeed({trajectoryData, frictionData, 
             <div className="flex flex-col lg:flex-row mt-2 items-center lg:justify-center ">
                 <div className="flex flex-col text-left lg:mr-4">
                     <div className="grid grid-cols-2">
-                        <span style={{color: tangentialFrictionColor}} className="mr-4 lg:mr-2">rozamiento tang.:</span> <span
+                        <span style={{color: tangentialFrictionColor}} className="mr-4 lg:mr-2">Fre tang.:</span> <span
                         style={{color: tangentialFrictionColor}}>{frictionInTime === undefined ? "-" : (frictionInTime.tangential / 10).toFixed(2) + "N"}</span>
-                        <span style={{color: normalFrictionColor}} className="mr-4 lg:mr-2">rozamiento normal:</span> <span
+                        <span style={{color: normalFrictionColor}} className="mr-4 lg:mr-2">Fre normal:</span> <span
                         style={{color: normalFrictionColor}} >{frictionInTime === undefined ? "-" : (frictionInTime.normal / 10).toFixed(2) + "N"}</span>
-                        <span style={{color: frictionColor}} className="mr-4 lg:mr-2">módulo rozamiento:</span> <span
+                        <span style={{color: frictionColor}} className="mr-4 lg:mr-2">| Fre |:</span> <span
                         style={{color: frictionColor}}>{frictionInTime === undefined ? "-" : (frictionInTime.module / 10).toFixed(2) + "N"}</span>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 text-left">
-                    <span style={{color: speedColor}} className="mr-4 lg:mr-2">módulo v </span> <span
+                    <span style={{color: speedColor}} className="mr-4 lg:mr-2">| v | </span> <span
                     style={{color: speedColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.module / 10).toFixed(2) + "m/s"}</span>
                     <span style={{color: speedometerColor}} className="mr-4 lg:mr-2">velocímetro: </span> <span
                     style={{color: speedometerColor}}>{vectorsInTime === undefined ? "-" : (vectorsInTime.velocity.speedometer / 10).toFixed(2) + "m/s"}</span>
