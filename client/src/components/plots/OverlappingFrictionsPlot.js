@@ -28,7 +28,7 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, a
                     x1: traces.moduleTrace.x[traces.moduleTrace.x.length -1] + 10,
                     y1: avgFrictionValue/10,
                     line: {
-                        color: 'lightblue',
+                        color: 'white',
                         width: 2,
                         dash: 'dashdot',
                     },
@@ -47,7 +47,6 @@ export default function OverlappingFrictionsPlot({className, timeUnit, traces, a
                     showarrow: false,
                     font: {
                         size: 16,
-                        color: 'lightblue',
                     }
 
                 },

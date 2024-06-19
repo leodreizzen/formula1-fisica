@@ -18,7 +18,7 @@ function CartesianPositionPlot({className, timeUnit, trajectoryData}) {
             })
             data.push({
                 x: trajectoryData.map(it => timeDeltaToTimeUnit(it.time, timeUnit)),
-                y: trajectoryData.map(it => it.polar.theta / 10),
+                y: trajectoryData.map(it => it.polar.theta),
                 type: 'scatter',
                 mode: 'lines',
                 marker: {color: secondaryGraphColor},

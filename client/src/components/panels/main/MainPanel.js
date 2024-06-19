@@ -91,8 +91,8 @@ export default function MainPanel({className}) {
                                     <Tabs className="h-full flex flex-col overflow-clip"
                                           selectedTabPanelClassName="react-tabs__tab-panel--selected grow">
                                         <TabList className="mb-1 border-b">
-                                            <Tab>Cinemática</Tab>
-                                            <Tab>Dinámica</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Cinemática</Tab>
+                                            <Tab disabled={driverData.drivers === null ? true : null}>Dinámica</Tab>
                                         </TabList>
                                         <TabPanel className="overflow-clip">
                                             <KinematicsTabs driverData={driverData}/>

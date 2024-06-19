@@ -39,18 +39,18 @@ export default function SplitFrictionsPlot({className, timeUnit, traces}) {
             },
 
             yaxis1: {
-                title: '|Frd| [N]',
+                title: '|Fre| [N]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
 
             },
             yaxis2: {
-                title: 'Frd tangencial [N]',
+                title: 'Fre tangencial [N]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
             yaxis3: {
-                title: 'Frd normal [N]',
+                title: 'Fre normal [N]',
                 titlefont: yAxisFont,
                 tolerance: 0.1
             },
