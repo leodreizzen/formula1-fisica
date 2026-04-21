@@ -71,13 +71,18 @@ function killServer() {
 
 async function installExtensions() {
     if(isDev) {
-        const installer = await import ('electron-devtools-installer');
-        const res = await installer.default.default(installer.REACT_DEVELOPER_TOOLS, {loadExtensionOptions: {allowFileAccess: true}});
-        session.defaultSession.getAllExtensions().map(e => {
-            if (e.name === 'React Developer Tools') {
-                session.defaultSession.loadExtension(e.path);
-            }
-        });
+        try {
+            const installer = await import ('electron-devtools-installer');
+            await installer.default.default(installer.REACT_DEVELOPER_TOOLS, {loadExtensionOptions: {allowFileAccess: true}});
+            session.defaultSession.getAllExtensions().map(e => {
+                if (e.name === 'React Developer Tools') {
+                    session.defaultSession.loadExtension(e.path);
+                }
+            });
+        } catch (error) {
+            console.error('Failed to install React DevTools:', error);
+        }
+
     }
 }
 let previousSize;
